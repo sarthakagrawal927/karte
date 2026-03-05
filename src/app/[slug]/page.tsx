@@ -4,6 +4,7 @@ import { db } from '@/db';
 import { pages, links } from '@/db/schema';
 import { GlassCard } from '@/components/public/glass-card';
 import { LinkCard } from '@/components/public/link-card';
+import { ChatWidget } from '@/components/public/chat-widget';
 import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -100,6 +101,8 @@ export default async function PublicPage({ params }: Props) {
           <span className="font-medium text-white/50">LinkChat</span>
         </p>
       </div>
+
+      {page.chatEnabled && <ChatWidget slug={slug} displayName={page.displayName} />}
     </main>
   );
 }
