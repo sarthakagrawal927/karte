@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, primaryKey } from 'drizzle-orm/sqlite-core';
 
 // ── Users (extends NextAuth default) ──────────────────────────────────
 export const users = sqliteTable('users', {
@@ -39,10 +39,7 @@ export const accounts = sqliteTable('accounts', {
 
 // ── Sessions (NextAuth) ───────────────────────────────────────────────
 export const sessions = sqliteTable('sessions', {
-  id: text('id')
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  sessionToken: text('sessionToken').notNull().unique(),
+  sessionToken: text('sessionToken').primaryKey(),
   userId: text('userId')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
@@ -50,11 +47,17 @@ export const sessions = sqliteTable('sessions', {
 });
 
 // ── Verification Tokens (NextAuth) ───────────────────────────────────
-export const verificationTokens = sqliteTable('verificationTokens', {
-  identifier: text('identifier').notNull(),
-  token: text('token').notNull(),
-  expires: integer('expires', { mode: 'timestamp' }).notNull(),
-});
+export const verificationTokens = sqliteTable(
+  'verificationTokens',
+  {
+    identifier: text('identifier').notNull(),
+    token: text('token').notNull(),
+    expires: integer('expires', { mode: 'timestamp' }).notNull(),
+  },
+  (table) => ({
+    compositePk: primaryKey({ columns: [table.identifier, table.token] }),
+  }),
+);
 
 // ── Pages (user profile pages) ───────────────────────────────────────
 export const pages = sqliteTable('pages', {
