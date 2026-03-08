@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SaaSMakerTestimonials, SaaSMakerChangelog } from '@/components/saasmaker-feedback';
 
 export default function Home() {
   return (
@@ -23,6 +24,18 @@ export default function Home() {
             Get Started
           </Link>
         </div>
+      </div>
+
+      {/* Testimonials */}
+      <div className="relative mx-auto max-w-4xl px-4 py-16">
+        <h2 className="mb-8 text-center text-2xl font-bold text-white">What people are saying</h2>
+        <SaaSMakerTestimonials />
+      </div>
+
+      {/* Changelog */}
+      <div className="relative mx-auto max-w-2xl px-4 py-16">
+        <h2 className="mb-8 text-center text-2xl font-bold text-white">Changelog</h2>
+        <SaaSMakerChangelog />
       </div>
     </div>
   );
