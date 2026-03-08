@@ -11,7 +11,7 @@ const navItems = [
   { label: 'Chats', href: '/dashboard/chats' },
 ];
 
-export function Sidebar() {
+export function Sidebar({ slug }: { slug?: string }) {
   const pathname = usePathname();
 
   return (
@@ -41,6 +41,19 @@ export function Sidebar() {
           );
         })}
       </nav>
+
+      {slug && (
+        <div className="border-t border-white/10 px-3 py-4">
+          <a
+            href={`/${slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block rounded-lg bg-white/5 px-3 py-2 text-center text-sm font-medium text-white hover:bg-white/10 transition"
+          >
+            View Page
+          </a>
+        </div>
+      )}
     </aside>
   );
 }

@@ -1,0 +1,26 @@
+[    1962ms] [ERROR] Access to fetch at 'https://api.sassmaker.com/v1/analytics/events' from origin 'https://linkchat-dun.vercel.app' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://linkchat-dun.vercel.app/:0
+[    1963ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://api.sassmaker.com/v1/analytics/events:0
+[    1969ms] TypeError: Failed to fetch
+    at o.request (https://linkchat-dun.vercel.app/_next/static/chunks/24b500ccbc0a441f.js:1:614)
+    at l.track (https://linkchat-dun.vercel.app/_next/static/chunks/24b500ccbc0a441f.js:1:2639)
+    at t (https://linkchat-dun.vercel.app/_next/static/chunks/24b500ccbc0a441f.js:1:3109)
+    at ih (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:102168)
+    at uf (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:126018)
+    at uc (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:125680)
+    at uf (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:126063)
+    at uc (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:125680)
+    at uf (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:126063)
+    at uc (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:125680)
+[   55614ms] [ERROR] Access to fetch at 'https://api.sassmaker.com/v1/analytics/events' from origin 'https://linkchat-dun.vercel.app' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://linkchat-dun.vercel.app/login:0
+[   55614ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://api.sassmaker.com/v1/analytics/events:0
+[   55628ms] TypeError: Failed to fetch
+    at o.request (https://linkchat-dun.vercel.app/_next/static/chunks/24b500ccbc0a441f.js:1:614)
+    at l.track (https://linkchat-dun.vercel.app/_next/static/chunks/24b500ccbc0a441f.js:1:2639)
+    at t (https://linkchat-dun.vercel.app/_next/static/chunks/24b500ccbc0a441f.js:1:3109)
+    at ih (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:102168)
+    at uf (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:126018)
+    at uc (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:125680)
+    at uf (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:126063)
+    at uc (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:125680)
+    at uf (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:126063)
+    at uc (https://linkchat-dun.vercel.app/_next/static/chunks/2f6a520da4620d11.js:1:125680)
