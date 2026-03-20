@@ -212,8 +212,8 @@ export function PageSettings({
       </h1>
 
       <div className="space-y-6 rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl">
-        <div>
-          <div className="mb-3 flex items-center justify-between">
+          <div>
+          <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-medium text-white">Live Preview</p>
               <p className="text-xs text-gray-500">
@@ -239,7 +239,7 @@ export function PageSettings({
             }}
           >
             <div
-              className="relative overflow-hidden rounded-[27px] border border-white/10 bg-gray-950 p-6 sm:p-8"
+              className="relative overflow-hidden rounded-[27px] border border-white/10 bg-gray-950 p-5 sm:p-8"
               style={{
                 background: `linear-gradient(180deg, ${previewTheme.gradientFrom}1a 0%, ${previewTheme.gradientTo}1a 40%, #020617 100%)`,
               }}
@@ -337,7 +337,7 @@ export function PageSettings({
               value={slug}
               onChange={(e) => setSlug(sanitizeSlug(e.target.value))}
               placeholder="your-name"
-              className="flex-1 bg-transparent px-1 py-3 text-sm text-white placeholder-gray-500 focus:outline-none"
+              className="min-w-0 flex-1 bg-transparent px-1 py-3 text-sm text-white placeholder-gray-500 focus:outline-none"
             />
           </div>
         </div>
@@ -392,7 +392,7 @@ export function PageSettings({
         </div>
 
         <div>
-          <div className="mb-2 flex items-center justify-between">
+          <div className="mb-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <label className="block text-sm font-medium text-white">
               Theme
             </label>
@@ -470,11 +470,11 @@ export function PageSettings({
         )}
 
         {/* Save / Create Button */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
           <button
             onClick={handleSave}
             disabled={saving || uploadingAvatar}
-            className="rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50"
+            className="w-full rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50 sm:w-auto"
           >
             {shouldClaimOnLogin
               ? 'Continue to Claim Username'
@@ -488,7 +488,7 @@ export function PageSettings({
           </button>
           {message && (
             <p
-              className={`text-sm ${
+              className={`text-sm sm:max-w-sm ${
                 isErrorMessage ? 'text-red-400' : 'text-green-400'
               }`}
             >

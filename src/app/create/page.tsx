@@ -14,12 +14,12 @@ export default async function CreatePage() {
       <div className="absolute -left-1/4 -top-1/4 h-[520px] w-[520px] rounded-full bg-cyan-500/10 blur-[128px]" />
       <div className="absolute -bottom-1/4 -right-1/4 h-[520px] w-[520px] rounded-full bg-blue-600/10 blur-[128px]" />
 
-      <div className="relative mx-auto max-w-5xl px-4 py-16 sm:px-6">
-        <div className="mx-auto mb-12 max-w-2xl text-center">
+      <div className="relative mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto mb-10 max-w-2xl text-center sm:mb-12">
           <p className="text-sm font-medium uppercase tracking-[0.32em] text-cyan-300/80">
             Start Before Login
           </p>
-          <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+          <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-5xl">
             Draft your profile first.
             <span className="block bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">
               Claim it when you&apos;re ready.
