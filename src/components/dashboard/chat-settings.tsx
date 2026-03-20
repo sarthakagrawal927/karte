@@ -60,7 +60,7 @@ export function ChatSettings({
 
       <div className="space-y-6 rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl">
         {/* Enable Chat Toggle */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h3 className="text-sm font-medium text-white">Enable Chat</h3>
             <p className="text-xs text-gray-400">
@@ -135,11 +135,11 @@ export function ChatSettings({
         </div>
 
         {/* Save Button */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
           <button
             onClick={handleSave}
             disabled={saving}
-            className="rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50"
+            className="w-full rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50 sm:w-auto"
           >
             {saving ? 'Saving...' : 'Save'}
           </button>

@@ -196,7 +196,7 @@ export function SectionEditor({
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl">
-        <div className="mb-4 flex items-center justify-between gap-4">
+        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-white">
               {editingId ? 'Edit Section' : 'Add a Section'}
@@ -209,7 +209,7 @@ export function SectionEditor({
             <button
               type="button"
               onClick={resetForm}
-              className="rounded-lg border border-white/20 px-3 py-1.5 text-sm text-white transition hover:bg-white/10"
+              className="w-full rounded-lg border border-white/20 px-3 py-1.5 text-sm text-white transition hover:bg-white/10 sm:w-auto"
             >
               Cancel Edit
             </button>
@@ -327,7 +327,7 @@ export function SectionEditor({
             <button
               type="submit"
               disabled={saving}
-              className="rounded-lg bg-white px-5 py-2 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50"
+              className="w-full rounded-lg bg-white px-5 py-2 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50 sm:w-auto"
             >
               {saving ? 'Saving...' : editingId ? 'Save Section' : 'Add Section'}
             </button>
@@ -350,7 +350,7 @@ export function SectionEditor({
                   : 'border-white/20'
               } ${reordering ? 'opacity-80' : ''}`}
             >
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
                   <div className="mb-2 flex items-center gap-2">
                     <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-gray-300">

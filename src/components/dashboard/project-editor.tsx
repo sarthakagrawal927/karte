@@ -248,7 +248,7 @@ export function ProjectEditor({
           <button
             type="submit"
             disabled={loading || uploadingImage}
-            className="rounded-lg bg-white px-6 py-2 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50"
+            className="w-full rounded-lg bg-white px-6 py-2 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50 sm:w-auto"
           >
             {uploadingImage ? 'Uploading image...' : loading ? 'Adding...' : 'Add Project'}
           </button>
@@ -297,12 +297,12 @@ export function ProjectEditor({
                 />
               )}
 
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
                   <p className="truncate text-lg font-semibold text-white">
                     {project.title}
                   </p>
-                  <p className="truncate text-sm text-blue-300">
+                  <p className="break-all text-sm text-blue-300 sm:truncate">
                     {project.url}
                   </p>
                 </div>
@@ -319,12 +319,12 @@ export function ProjectEditor({
                 {project.description}
               </p>
 
-              <div className="mt-4 flex items-center gap-2">
+              <div className="mt-4 flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   onClick={() => moveProject(project.id, -1)}
                   disabled={reorderingProjectId !== null || index === 0}
-                  className="rounded-lg border border-white/20 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-white/10 disabled:opacity-50"
+                  className="flex-1 rounded-lg border border-white/20 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-white/10 disabled:opacity-50 sm:flex-none"
                 >
                   Move Up
                 </button>
@@ -335,7 +335,7 @@ export function ProjectEditor({
                     reorderingProjectId !== null ||
                     index === projects.length - 1
                   }
-                  className="rounded-lg border border-white/20 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-white/10 disabled:opacity-50"
+                  className="flex-1 rounded-lg border border-white/20 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-white/10 disabled:opacity-50 sm:flex-none"
                 >
                   Move Down
                 </button>

@@ -96,8 +96,8 @@ export function InfoEditor({
               key={block.id}
               className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl"
             >
-              <div className="mb-2 flex items-center justify-between">
-                <div className="flex items-center gap-2">
+              <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap items-center gap-2">
                   <span
                     className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${typeBadgeColor(block.type)}`}
                   >
@@ -179,7 +179,7 @@ export function InfoEditor({
         <button
           type="submit"
           disabled={loading || !content.trim()}
-          className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50"
+          className="w-full rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50 sm:w-auto"
         >
           {loading ? 'Adding...' : 'Add'}
         </button>

@@ -45,7 +45,7 @@ export function AiKeySettings({ hasKey }: { hasKey: boolean }) {
           : 'Add your AI API key to enable the chat feature.'}
       </p>
 
-      <div className="flex gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row">
         <input
           type="password"
           value={aiKey}
@@ -56,7 +56,7 @@ export function AiKeySettings({ hasKey }: { hasKey: boolean }) {
         <button
           onClick={handleSave}
           disabled={saving || !aiKey.trim()}
-          className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50"
+          className="w-full rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50 sm:w-auto"
         >
           {saving ? 'Saving...' : 'Save'}
         </button>

@@ -164,8 +164,8 @@ export default async function AnalyticsPage() {
     .slice(-7);
 
   return (
-    <div className="space-y-8">
-      <div className="mb-1 flex items-center gap-3">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="mb-1 flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-bold text-white">Analytics</h1>
         <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-cyan-200">
           Beta
@@ -181,7 +181,7 @@ export default async function AnalyticsPage() {
         </div>
       ) : (
         <>
-          <div className="grid gap-4 md:grid-cols-5">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
             <MetricCard label="Page views" value={formatNumber(pageViews)} helper="Tracked on every public page load" />
             <MetricCard label="Section views" value={formatNumber(sectionViews)} helper="Blocks seen by visitors" />
             <MetricCard label="Outbound clicks" value={formatNumber(outboundClicks)} helper="Clicks on external links and projects" />
@@ -202,7 +202,7 @@ export default async function AnalyticsPage() {
                 ) : (
                   recentActivity.map((event) => (
                     <div key={event.id} className="rounded-xl border border-white/10 bg-white/5 p-4">
-                      <div className="flex items-start justify-between gap-4">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                         <div>
                           <p className="text-sm font-medium text-white">
                             {event.eventType === 'page_view'
@@ -285,17 +285,22 @@ export default async function AnalyticsPage() {
                 <p className="text-sm text-gray-400">No data yet.</p>
               ) : (
                 dailyRows.map(([day, metrics]) => (
-                  <div key={day} className="grid grid-cols-[120px_1fr_90px_90px_80px] items-center gap-3">
+                  <div
+                    key={day}
+                    className="rounded-xl border border-white/10 bg-white/5 p-4 sm:grid sm:grid-cols-[120px_1fr_90px_90px_80px] sm:items-center sm:gap-3 sm:border-0 sm:bg-transparent sm:p-0"
+                  >
                     <p className="text-sm text-gray-400">{day}</p>
-                    <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10 sm:mt-0">
                       <div
                         className="h-full rounded-full bg-cyan-400"
                         style={{ width: `${Math.min(100, metrics.views * 20)}%` }}
                       />
                     </div>
-                    <p className="text-right text-sm text-white">{metrics.views} views</p>
-                    <p className="text-right text-sm text-white">{metrics.sectionViews} section</p>
-                    <p className="text-right text-sm text-white">{metrics.clicks} clicks</p>
+                    <div className="mt-3 grid grid-cols-3 gap-3 text-xs text-white sm:contents sm:text-sm">
+                      <p className="text-left sm:text-right">{metrics.views} views</p>
+                      <p className="text-left sm:text-right">{metrics.sectionViews} section</p>
+                      <p className="text-left sm:text-right">{metrics.clicks} clicks</p>
+                    </div>
                   </div>
                 ))
               )}

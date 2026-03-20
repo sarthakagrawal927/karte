@@ -19,9 +19,11 @@ export default async function DashboardLayout({
   });
 
   return (
-    <div className="flex h-screen bg-gray-950">
+    <div className="min-h-screen bg-gray-950 lg:flex">
       <Sidebar slug={page?.slug} />
-      <main className="flex-1 overflow-y-auto p-8">{children}</main>
+      <main className="min-w-0 flex-1 px-4 pb-8 pt-4 sm:px-6 lg:h-screen lg:overflow-y-auto lg:p-8">
+        {children}
+      </main>
     </div>
   );
 }

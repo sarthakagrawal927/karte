@@ -83,32 +83,33 @@ export function ChatList({ pageId }: { pageId: string }) {
           {/* Conversation header */}
           <button
             onClick={() => toggleConversation(convo.id)}
-            className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-white/5 transition-colors"
+            className="flex w-full flex-col gap-3 px-4 py-4 text-left transition-colors hover:bg-white/5 sm:flex-row sm:items-center sm:justify-between sm:px-5"
           >
             <div className="flex-1 min-w-0">
               <p className="text-sm text-white truncate">
                 {convo.firstMessage || 'No messages'}
               </p>
-              <p className="text-xs text-gray-500 mt-1">
-                {new Date(convo.createdAt).toLocaleDateString(undefined, {
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-                {' \u00B7 '}
-                {convo.messageCount} message{convo.messageCount !== 1 ? 's' : ''}
-                {convo.visitorId && ` \u00B7 ${convo.visitorId.slice(0, 8)}...`}
-              </p>
+              <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-xs text-gray-500">
+                <span>
+                  {new Date(convo.createdAt).toLocaleDateString(undefined, {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </span>
+                <span>{convo.messageCount} message{convo.messageCount !== 1 ? 's' : ''}</span>
+                {convo.visitorId && <span>{convo.visitorId.slice(0, 8)}...</span>}
+              </div>
             </div>
-            <span className="text-gray-500 ml-3 text-sm">
+            <span className="text-sm text-gray-500 sm:ml-3">
               {expandedId === convo.id ? '\u25B2' : '\u25BC'}
             </span>
           </button>
 
           {/* Expanded messages */}
           {expandedId === convo.id && (
-            <div className="border-t border-white/10 px-5 py-4 space-y-3 max-h-96 overflow-y-auto">
+            <div className="max-h-96 space-y-3 overflow-y-auto border-t border-white/10 px-4 py-4 sm:px-5">
               {loadingMessages === convo.id ? (
                 <p className="text-xs text-gray-500">Loading messages...</p>
               ) : (
@@ -118,7 +119,7 @@ export function ChatList({ pageId }: { pageId: string }) {
                     className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[80%] rounded-xl px-3 py-2 text-sm whitespace-pre-wrap ${
+                      className={`max-w-[88%] whitespace-pre-wrap rounded-xl px-3 py-2 text-sm sm:max-w-[80%] ${
                         msg.role === 'user'
                           ? 'bg-blue-600 text-white'
                           : 'border border-white/10 bg-white/5 text-white/90'
