@@ -1,4 +1,7 @@
+import { redirect } from 'next/navigation';
 import { signIn } from '@/lib/auth';
+import { auth } from '@/lib/auth';
+import { PublicTopBar } from '@/components/public/public-top-bar';
 
 type LoginPageProps = {
   searchParams: Promise<{ next?: string }>;
@@ -15,9 +18,17 @@ function getSafeRedirectPath(nextPath: string | undefined) {
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { next } = await searchParams;
   const redirectTo = getSafeRedirectPath(next);
+  const session = await auth();
+
+  if (session?.user?.id) {
+    redirect(redirectTo);
+  }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-950 px-4">
+    <div className="min-h-screen bg-gray-950">
+      <PublicTopBar current="login" />
+
+      <div className="flex min-h-[calc(100vh-4.5rem)] items-center justify-center px-4 pb-8 pt-4 sm:min-h-[calc(100vh-5rem)]">
       <div className="w-full max-w-sm rounded-2xl border border-white/20 bg-white/5 p-8 shadow-xl backdrop-blur-xl">
         <h1 className="mb-2 text-center text-2xl font-bold text-white">
           Welcome to LinkChat
@@ -59,6 +70,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             </button>
           </form>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { SaaSMakerTestimonials, SaaSMakerChangelog } from '@/components/saasmaker-feedback';
+import { PublicTopBar } from '@/components/public/public-top-bar';
 
 export default function Home() {
   return (
@@ -7,6 +8,8 @@ export default function Home() {
       {/* Gradient blobs */}
       <div className="absolute -left-1/4 -top-1/4 h-[600px] w-[600px] rounded-full bg-purple-600/15 blur-[128px]" />
       <div className="absolute -bottom-1/4 -right-1/4 h-[600px] w-[600px] rounded-full bg-blue-600/15 blur-[128px]" />
+
+      <PublicTopBar current="home" />
 
       <div className="relative mx-auto max-w-3xl px-4 py-20 text-center sm:py-32">
         <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">

@@ -9,6 +9,7 @@ import { LinkCard } from '@/components/public/link-card';
 import { ProjectCard } from '@/components/public/project-card';
 import { ChatWidget } from '@/components/public/chat-widget';
 import { PageSectionRenderer } from '@/components/public/page-section-renderer';
+import { PublicTopBar } from '@/components/public/public-top-bar';
 import { TrackableSection } from '@/components/public/trackable-section';
 import { resolveThemeConfig } from '@/lib/themes';
 import type { Metadata } from 'next';
@@ -114,8 +115,10 @@ export default async function PublicPage({ params }: Props) {
         />
       </div>
 
+      <PublicTopBar current="profile" accentColor={theme.accentColor} />
+
       {/* Content */}
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-4xl flex-col px-4 py-16 sm:px-6">
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-4xl flex-col px-4 pb-16 pt-8 sm:px-6 sm:pt-10">
         {/* Profile card */}
         <div
           className="rounded-[28px] p-[1px]"

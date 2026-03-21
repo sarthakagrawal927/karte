@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { PageSettings } from '@/components/dashboard/page-settings';
+import { PublicTopBar } from '@/components/public/public-top-bar';
 
 export default async function CreatePage() {
   const session = await auth();
@@ -13,6 +14,8 @@ export default async function CreatePage() {
     <div className="relative min-h-screen overflow-hidden bg-gray-950">
       <div className="absolute -left-1/4 -top-1/4 h-[520px] w-[520px] rounded-full bg-cyan-500/10 blur-[128px]" />
       <div className="absolute -bottom-1/4 -right-1/4 h-[520px] w-[520px] rounded-full bg-blue-600/10 blur-[128px]" />
+
+      <PublicTopBar current="create" accentColor="#67e8f9" />
 
       <div className="relative mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
         <div className="mx-auto mb-10 max-w-2xl text-center sm:mb-12">
