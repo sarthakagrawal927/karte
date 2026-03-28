@@ -4,6 +4,10 @@ import { DrizzleAdapter } from '@auth/drizzle-adapter';
 import { db } from '@/db';
 import * as schema from '@/db/schema';
 
+if (!process.env.AUTH_SECRET) {
+  throw new Error('AUTH_SECRET environment variable is required');
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: DrizzleAdapter(db, {
     usersTable: schema.users,
