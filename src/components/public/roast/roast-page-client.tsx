@@ -86,7 +86,7 @@ export function RoastPageClient({
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
+      <div className="flex min-h-[50vh] items-center justify-center px-4 py-8">
         <div className="text-center space-y-6">
           <div className="text-6xl animate-spin inline-block">🔥</div>
           <div className="space-y-2">
@@ -108,7 +108,7 @@ export function RoastPageClient({
   // No roast yet - show generate prompt
   if (!roast) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
+      <div className="flex min-h-[50vh] items-center justify-center px-4 py-8">
         <div className="border border-white/10 bg-white/5 rounded-2xl backdrop-blur-xl p-8 sm:p-12 max-w-md w-full text-center space-y-6">
           <div className="text-6xl">🔥</div>
           <div className="space-y-2">
@@ -142,7 +142,7 @@ export function RoastPageClient({
 
   // Roast display
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="w-full text-white">
       <div className="max-w-3xl mx-auto px-4 py-10 sm:py-16 space-y-8">
         {/* Headline */}
         <div className="text-center space-y-2">

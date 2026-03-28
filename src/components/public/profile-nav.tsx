@@ -51,7 +51,7 @@ export function ProfileNav({
               className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                 isActive
                   ? 'text-white shadow-lg'
-                  : 'text-white/50 hover:text-white/80'
+                  : 'text-white/70 hover:text-white hover:bg-white/5'
               }`}
               style={
                 isActive
