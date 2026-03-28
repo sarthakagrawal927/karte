@@ -17,7 +17,7 @@ export async function POST(
   // Rate limit by IP
   const ip =
     req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  const { ok } = rateLimit(`roast:${ip}`);
+  const { ok } = rateLimit(`roast:${ip}`, { windowMs: 3_600_000, maxRequests: 3 });
   if (!ok) {
     return new Response(JSON.stringify({ error: 'Too many requests' }), {
       status: 429,

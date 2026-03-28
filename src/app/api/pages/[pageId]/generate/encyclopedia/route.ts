@@ -12,7 +12,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ pageId:
   const { pageId } = await params;
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  const { ok } = rateLimit(`encyclopedia:${ip}`);
+  const { ok } = rateLimit(`encyclopedia:${ip}`, { windowMs: 3_600_000, maxRequests: 3 });
   if (!ok) return new Response(JSON.stringify({ error: 'Too many requests' }), { status: 429 });
 
   await ensureProjectsTable();
