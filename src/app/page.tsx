@@ -198,173 +198,58 @@ function SectionHeader({
 
 function HeroStudio() {
   return (
-    <div className="relative mx-auto w-full max-w-[620px]">
-      {/* Glow effects behind the studio */}
+    <div className="relative mx-auto w-full max-w-[540px]">
+      {/* Glow effects */}
       <div className="absolute inset-x-6 top-6 h-48 rounded-full bg-cyan-400/15 blur-[96px]" />
-      <div className="absolute inset-x-10 bottom-0 h-44 rounded-full bg-amber-300/8 blur-[100px]" />
 
-      <div className={`relative ${glassCardLg} p-4 shadow-[0_48px_120px_-70px_rgba(34,211,238,0.6)] sm:p-5`}>
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
-          {/* Left column - Profile preview */}
-          <div className="rounded-3xl border border-white/10 bg-gray-950/90 p-5 shadow-inner shadow-black/20">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-cyan-300/80">
-                  Live Draft
-                </p>
-                <p className="mt-1 text-sm text-slate-400">Public profile preview</p>
-              </div>
-              <span className="rounded-full border border-cyan-200/20 bg-cyan-300/10 px-3 py-1 text-[11px] font-medium text-cyan-100">
-                Claim later
-              </span>
-            </div>
+      {/* Browser frame mockup */}
+      <div className={`relative ${glassCardLg} overflow-hidden shadow-[0_48px_120px_-70px_rgba(34,211,238,0.5)]`}>
+        {/* Browser chrome */}
+        <div className="flex items-center gap-2 border-b border-white/10 bg-gray-950/80 px-4 py-2.5">
+          <div className="flex gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+            <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+            <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+          </div>
+          <div className="ml-2 flex-1 rounded-md bg-white/5 px-3 py-1">
+            <span className="text-[11px] text-white/40">linkchat.com/sarthak</span>
+          </div>
+        </div>
 
-            <div className="mt-5 flex items-start gap-4">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl border border-cyan-200/25 bg-gradient-to-br from-cyan-300/25 to-emerald-300/10 text-xl font-semibold text-white">
-                SA
-              </div>
-              <div className="min-w-0">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/40">
-                  Founder Profile
-                </p>
-                <h3 className={`${fraunces.className} mt-1.5 text-2xl text-white`}>
-                  Sarthak Agrawal
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Building software, sharing experiments, and turning a link page into a profile that actually closes loops.
-                </p>
-              </div>
+        {/* Profile preview — minimal */}
+        <div className="bg-gradient-to-b from-cyan-900/20 to-gray-950 p-6 sm:p-8">
+          {/* Profile card */}
+          <div className="mx-auto max-w-sm rounded-2xl border border-white/15 bg-white/8 p-6 text-center backdrop-blur-xl">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-cyan-200/25 bg-gradient-to-br from-cyan-300/25 to-emerald-300/10 text-lg font-semibold text-white">
+              SA
             </div>
-
-            <div className="mt-6 space-y-2.5">
-              {['Book an intro call', 'Read my operating notes', 'Browse AI projects'].map((item, index) => (
-                <div
-                  key={item}
-                  className={`flex items-center justify-between ${glassCard} px-4 py-3`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-white/35">0{index + 1}</span>
-                    <span className="text-sm font-medium text-white">{item}</span>
-                  </div>
-                  <span className="text-xs text-cyan-300/70">Open</span>
-                </div>
-              ))}
-            </div>
-
-            <div className={`mt-5 ${glassCard} p-4`}>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-amber-200/80">
-                Featured Project
-              </p>
-              <h4 className="mt-3 text-lg font-semibold text-white">AI GTM Operating System</h4>
-              <p className="mt-2 text-sm leading-6 text-slate-400">
-                Frameworks, templates, and experiments for founder-led distribution.
-              </p>
-            </div>
-
-            <div className="mt-5 rounded-2xl border border-cyan-200/15 bg-cyan-300/8 p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-100/85">
-                Chat Preview
-              </p>
-              <p className="mt-3 text-sm text-white/60">Visitor asks</p>
-              <p className="mt-1 text-sm font-medium text-white">
-                Can I see your best product and AI work?
-              </p>
-              <p className="mt-4 text-sm text-white/60">LinkChat replies</p>
-              <p className="mt-1 text-sm leading-6 text-slate-300">
-                Start with the highlighted project card, then open the social proof and contact sections if you want to keep talking.
-              </p>
-            </div>
+            <h3 className={`${fraunces.className} mt-3 text-xl text-white`}>Sarthak Agrawal</h3>
+            <p className="mt-1.5 text-xs text-slate-400">Building software & sharing experiments</p>
           </div>
 
-          {/* Right column - Dashboard preview */}
-          <div className="flex flex-col gap-4">
-            <div className="rounded-3xl border border-white/10 bg-gray-950/80 p-5">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300/80">
-                    Analytics Beta
-                  </p>
-                  <h4 className="mt-2 text-lg font-semibold text-white">What the page is doing</h4>
-                </div>
-                <span className={`${glassCard} px-3 py-1 text-[11px] text-white/50`}>
-                  Last 7 days
-                </span>
+          {/* Links */}
+          <div className="mx-auto mt-4 max-w-sm space-y-2">
+            {['Portfolio', 'Blog', 'LinkedIn', 'GitHub'].map((item) => (
+              <div key={item} className={`${glassCard} px-4 py-2.5 text-center text-sm font-medium text-white`}>
+                {item}
               </div>
+            ))}
+          </div>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
-                {heroMetrics.map((metric) => (
-                  <div
-                    key={metric.label}
-                    className={`${glassCard} px-4 py-3`}
-                  >
-                    <p className="text-[10px] uppercase tracking-[0.24em] text-white/40">{metric.label}</p>
-                    <p className="mt-2.5 text-2xl font-semibold text-white">{metric.value}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-5 rounded-2xl border border-cyan-200/15 bg-cyan-300/8 px-4 py-3">
-                <p className="text-[10px] uppercase tracking-[0.24em] text-cyan-200/60">Signal</p>
-                <p className="mt-2 text-sm leading-6 text-slate-300">
-                  The portfolio card and contact CTA are earning the most intent right now.
-                </p>
-              </div>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-gray-950/80 p-5">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-emerald-300/80">
-                Lead Inbox
-              </p>
-              <h4 className="mt-2 text-lg font-semibold text-white">Follow up while interest is hot</h4>
-
-              <div className="mt-4 space-y-2.5">
-                {[
-                  ['Aarav from Stripe', 'Loved the AI project section. Open to a product ops call next week?'],
-                  ['Maya from Figma', 'Can you share a deeper walkthrough of the portfolio case study?'],
-                ].map(([name, message]) => (
-                  <div
-                    key={name}
-                    className={`${glassCard} px-4 py-3`}
-                  >
-                    <p className="text-sm font-medium text-white">{name}</p>
-                    <p className="mt-1.5 text-sm leading-6 text-slate-400">{message}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-3xl border border-white/10 bg-gray-950/80 p-5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-amber-200/80">
-                  Theme Stack
-                </p>
-                <div className="mt-4 flex items-center gap-2.5">
-                  {themeSwatches.map((color) => (
-                    <span
-                      key={color}
-                      className="h-9 w-9 rounded-xl border border-white/10 transition-transform hover:scale-110"
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-                <p className="mt-4 text-sm leading-6 text-slate-400">
-                  Presets, custom accents, and a page that already feels branded.
-                </p>
-              </div>
-
-              <div className="rounded-3xl border border-white/10 bg-gray-950/80 p-5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300/80">
-                  Upload Flow
-                </p>
-                <div className="mt-4 rounded-2xl border border-dashed border-white/15 bg-white/[0.03] px-4 py-5">
-                  <p className="text-sm font-medium text-white">Avatar and project images</p>
-                  <p className="mt-1.5 text-sm text-slate-400">Stored in R2, ready for live previews.</p>
-                </div>
-                <p className="mt-4 text-sm leading-6 text-slate-400">
-                  Keep media local to the product.
-                </p>
-              </div>
-            </div>
+          {/* Tabs hint */}
+          <div className="mx-auto mt-4 flex max-w-sm justify-center gap-2">
+            {['Profile', 'Encyclopedia', 'Roast Me', 'Newspaper'].map((tab, i) => (
+              <span
+                key={tab}
+                className={`rounded-lg px-2.5 py-1 text-[10px] font-medium ${
+                  i === 0
+                    ? 'bg-cyan-300/15 text-cyan-300'
+                    : 'text-white/30'
+                }`}
+              >
+                {tab}
+              </span>
+            ))}
           </div>
         </div>
       </div>
