@@ -4,7 +4,7 @@ import { db, ensureProjectsTable } from '@/db';
 import { pages, generatedPages } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { EncyclopediaEditor } from '@/components/dashboard/encyclopedia-editor';
-import type { EncyclopediaContent } from '@/lib/generated-page-types';
+import { normalizeEncyclopediaContent } from '@/lib/encyclopedia-compat';
 
 export default async function DashboardEncyclopediaPage() {
   const session = await auth();
@@ -36,7 +36,7 @@ export default async function DashboardEncyclopediaPage() {
     )
     .limit(1);
 
-  const content = (existing?.content as unknown as EncyclopediaContent | undefined) ?? null;
+  const content = normalizeEncyclopediaContent(existing?.content) ?? null;
 
   if (!content) {
     return (

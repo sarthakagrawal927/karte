@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation';
 import { getPageBySlug, getGeneratedPage } from '../_lib/get-page-data';
 import { resolveThemeConfig } from '@/lib/themes';
 import { auth } from '@/lib/auth';
-import type { EncyclopediaContent } from '@/lib/generated-page-types';
 import { WikiArticle } from '@/components/public/encyclopedia/wiki-article';
 import { GenerateEncyclopedia } from '@/components/public/encyclopedia/generate-encyclopedia';
+import { normalizeEncyclopediaContent } from '@/lib/encyclopedia-compat';
 
 export default async function EncyclopediaPage({
   params,
@@ -22,6 +22,9 @@ export default async function EncyclopediaPage({
   const generatedPage = await getGeneratedPage(page.id, 'encyclopedia');
 
   if (generatedPage?.status === 'ready' && generatedPage.content) {
+    const content = normalizeEncyclopediaContent(generatedPage.content);
+    if (!content) notFound();
+
     return (
       <div className="min-h-screen bg-[#f8f9fa]">
         {/* Wikipedia-style header */}
@@ -77,7 +80,7 @@ export default async function EncyclopediaPage({
 
         {/* Article content */}
         <WikiArticle
-          content={generatedPage.content as unknown as EncyclopediaContent}
+          content={content}
           displayName={page.displayName}
           avatarUrl={page.avatarUrl ?? null}
           accentColor={theme.accentColor}

@@ -1,19 +1,12 @@
 import type { EncyclopediaContent } from '@/lib/generated-page-types';
 import { WikiInfobox } from './wiki-infobox';
-import { WikiToc } from './wiki-toc';
+import { WikiTocFromHtml } from './wiki-toc';
 
 interface WikiArticleProps {
   content: EncyclopediaContent;
   displayName: string;
   avatarUrl: string | null;
   accentColor: string;
-}
-
-function sectionId(heading: string): string {
-  return heading
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
 }
 
 export function WikiArticle({ content, displayName, avatarUrl, accentColor }: WikiArticleProps) {
@@ -48,14 +41,6 @@ export function WikiArticle({ content, displayName, avatarUrl, accentColor }: Wi
           From LinkChat Encyclopedia, the free profile
         </p>
 
-        {/* Lead paragraph - slightly larger */}
-        <p
-          className="mb-5 text-[15px] leading-relaxed sm:text-base"
-          style={{ color: '#202122' }}
-        >
-          <b>{displayName}</b> {content.leadParagraph}
-        </p>
-
         {/* Infobox floated right (on desktop) */}
         <WikiInfobox
           infobox={content.infobox}
@@ -64,42 +49,14 @@ export function WikiArticle({ content, displayName, avatarUrl, accentColor }: Wi
           accentColor={accentColor}
         />
 
-        {/* Table of Contents */}
-        <WikiToc sections={content.sections} accentColor={accentColor} />
+        {/* Table of Contents (extracted from HTML headings) */}
+        <WikiTocFromHtml html={content.markdown} accentColor={accentColor} />
 
-        {/* Article sections */}
-        <div className="clear-none">
-          {content.sections.map((section, i) => (
-            <section key={i} id={sectionId(section.heading)} className="mb-6">
-              <div className="mb-2 flex items-baseline gap-3 border-b border-[#a2a9b1] pb-1">
-                <h2
-                  className="text-[22px] font-normal leading-snug"
-                  style={{
-                    fontFamily: 'Linux Libertine, Georgia, "Times New Roman", serif',
-                    color: '#000000',
-                  }}
-                >
-                  {section.heading}
-                </h2>
-                <span
-                  className="cursor-default select-none text-xs"
-                  style={{ fontFamily: 'sans-serif', color: '#3366cc' }}
-                >
-                  [edit]
-                </span>
-              </div>
-              <div
-                className="whitespace-pre-line text-sm leading-relaxed"
-                style={{
-                  color: '#202122',
-                  fontFamily: 'Georgia, "Times New Roman", serif',
-                }}
-              >
-                {section.content}
-              </div>
-            </section>
-          ))}
-        </div>
+        {/* Article body rendered from HTML */}
+        <div
+          className="wiki-prose clear-none"
+          dangerouslySetInnerHTML={{ __html: content.markdown }}
+        />
 
         {/* Categories */}
         {content.categories.length > 0 && (

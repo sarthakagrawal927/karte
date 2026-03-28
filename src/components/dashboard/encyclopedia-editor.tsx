@@ -1,16 +1,15 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import type { EncyclopediaContent } from '@/lib/generated-page-types';
 import {
   Badge,
   Button,
   Card,
-  FormField,
   Input,
   Label,
-  Textarea,
 } from '@/components/ui';
+import { NovelEditor } from './novel-editor';
 
 interface EncyclopediaEditorProps {
   pageId: string;
@@ -19,9 +18,8 @@ interface EncyclopediaEditorProps {
 
 function emptyContent(): EncyclopediaContent {
   return {
-    leadParagraph: '',
+    markdown: '',
     infobox: {},
-    sections: [{ heading: '', content: '' }],
     categories: [],
   };
 }
@@ -37,12 +35,13 @@ export function EncyclopediaEditor({
   const [regenerating, setRegenerating] = useState(false);
   const [message, setMessage] = useState('');
   const [categoryInput, setCategoryInput] = useState('');
-  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
 
-  // ── Lead paragraph ──────────────────────────────────────────────────
+  // Track the latest markdown from the editor via ref to avoid re-renders
+  const markdownRef = useRef(content.markdown);
 
-  const setLeadParagraph = useCallback((value: string) => {
-    setContent((c) => ({ ...c, leadParagraph: value }));
+  const handleEditorUpdate = useCallback((html: string) => {
+    markdownRef.current = html;
+    setContent((c) => ({ ...c, markdown: html }));
   }, []);
 
   // ── Infobox helpers ─────────────────────────────────────────────────
@@ -81,53 +80,6 @@ export function EncyclopediaEditor({
     });
   }
 
-  // ── Sections helpers ────────────────────────────────────────────────
-
-  function setSectionHeading(index: number, heading: string) {
-    setContent((c) => {
-      const sections = [...c.sections];
-      sections[index] = { ...sections[index], heading };
-      return { ...c, sections };
-    });
-  }
-
-  function setSectionContent(index: number, value: string) {
-    setContent((c) => {
-      const sections = [...c.sections];
-      sections[index] = { ...sections[index], content: value };
-      return { ...c, sections };
-    });
-  }
-
-  function addSection() {
-    setContent((c) => ({
-      ...c,
-      sections: [...c.sections, { heading: '', content: '' }],
-    }));
-  }
-
-  function removeSection(index: number) {
-    if (deleteConfirm !== index) {
-      setDeleteConfirm(index);
-      return;
-    }
-    setContent((c) => ({
-      ...c,
-      sections: c.sections.filter((_, i) => i !== index),
-    }));
-    setDeleteConfirm(null);
-  }
-
-  function moveSection(index: number, direction: -1 | 1) {
-    const target = index + direction;
-    if (target < 0 || target >= content.sections.length) return;
-    setContent((c) => {
-      const sections = [...c.sections];
-      [sections[index], sections[target]] = [sections[target], sections[index]];
-      return { ...c, sections };
-    });
-  }
-
   // ── Categories helpers ──────────────────────────────────────────────
 
   function addCategory() {
@@ -158,11 +110,14 @@ export function EncyclopediaEditor({
     setSaving(true);
     setMessage('');
 
+    // Use the latest markdown from the ref
+    const toSave = { ...content, markdown: markdownRef.current };
+
     try {
       const res = await fetch(`/api/pages/${pageId}/encyclopedia-content`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(content),
+        body: JSON.stringify(toSave),
       });
 
       if (!res.ok) {
@@ -202,6 +157,7 @@ export function EncyclopediaEditor({
 
       const newContent: EncyclopediaContent = await res.json();
       setContent(newContent);
+      markdownRef.current = newContent.markdown;
       setMessage('Regenerated successfully');
     } catch {
       setMessage('Failed to regenerate');
@@ -217,24 +173,23 @@ export function EncyclopediaEditor({
       </h1>
 
       <div className="space-y-6">
-        {/* ── Lead Paragraph ──────────────────────────────────── */}
+        {/* Article Body (Novel Editor) */}
         <Card>
-          <FormField
-            label="Lead Paragraph"
-            htmlFor="leadParagraph"
-            description="The opening paragraph that summarizes the article"
-          >
-            <Textarea
-              id="leadParagraph"
-              rows={5}
-              value={content.leadParagraph}
-              onChange={(e) => setLeadParagraph(e.target.value)}
-              placeholder="A summary paragraph about this person..."
-            />
-          </FormField>
+          <div className="mb-3">
+            <h3 className="text-sm font-medium text-white">Article Body</h3>
+            <p className="mb-2 text-xs text-gray-400">
+              Write your encyclopedia article. Use / for slash commands (headings, lists, quotes).
+              Select text for formatting options.
+            </p>
+          </div>
+          <NovelEditor
+            key={`editor-${content.markdown.length === 0 ? 'empty' : 'loaded'}-${regenerating ? 'regen' : 'stable'}`}
+            initialContent={content.markdown || undefined}
+            onUpdate={handleEditorUpdate}
+          />
         </Card>
 
-        {/* ── Infobox ─────────────────────────────────────────── */}
+        {/* Infobox */}
         <Card>
           <div className="mb-3 flex items-center justify-between">
             <div>
@@ -296,91 +251,7 @@ export function EncyclopediaEditor({
           </div>
         </Card>
 
-        {/* ── Sections ────────────────────────────────────────── */}
-        <Card>
-          <div className="mb-3 flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-medium text-white">Sections</h3>
-              <p className="mb-2 text-xs text-gray-400">
-                Article sections with headings and content
-              </p>
-            </div>
-            <Button variant="small" type="button" onClick={addSection}>
-              + Add Section
-            </Button>
-          </div>
-
-          {content.sections.length === 0 && (
-            <p className="text-xs text-gray-500">
-              No sections yet. Click &quot;+ Add Section&quot; to start.
-            </p>
-          )}
-
-          <div className="space-y-4">
-            {content.sections.map((section, i) => (
-              <div
-                key={i}
-                className="rounded-xl border border-white/10 bg-white/5 p-4"
-              >
-                <div className="mb-3 flex items-center justify-between gap-2">
-                  <span className="text-xs font-medium text-gray-400">
-                    Section {i + 1}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="small"
-                      type="button"
-                      onClick={() => moveSection(i, -1)}
-                      disabled={i === 0}
-                      className="disabled:opacity-30"
-                      aria-label="Move section up"
-                    >
-                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
-                      </svg>
-                    </Button>
-                    <Button
-                      variant="small"
-                      type="button"
-                      onClick={() => moveSection(i, 1)}
-                      disabled={i === content.sections.length - 1}
-                      className="disabled:opacity-30"
-                      aria-label="Move section down"
-                    >
-                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </Button>
-                    <Button
-                      variant={deleteConfirm === i ? 'danger' : 'small'}
-                      type="button"
-                      onClick={() => removeSection(i)}
-                      className={deleteConfirm !== i ? 'hover:!bg-red-500/10 hover:!text-red-400' : undefined}
-                    >
-                      {deleteConfirm === i ? 'Confirm' : 'Delete'}
-                    </Button>
-                  </div>
-                </div>
-
-                <Input
-                  type="text"
-                  value={section.heading}
-                  onChange={(e) => setSectionHeading(i, e.target.value)}
-                  placeholder="Section heading"
-                  className="mb-3"
-                />
-                <Textarea
-                  rows={4}
-                  value={section.content}
-                  onChange={(e) => setSectionContent(i, e.target.value)}
-                  placeholder="Section content..."
-                />
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* ── Categories ──────────────────────────────────────── */}
+        {/* Categories */}
         <Card>
           <Label htmlFor="categoryInput">Categories</Label>
           <p className="mb-2 text-xs text-gray-400">
@@ -423,7 +294,7 @@ export function EncyclopediaEditor({
           </div>
         </Card>
 
-        {/* ── Actions ─────────────────────────────────────────── */}
+        {/* Actions */}
         <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
           <Button
             onClick={handleSave}

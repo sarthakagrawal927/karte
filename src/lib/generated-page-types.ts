@@ -2,9 +2,9 @@ export type GeneratedPageType = 'encyclopedia' | 'roast' | 'newspaper';
 export type GeneratedPageStatus = 'pending' | 'generating' | 'ready' | 'error';
 
 export interface EncyclopediaContent {
-  leadParagraph: string;
+  /** Full article body as HTML (from Novel/Tiptap editor) */
+  markdown: string;
   infobox: Record<string, string>;
-  sections: { heading: string; content: string }[];
   categories: string[];
 }
 

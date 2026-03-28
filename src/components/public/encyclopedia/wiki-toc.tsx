@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-interface WikiTocProps {
-  sections: { heading: string }[];
-  accentColor: string;
+interface TocEntry {
+  text: string;
+  id: string;
 }
 
 function sectionId(heading: string): string {
@@ -14,14 +14,50 @@ function sectionId(heading: string): string {
     .replace(/^-|-$/g, '');
 }
 
-export function WikiToc({ sections, accentColor }: WikiTocProps) {
+/**
+ * Extract h2 headings from raw HTML string for the table of contents.
+ * Works on both server and client by using a regex approach.
+ */
+function extractHeadings(html: string): TocEntry[] {
+  const headings: TocEntry[] = [];
+  const regex = /<h2[^>]*>(.*?)<\/h2>/gi;
+  let match;
+  while ((match = regex.exec(html)) !== null) {
+    // Strip any nested HTML tags from heading text
+    const text = match[1].replace(/<[^>]*>/g, '').trim();
+    if (text) {
+      headings.push({ text, id: sectionId(text) });
+    }
+  }
+  return headings;
+}
+
+// ── WikiTocFromHtml ─────────────────────────────────────────────────────────
+
+interface WikiTocFromHtmlProps {
+  html: string;
+  accentColor: string;
+}
+
+export function WikiTocFromHtml({ html, accentColor }: WikiTocFromHtmlProps) {
+  const headings = useMemo(() => extractHeadings(html), [html]);
   const [activeId, setActiveId] = useState<string>('');
   const [collapsed, setCollapsed] = useState(false);
 
+  // Add IDs to actual DOM h2 elements so scroll-to works
   useEffect(() => {
-    const ids = sections.map((s) => sectionId(s.heading));
-    const elements = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const container = document.querySelector('.wiki-prose');
+    if (!container) return;
+    const h2s = container.querySelectorAll('h2');
+    h2s.forEach((el) => {
+      const text = el.textContent?.trim() ?? '';
+      el.id = sectionId(text);
+    });
+  }, [html]);
 
+  useEffect(() => {
+    const ids = headings.map((h) => h.id);
+    const elements = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     if (elements.length === 0) return;
 
     const observer = new IntersectionObserver(
@@ -36,7 +72,7 @@ export function WikiToc({ sections, accentColor }: WikiTocProps) {
 
     elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [sections]);
+  }, [headings]);
 
   function scrollTo(id: string) {
     const el = document.getElementById(id);
@@ -44,6 +80,8 @@ export function WikiToc({ sections, accentColor }: WikiTocProps) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
+
+  if (headings.length === 0) return null;
 
   return (
     <nav
@@ -62,14 +100,13 @@ export function WikiToc({ sections, accentColor }: WikiTocProps) {
 
       {!collapsed && (
         <ol className="m-0 list-none space-y-0.5 pl-0">
-          {sections.map((section, i) => {
-            const id = sectionId(section.heading);
-            const isActive = activeId === id;
+          {headings.map((heading, i) => {
+            const isActive = activeId === heading.id;
 
             return (
-              <li key={id} className="leading-relaxed">
+              <li key={heading.id} className="leading-relaxed">
                 <button
-                  onClick={() => scrollTo(id)}
+                  onClick={() => scrollTo(heading.id)}
                   className="cursor-pointer border-none bg-transparent p-0 text-left text-sm transition-colors duration-100"
                   style={{
                     color: isActive ? '#202122' : '#3366cc',
@@ -79,7 +116,7 @@ export function WikiToc({ sections, accentColor }: WikiTocProps) {
                 >
                   <span className="mr-1.5 tabular-nums text-[#202122]">{i + 1}</span>
                   <span className={isActive ? '' : 'hover:underline'}>
-                    {section.heading}
+                    {heading.text}
                   </span>
                 </button>
               </li>
