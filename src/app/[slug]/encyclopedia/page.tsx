@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getPageBySlug, getGeneratedPage } from '../_lib/get-page-data';
 import { resolveThemeConfig } from '@/lib/themes';
+import { auth } from '@/lib/auth';
 import type { EncyclopediaContent } from '@/lib/generated-page-types';
 import { WikiArticle } from '@/components/public/encyclopedia/wiki-article';
 import { GenerateEncyclopedia } from '@/components/public/encyclopedia/generate-encyclopedia';
@@ -29,6 +30,11 @@ export default async function EncyclopediaPage({
       />
     );
   }
+
+  // Only show generate UI to the page owner
+  const session = await auth().catch(() => null);
+  const isOwner = session?.user?.id === page.userId;
+  if (!isOwner) notFound();
 
   return (
     <GenerateEncyclopedia

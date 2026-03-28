@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getPageBySlug, getGeneratedPage } from '../_lib/get-page-data';
 import { resolveThemeConfig } from '@/lib/themes';
+import { auth } from '@/lib/auth';
 import type { NewspaperContent } from '@/lib/generated-page-types';
 import { NewspaperFrontPage } from '@/components/public/newspaper/newspaper-front-page';
 import { GenerateNewspaper } from '@/components/public/newspaper/generate-newspaper';
@@ -17,7 +18,6 @@ export default async function NewspaperPage({
   if (!page.newspaperEnabled) notFound();
 
   const theme = resolveThemeConfig(page.themeConfig as any);
-
   const generatedPage = await getGeneratedPage(page.id, 'newspaper');
 
   const existingNewspaper =
@@ -36,6 +36,11 @@ export default async function NewspaperPage({
       />
     );
   }
+
+  // Only show generate UI to the page owner
+  const session = await auth().catch(() => null);
+  const isOwner = session?.user?.id === page.userId;
+  if (!isOwner) notFound();
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center px-4">

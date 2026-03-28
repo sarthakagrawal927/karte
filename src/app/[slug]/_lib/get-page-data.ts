@@ -61,3 +61,12 @@ export const getGeneratedPage = cache(async (pageId: string, type: string) => {
     .limit(1);
   return result[0] ?? null;
 });
+
+export const getReadyPages = cache(async (pageId: string) => {
+  await ensureProjectsTable();
+  const results = await db
+    .select({ type: generatedPages.type, status: generatedPages.status })
+    .from(generatedPages)
+    .where(and(eq(generatedPages.pageId, pageId), eq(generatedPages.status, 'ready')));
+  return new Set(results.map((r) => r.type));
+});
