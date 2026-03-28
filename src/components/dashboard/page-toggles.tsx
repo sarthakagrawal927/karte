@@ -2,6 +2,15 @@
 
 import { useState } from 'react';
 import type { PageSettings } from '@/db/schema';
+import {
+  Button,
+  Card,
+  FormField,
+  Input,
+  Select,
+  Textarea,
+  Toggle,
+} from '@/components/ui';
 
 interface PageTogglesProps {
   pageId: string;
@@ -129,40 +138,30 @@ export function PageToggles({
   }
 
   function renderSettings(featureKey: string) {
-    const inputClass =
-      'w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-sm text-white placeholder-gray-500 backdrop-blur-sm transition focus:border-white/40 focus:outline-none focus:ring-1 focus:ring-white/20';
-    const selectClass =
-      'w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-sm text-white backdrop-blur-sm transition focus:border-white/40 focus:outline-none focus:ring-1 focus:ring-white/20';
-    const labelClass = 'mb-1.5 block text-xs font-medium text-gray-400';
-
     if (featureKey === 'roast') {
       const settings = pageSettings.roast || {};
       return (
         <div className="space-y-4">
-          <div>
-            <label className={labelClass}>Tone</label>
-            <select
+          <FormField label="Tone">
+            <Select
               value={settings.tone || 'Savage'}
               onChange={(e) => updatePageSetting('roast', 'tone', e.target.value)}
-              className={selectClass}
             >
               {ROAST_TONES.map((tone) => (
                 <option key={tone} value={tone} className="bg-gray-900">
                   {tone}
                 </option>
               ))}
-            </select>
-          </div>
-          <div>
-            <label className={labelClass}>Extra Context</label>
-            <textarea
+            </Select>
+          </FormField>
+          <FormField label="Extra Context">
+            <Textarea
               rows={3}
               value={settings.context || ''}
               onChange={(e) => updatePageSetting('roast', 'context', e.target.value)}
               placeholder="Add details the AI should know about you for a better roast"
-              className={inputClass}
             />
-          </div>
+          </FormField>
         </div>
       );
     }
@@ -171,40 +170,34 @@ export function PageToggles({
       const settings = pageSettings.newspaper || {};
       return (
         <div className="space-y-4">
-          <div>
-            <label className={labelClass}>Newspaper Name</label>
-            <input
+          <FormField label="Newspaper Name">
+            <Input
               type="text"
               value={settings.name || ''}
               onChange={(e) => updatePageSetting('newspaper', 'name', e.target.value)}
               placeholder="Leave empty for AI to generate one"
-              className={inputClass}
             />
-          </div>
-          <div>
-            <label className={labelClass}>Tone</label>
-            <select
+          </FormField>
+          <FormField label="Tone">
+            <Select
               value={settings.tone || 'Prestigious'}
               onChange={(e) => updatePageSetting('newspaper', 'tone', e.target.value)}
-              className={selectClass}
             >
               {NEWSPAPER_TONES.map((tone) => (
                 <option key={tone} value={tone} className="bg-gray-900">
                   {tone}
                 </option>
               ))}
-            </select>
-          </div>
-          <div>
-            <label className={labelClass}>Extra Context</label>
-            <textarea
+            </Select>
+          </FormField>
+          <FormField label="Extra Context">
+            <Textarea
               rows={3}
               value={settings.context || ''}
               onChange={(e) => updatePageSetting('newspaper', 'context', e.target.value)}
               placeholder="Add details the AI should use when writing the newspaper"
-              className={inputClass}
             />
-          </div>
+          </FormField>
         </div>
       );
     }
@@ -213,30 +206,26 @@ export function PageToggles({
       const settings = pageSettings.encyclopedia || {};
       return (
         <div className="space-y-4">
-          <div>
-            <label className={labelClass}>Writing Style</label>
-            <select
+          <FormField label="Writing Style">
+            <Select
               value={settings.style || 'Formal Wikipedia'}
               onChange={(e) => updatePageSetting('encyclopedia', 'style', e.target.value)}
-              className={selectClass}
             >
               {ENCYCLOPEDIA_STYLES.map((style) => (
                 <option key={style} value={style} className="bg-gray-900">
                   {style}
                 </option>
               ))}
-            </select>
-          </div>
-          <div>
-            <label className={labelClass}>Extra Context</label>
-            <textarea
+            </Select>
+          </FormField>
+          <FormField label="Extra Context">
+            <Textarea
               rows={3}
               value={settings.context || ''}
               onChange={(e) => updatePageSetting('encyclopedia', 'context', e.target.value)}
               placeholder="Add details the AI should include in the encyclopedia article"
-              className={inputClass}
             />
-          </div>
+          </FormField>
         </div>
       );
     }
@@ -258,49 +247,33 @@ export function PageToggles({
           const isExpanded = expandedSettings.has(feature.settingsKey);
 
           return (
-            <div
-              key={feature.key}
-              className="rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl"
-            >
+            <Card key={feature.key}>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0">
                   <h3 className="text-sm font-medium text-white">{feature.label}</h3>
                   <p className="mt-1 text-xs text-gray-400">{feature.description}</p>
                 </div>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={enabled}
-                  onClick={() =>
-                    setToggles((prev) => ({
-                      ...prev,
-                      [feature.key]: !prev[feature.key],
-                    }))
+                <Toggle
+                  checked={enabled}
+                  onChange={(checked) =>
+                    setToggles((prev) => ({ ...prev, [feature.key]: checked }))
                   }
-                  className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-gray-950 ${
-                    enabled ? 'bg-blue-500' : 'bg-white/20'
-                  }`}
-                >
-                  <span
-                    className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-white shadow-lg transition-transform duration-200 ${
-                      enabled ? 'translate-x-5' : 'translate-x-0'
-                    }`}
-                  />
-                </button>
+                />
               </div>
 
               {enabled && (
                 <>
                   <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-white/10 pt-4">
-                    <button
+                    <Button
+                      variant="secondary"
                       onClick={() => handleGenerate(feature.path)}
                       disabled={generating === feature.path}
-                      className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-white transition hover:bg-white/10 disabled:opacity-50"
+                      className="text-xs"
                     >
                       {generating === feature.path
                         ? 'Generating...'
                         : 'Generate Content'}
-                    </button>
+                    </Button>
                     <a
                       href={`/${slug}/${feature.path}`}
                       target="_blank"
@@ -309,12 +282,13 @@ export function PageToggles({
                     >
                       Preview
                     </a>
-                    <button
+                    <Button
+                      variant="ghost"
                       onClick={() => toggleSettingsPanel(feature.settingsKey)}
-                      className="ml-auto text-xs font-medium text-gray-400 transition hover:text-white"
+                      className="ml-auto text-xs"
                     >
                       {isExpanded ? 'Hide Settings' : 'Configure'}
-                    </button>
+                    </Button>
                   </div>
 
                   {isExpanded && (
@@ -324,19 +298,19 @@ export function PageToggles({
                   )}
                 </>
               )}
-            </div>
+            </Card>
           );
         })}
       </div>
 
       <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-        <button
+        <Button
           onClick={handleSave}
           disabled={saving}
-          className="w-full rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50 sm:w-auto"
+          className="w-full sm:w-auto"
         >
           {saving ? 'Saving...' : 'Save'}
-        </button>
+        </Button>
         {message && (
           <p
             className={`text-sm ${

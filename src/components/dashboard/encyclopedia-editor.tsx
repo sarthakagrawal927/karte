@@ -2,26 +2,20 @@
 
 import { useState, useCallback } from 'react';
 import type { EncyclopediaContent } from '@/lib/generated-page-types';
+import {
+  Badge,
+  Button,
+  Card,
+  FormField,
+  Input,
+  Label,
+  Textarea,
+} from '@/components/ui';
 
 interface EncyclopediaEditorProps {
   pageId: string;
   initialContent: EncyclopediaContent | null;
 }
-
-const inputClass =
-  'w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-sm text-white placeholder-gray-500 backdrop-blur-sm transition focus:border-white/40 focus:outline-none focus:ring-1 focus:ring-white/20';
-const cardClass =
-  'rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl';
-const labelClass = 'mb-2 block text-sm font-medium text-white';
-const descClass = 'mb-2 text-xs text-gray-400';
-const btnPrimary =
-  'rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 transition hover:bg-gray-100 disabled:opacity-50';
-const btnSecondary =
-  'rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10 disabled:opacity-50';
-const btnDanger =
-  'rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm font-medium text-red-400 transition hover:bg-red-500/20';
-const btnSmall =
-  'rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-xs font-medium text-white transition hover:bg-white/10';
 
 function emptyContent(): EncyclopediaContent {
   return {
@@ -139,7 +133,6 @@ export function EncyclopediaEditor({
   function addCategory() {
     const trimmed = categoryInput.trim();
     if (!trimmed) return;
-    // Support comma-separated input
     const newCats = trimmed
       .split(',')
       .map((c) => c.trim())
@@ -225,35 +218,34 @@ export function EncyclopediaEditor({
 
       <div className="space-y-6">
         {/* ── Lead Paragraph ──────────────────────────────────── */}
-        <div className={cardClass}>
-          <label htmlFor="leadParagraph" className={labelClass}>
-            Lead Paragraph
-          </label>
-          <p className={descClass}>
-            The opening paragraph that summarizes the article
-          </p>
-          <textarea
-            id="leadParagraph"
-            rows={5}
-            value={content.leadParagraph}
-            onChange={(e) => setLeadParagraph(e.target.value)}
-            placeholder="A summary paragraph about this person..."
-            className={inputClass}
-          />
-        </div>
+        <Card>
+          <FormField
+            label="Lead Paragraph"
+            htmlFor="leadParagraph"
+            description="The opening paragraph that summarizes the article"
+          >
+            <Textarea
+              id="leadParagraph"
+              rows={5}
+              value={content.leadParagraph}
+              onChange={(e) => setLeadParagraph(e.target.value)}
+              placeholder="A summary paragraph about this person..."
+            />
+          </FormField>
+        </Card>
 
         {/* ── Infobox ─────────────────────────────────────────── */}
-        <div className={cardClass}>
+        <Card>
           <div className="mb-3 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-medium text-white">Infobox</h3>
-              <p className={descClass}>
+              <p className="mb-2 text-xs text-gray-400">
                 Key facts displayed in the sidebar info panel
               </p>
             </div>
-            <button type="button" onClick={addInfoboxRow} className={btnSmall}>
+            <Button variant="small" type="button" onClick={addInfoboxRow}>
               + Add Row
-            </button>
+            </Button>
           </div>
 
           {infoboxEntries.length === 0 && (
@@ -265,19 +257,19 @@ export function EncyclopediaEditor({
           <div className="space-y-3">
             {infoboxEntries.map(([key, value], i) => (
               <div key={i} className="flex items-start gap-2">
-                <input
+                <Input
                   type="text"
                   value={key}
                   onChange={(e) => setInfoboxKey(key, e.target.value)}
                   placeholder="Label"
-                  className={`${inputClass} flex-[2]`}
+                  className="flex-[2]"
                 />
-                <input
+                <Input
                   type="text"
                   value={value}
                   onChange={(e) => setInfoboxValue(key, e.target.value)}
                   placeholder="Value"
-                  className={`${inputClass} flex-[3]`}
+                  className="flex-[3]"
                 />
                 <button
                   type="button"
@@ -302,20 +294,20 @@ export function EncyclopediaEditor({
               </div>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* ── Sections ────────────────────────────────────────── */}
-        <div className={cardClass}>
+        <Card>
           <div className="mb-3 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-medium text-white">Sections</h3>
-              <p className={descClass}>
+              <p className="mb-2 text-xs text-gray-400">
                 Article sections with headings and content
               </p>
             </div>
-            <button type="button" onClick={addSection} className={btnSmall}>
+            <Button variant="small" type="button" onClick={addSection}>
               + Add Section
-            </button>
+            </Button>
           </div>
 
           {content.sections.length === 0 && (
@@ -335,103 +327,83 @@ export function EncyclopediaEditor({
                     Section {i + 1}
                   </span>
                   <div className="flex items-center gap-1">
-                    <button
+                    <Button
+                      variant="small"
                       type="button"
                       onClick={() => moveSection(i, -1)}
                       disabled={i === 0}
-                      className={`${btnSmall} disabled:opacity-30`}
+                      className="disabled:opacity-30"
                       aria-label="Move section up"
                     >
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
                       </svg>
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant="small"
                       type="button"
                       onClick={() => moveSection(i, 1)}
                       disabled={i === content.sections.length - 1}
-                      className={`${btnSmall} disabled:opacity-30`}
+                      className="disabled:opacity-30"
                       aria-label="Move section down"
                     >
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                       </svg>
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant={deleteConfirm === i ? 'danger' : 'small'}
                       type="button"
                       onClick={() => removeSection(i)}
-                      className={
-                        deleteConfirm === i ? btnDanger : `${btnSmall} hover:!bg-red-500/10 hover:!text-red-400`
-                      }
+                      className={deleteConfirm !== i ? 'hover:!bg-red-500/10 hover:!text-red-400' : undefined}
                     >
                       {deleteConfirm === i ? 'Confirm' : 'Delete'}
-                    </button>
+                    </Button>
                   </div>
                 </div>
 
-                <input
+                <Input
                   type="text"
                   value={section.heading}
                   onChange={(e) => setSectionHeading(i, e.target.value)}
                   placeholder="Section heading"
-                  className={`${inputClass} mb-3`}
+                  className="mb-3"
                 />
-                <textarea
+                <Textarea
                   rows={4}
                   value={section.content}
                   onChange={(e) => setSectionContent(i, e.target.value)}
                   placeholder="Section content..."
-                  className={inputClass}
                 />
               </div>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* ── Categories ──────────────────────────────────────── */}
-        <div className={cardClass}>
-          <label htmlFor="categoryInput" className={labelClass}>
-            Categories
-          </label>
-          <p className={descClass}>
+        <Card>
+          <Label htmlFor="categoryInput">Categories</Label>
+          <p className="mb-2 text-xs text-gray-400">
             Tags for the article. Type and press Enter or click Add. Comma-separated values also work.
           </p>
 
           {content.categories.length > 0 && (
             <div className="mb-3 flex flex-wrap gap-2">
               {content.categories.map((cat) => (
-                <span
+                <Badge
                   key={cat}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-white"
+                  className="bg-white/10 text-white"
+                  onRemove={() => removeCategory(cat)}
+                  removeLabel={`Remove category ${cat}`}
                 >
                   {cat}
-                  <button
-                    type="button"
-                    onClick={() => removeCategory(cat)}
-                    className="text-gray-400 transition hover:text-red-400"
-                    aria-label={`Remove category ${cat}`}
-                  >
-                    <svg
-                      className="h-3 w-3"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </span>
+                </Badge>
               ))}
             </div>
           )}
 
           <div className="flex gap-2">
-            <input
+            <Input
               id="categoryInput"
               type="text"
               value={categoryInput}
@@ -443,30 +415,29 @@ export function EncyclopediaEditor({
                 }
               }}
               placeholder="e.g. Software Engineer, Open Source"
-              className={`${inputClass} flex-1`}
+              className="flex-1"
             />
-            <button type="button" onClick={addCategory} className={btnSmall}>
+            <Button variant="small" type="button" onClick={addCategory}>
               Add
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
 
         {/* ── Actions ─────────────────────────────────────────── */}
         <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-          <button
+          <Button
             onClick={handleSave}
             disabled={saving || regenerating}
-            className={btnPrimary}
           >
             {saving ? 'Saving...' : 'Save Changes'}
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="secondary"
             onClick={handleRegenerate}
             disabled={saving || regenerating}
-            className={btnSecondary}
           >
             {regenerating ? 'Regenerating...' : 'Regenerate with AI'}
-          </button>
+          </Button>
           {message && (
             <p
               className={`text-sm ${
