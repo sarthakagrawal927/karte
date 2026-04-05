@@ -1,16 +1,26 @@
 const windows = new Map<string, number[]>();
 
-const WINDOW_MS = 60_000; // 1 minute
-const MAX_REQUESTS = 20;
+const DEFAULT_WINDOW_MS = 60_000; // 1 minute
+const DEFAULT_MAX_REQUESTS = 20;
 
-export function rateLimit(key: string): { ok: boolean; remaining: number } {
+interface RateLimitOptions {
+  windowMs?: number;
+  maxRequests?: number;
+}
+
+export function rateLimit(
+  key: string,
+  opts?: RateLimitOptions
+): { ok: boolean; remaining: number } {
+  const windowMs = opts?.windowMs ?? DEFAULT_WINDOW_MS;
+  const maxRequests = opts?.maxRequests ?? DEFAULT_MAX_REQUESTS;
   const now = Date.now();
   const timestamps = windows.get(key) ?? [];
 
   // Remove expired entries
-  const valid = timestamps.filter((t) => now - t < WINDOW_MS);
+  const valid = timestamps.filter((t) => now - t < windowMs);
 
-  if (valid.length >= MAX_REQUESTS) {
+  if (valid.length >= maxRequests) {
     windows.set(key, valid);
     return { ok: false, remaining: 0 };
   }
@@ -21,9 +31,9 @@ export function rateLimit(key: string): { ok: boolean; remaining: number } {
   // Cleanup old keys periodically
   if (windows.size > 10_000) {
     for (const [k, v] of windows) {
-      if (v.every((t) => now - t >= WINDOW_MS)) windows.delete(k);
+      if (v.every((t) => now - t >= windowMs)) windows.delete(k);
     }
   }
 
-  return { ok: true, remaining: MAX_REQUESTS - valid.length };
+  return { ok: true, remaining: maxRequests - valid.length };
 }

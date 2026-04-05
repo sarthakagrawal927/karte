@@ -142,4 +142,6 @@ export async function ensureProjectsTable() {
 }
 
 // Eagerly start migration on module load so columns exist before any query
-ensureProjectsTable().catch(() => {});
+ensureProjectsTable().catch((error) => {
+  console.error('[db] ensureProjectsTable migration failed:', error);
+});
