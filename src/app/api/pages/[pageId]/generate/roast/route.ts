@@ -2,7 +2,8 @@ import { db, ensureProjectsTable } from '@/db';
 import { pages, users, infoBlocks, links, projects, generatedPages } from '@/db/schema';
 import type { PageSettings } from '@/db/schema';
 import { eq, and, asc } from 'drizzle-orm';
-import { generateCompletion, parseAIResponse } from '@/lib/saasmaker';
+import { generate, type AiConfig } from '@/lib/ai-client';
+import { parseAIResponse } from '@/lib/saasmaker';
 import { ROAST_SYSTEM_PROMPT } from '@/lib/ai-prompts';
 import { rateLimit } from '@/lib/rate-limit';
 import { asGeneratedPageContent, type RoastContent } from '@/lib/generated-page-types';
@@ -35,11 +36,17 @@ export async function POST(
   }
 
   const [user] = await db.select().from(users).where(eq(users.id, page.userId));
-  if (!user?.smApiKey || !user?.smIndexId) {
+  if (!user?.aiEndpointUrl || !user?.aiApiKey || !user?.aiModel) {
     return new Response(JSON.stringify({ error: 'AI not configured' }), {
       status: 503,
     });
   }
+
+  const aiConfig: AiConfig = {
+    endpointUrl: user.aiEndpointUrl,
+    apiKey: user.aiApiKey,
+    model: user.aiModel,
+  };
 
   // Check for existing recent roast (cache for 24h)
   const existing = await db
@@ -92,12 +99,10 @@ export async function POST(
   }
 
   try {
-    const raw = await generateCompletion(
-      user.smApiKey,
-      user.smIndexId,
-      `Roast this person based on their profile:\n\n${context}`,
-      systemPrompt
-    );
+    const raw = await generate(aiConfig, {
+      system: systemPrompt,
+      prompt: `Roast this person based on their profile:\n\n${context}`,
+    });
 
     const roast = parseAIResponse<RoastContent>(raw);
 

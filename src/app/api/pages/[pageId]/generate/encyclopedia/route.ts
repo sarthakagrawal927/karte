@@ -2,7 +2,8 @@ import { db, ensureProjectsTable } from '@/db';
 import { pages, users, infoBlocks, links, projects, generatedPages } from '@/db/schema';
 import type { PageSettings } from '@/db/schema';
 import { eq, and, asc } from 'drizzle-orm';
-import { generateCompletion, parseAIResponse } from '@/lib/saasmaker';
+import { generate, type AiConfig } from '@/lib/ai-client';
+import { parseAIResponse } from '@/lib/saasmaker';
 import { ENCYCLOPEDIA_SYSTEM_PROMPT } from '@/lib/ai-prompts';
 import { rateLimit } from '@/lib/rate-limit';
 import { asGeneratedPageContent, type EncyclopediaContent } from '@/lib/generated-page-types';
@@ -23,9 +24,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ pageId:
   }
 
   const [user] = await db.select().from(users).where(eq(users.id, page.userId));
-  if (!user?.smApiKey || !user?.smIndexId) {
+  if (!user?.aiEndpointUrl || !user?.aiApiKey || !user?.aiModel) {
     return new Response(JSON.stringify({ error: 'AI not configured' }), { status: 503 });
   }
+
+  const aiConfig: AiConfig = {
+    endpointUrl: user.aiEndpointUrl,
+    apiKey: user.aiApiKey,
+    model: user.aiModel,
+  };
 
   // Fetch all context + scraped content in parallel
   const [blocks, pageLinks, pageProjects, scrapedContext] = await Promise.all([
@@ -61,12 +68,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ pageId:
   }
 
   try {
-    const raw = await generateCompletion(
-      user.smApiKey,
-      user.smIndexId,
-      `Write a Wikipedia-style encyclopedia article about this person:\n\n${context}`,
-      systemPrompt,
-    );
+    const raw = await generate(aiConfig, {
+      system: systemPrompt,
+      prompt: `Write a Wikipedia-style encyclopedia article about this person:\n\n${context}`,
+    });
 
     const encyclopedia = parseAIResponse<EncyclopediaContent>(raw);
 
