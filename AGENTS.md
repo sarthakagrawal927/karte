@@ -1,162 +1,89 @@
-# LinkChat
+# agents.md — linkchat
 
-Personal link-in-bio pages with an AI chatbot that answers questions about you using RAG.
+## Purpose
+A link-in-bio platform where users create AI-enhanced profile pages with links, projects, chat, encyclopedia, roast, and newspaper modes — deployed on Cloudflare via OpenNext.
 
-## Tech Stack
+## Stack
+- Framework: Next.js 16 (App Router, React 19, React Compiler enabled)
+- Language: TypeScript (strict)
+- Styling: Tailwind CSS v4 (dark theme, glassmorphism aesthetic)
+- DB: Turso (libSQL/SQLite) via Drizzle ORM — schema at `src/db/schema.ts`
+- Auth: NextAuth v5 (beta 30) with Google provider + Drizzle adapter
+- Testing: Playwright configured (minimal tests); no unit test framework
+- Deploy: Cloudflare Workers via `@opennextjs/cloudflare` (OpenNext). `pnpm deploy:cf`
+- Package manager: pnpm
 
-- **Framework:** Next.js 16 (App Router, React 19, React Compiler enabled)
-- **Language:** TypeScript (strict)
-- **Database:** Turso (libSQL) via Drizzle ORM
-- **Auth:** NextAuth v5 (beta 30) with Google provider, Drizzle adapter
-- **Styling:** Tailwind CSS v4 (dark theme, glassmorphism aesthetic)
-- **Image Storage:** Cloudflare R2 via AWS S3 SDK
-- **AI Chat:** SaaS Maker RAG API (vector search + streaming chat completions)
-- **Analytics/Feedback:** SaaS Maker widgets (feedback, testimonials, changelog, analytics)
-- **Package Manager:** pnpm
-- **Deployment:** Vercel
-
-## Architecture
-
+## Repo structure
 ```
 src/
   app/
-    page.tsx                    # Landing page (marketing)
-    login/page.tsx              # Auth page
-    [slug]/page.tsx             # Public profile page (SSR)
-    dashboard/
-      layout.tsx                # Auth guard + sidebar
-      page.tsx                  # Redirects to /dashboard/links
-      links/                    # Manage profile links
-      projects/                 # Manage portfolio projects
-      sections/                 # Manage custom page sections
-      appearance/               # Theme/appearance settings
-      memory/                   # AI chatbot memory (info blocks + AI key)
-      leads/                    # Contact form submissions
-      analytics/                # Page view/click analytics
-      chats/                    # Chat conversation history
+    page.tsx              — Landing / marketing page
+    layout.tsx            — Root layout
+    login/                — Sign-in page
+    create/               — Page creation wizard
+    dashboard/            — Authenticated dashboard (links, projects, sections, appearance, memory, leads, analytics, chats)
+    [slug]/               — Public profile page (SSR, dynamic route)
     api/
-      auth/[...nextauth]/       # NextAuth route handler
-      pages/                    # CRUD for pages, links, projects, info blocks, sections, chat config
-      chat/[slug]/              # Public chat endpoint (streaming) + conversations + messages
-      contact/[slug]/           # Public contact form submission
-      track/[slug]/             # Analytics event tracking
-      settings/ai-key/          # AI API key management
-      uploads/images/           # R2 image upload
+      auth/               — NextAuth handler
+      pages/              — CRUD for pages, links, projects, infoBlocks, sections, chat config
+      chat/[slug]/        — Public chat endpoint (streaming SSE) + conversations + messages
+      contact/[slug]/     — Public contact form submission
+      track/[slug]/       — Analytics event tracking
+      settings/ai-key/    — AI API key management
+      uploads/images/     — R2 image upload
   components/
-    dashboard/                  # Dashboard UI (sidebar, editors for links/projects/sections/etc)
-    public/                     # Public-facing (glass-card, link-card, project-card, chat-widget, contact form)
+    dashboard/            — Dashboard UI (sidebar, editors for links/projects/sections/etc.)
+    public/               — Public-facing (glass-card, link-card, project-card, chat-widget, contact form)
+    ui/                   — Shared UI primitives
+    SaasMakerAnalytics.tsx / saasmaker-feedback.tsx
   db/
-    schema.ts                   # Drizzle schema (all tables)
-    index.ts                    # DB client + runtime table creation helpers
+    schema.ts             — Full Drizzle schema (users, pages, links, projects, infoBlocks, pageSections, conversations, messages, pageEvents, generatedPages, contactSubmissions)
+    index.ts              — Drizzle client (Turso connection)
   lib/
-    auth.ts                     # NextAuth config
-    themes.ts                   # Theme presets + resolver
-    saasmaker.ts                # SaaS Maker API client (indexes, documents, search, RAG chat)
-    r2.ts                       # Cloudflare R2 upload helpers
-    rate-limit.ts               # In-memory sliding window rate limiter (20 req/min/IP)
-    validation.ts               # Input validators (slug, URL, email, content length limits)
-    visitor-id.ts               # Client-side anonymous visitor ID (localStorage)
-    page-sections.ts            # Section type definitions (text, social, testimonial, CTA, contact)
-  proxy.ts                      # Auth proxy for /dashboard/*
+    auth.ts               — NextAuth v5 config (Google, DrizzleAdapter)
+    ai-prompts.ts         — AI prompts for encyclopedia/roast/newspaper generation
+    themes.ts             — Theme config types + presets
+    scraper.ts            — URL scraping for page content enrichment
+    r2.ts                 — Cloudflare R2 client (avatar uploads via @aws-sdk/client-s3)
+    rate-limit.ts         — In-memory sliding window rate limiter (20 req/min/IP)
+    page-sections.ts      — Section type definitions
+    visitor-id.ts         — Anonymous visitor fingerprinting (localStorage)
+    validation.ts         — Input validators (slug, URL, email, content length limits)
+  middleware.ts           — Next.js middleware (auth guards for /dashboard/*)
+docs/plans/               — Archived implementation plans (timestamped)
+drizzle.config.ts         — Drizzle Kit config (Turso dialect)
+wrangler.jsonc            — Cloudflare Worker config (OpenNext output)
+open-next.config.ts       — OpenNext Cloudflare config (minimal)
 ```
 
-### Data Model
-
-- **users** -- extended NextAuth users with `smProjectId`, `smApiKey`, `smIndexId` for SaaS Maker integration
-- **pages** -- user profile pages with slug, theme config, chat toggle, system prompt
-- **links** -- sortable links on a page
-- **projects** -- portfolio entries with image, description, URL
-- **infoBlocks** -- content blocks fed into RAG (types: text, resume, faq), synced to SaaS Maker via `smDocumentId`
-- **pageSections** -- modular public page blocks (text, social, testimonial, CTA, contact form)
-- **contactSubmissions** -- leads from public contact forms
-- **pageEvents** -- native analytics (page views, clicks, section views)
-- **conversations/messages** -- chat history per visitor
-
-### Key Flows
-
-1. **Auth:** Google OAuth -> NextAuth -> Drizzle adapter -> Turso
-2. **Public page:** `[slug]/page.tsx` fetches page + links + projects + sections from DB, renders SSR with theme
-3. **AI Chat:** Visitor sends message -> `/api/chat/[slug]` -> rate limit check -> SaaS Maker RAG streaming response
-4. **Image uploads:** Dashboard -> `/api/uploads/images` -> R2 bucket -> public URL stored in DB
-5. **Analytics:** Client-side tracker fires events to `/api/track/[slug]`, stored in `pageEvents`
-
-## Conventions
-
-- **Path alias:** `@/*` maps to `./src/*`
-- **API pattern:** Next.js Route Handlers with `auth()` guard, return `NextResponse.json()`
-- **DB queries:** Drizzle query builder, not raw SQL
-- **IDs:** UUID v4 via `crypto.randomUUID()` as text primary keys
-- **Validation:** Centralized in `src/lib/validation.ts`, applied at API boundaries
-- **Components:** Server components by default, `'use client'` only when needed
-- **Sorting:** `sortOrder` integer column on all list-type tables
-
-## Commands
-
+## Key commands
 ```bash
-pnpm dev              # Dev server (http://localhost:3000)
-pnpm build            # Production build
-pnpm start            # Start production server
-pnpm lint             # ESLint
+pnpm dev              # next dev (localhost:3000)
+pnpm build            # next build
+pnpm lint             # eslint
 
-# Database
-pnpm drizzle-kit generate   # Generate migrations
-pnpm drizzle-kit push       # Push schema to DB
-pnpm drizzle-kit studio     # DB browser UI
+# Cloudflare deployment
+pnpm deploy:cf        # opennextjs-cloudflare build + deploy to CF Workers
+pnpm preview          # opennextjs-cloudflare build + local preview
+
+# Drizzle DB
+pnpm drizzle-kit generate   # generate migration from schema changes
+pnpm drizzle-kit push       # push schema to Turso (dev shortcut, no migration file)
+pnpm drizzle-kit studio     # Drizzle Studio UI
 ```
 
-## Environment Variables
+## Architecture notes
+- **Dual deploy target**: `pnpm dev` uses standard Next.js locally with `file:local.db`. `pnpm deploy:cf` compiles via OpenNext and deploys to Cloudflare Workers (`wrangler.jsonc` points at `.open-next/worker.js`).
+- **DB**: Turso (libSQL) in production; `local.db` SQLite file for local dev. Drizzle ORM for all queries — no raw SQL. UUIDs as text primary keys via `crypto.randomUUID()`.
+- **AI features**: Pages can enable `chat` (RAG via SaasMaker), `encyclopedia`, `roast`, `newspaper`. Generated content cached in `generatedPages` table with status lifecycle: `pending → generating → ready | error`.
+- **R2 storage**: Avatar/project images stored in Cloudflare R2 via AWS S3-compatible SDK. Requires `CLOUDFLARE_ACCOUNT_ID`, `R2_BUCKET_NAME`, `R2_PUBLIC_BASE_URL`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`.
+- **SaasMaker integration**: Each user has `smProjectId`, `smApiKey`, `smIndexId` for RAG-backed chat. `infoBlocks` are synced to SaasMaker as documents (tracked via `smDocumentId`).
+- **React Compiler**: `babel-plugin-react-compiler` is installed — do not add manual `useMemo`/`useCallback` where the compiler handles it.
+- **Rate limiter is in-memory** — resets on deploy. No distributed rate limiting currently.
+- **No proper DB migrations** — some tables use runtime `CREATE TABLE IF NOT EXISTS`. Use `drizzle-kit push` for schema changes in dev; for production schema changes, verify migration strategy first.
+- **No tests** — no unit, integration, or e2e tests written yet. Playwright is configured.
+- Required env vars: `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, R2 vars, `SAASMAKER_API_URL`, `SAASMAKER_ADMIN_KEY`, `NEXT_PUBLIC_APP_URL`. See `.env.example`.
+- Husky pre-push hook configured.
 
-```bash
-# Auth
-AUTH_SECRET=                  # NextAuth secret
-AUTH_GOOGLE_ID=               # Google OAuth client ID
-AUTH_GOOGLE_SECRET=           # Google OAuth client secret
+## Active context
 
-# Database
-TURSO_DATABASE_URL=           # Turso DB URL (or file:local.db for local dev)
-TURSO_AUTH_TOKEN=             # Turso auth token (not needed for local)
-
-# Cloudflare R2 (optional -- image uploads)
-CLOUDFLARE_ACCOUNT_ID=
-R2_BUCKET_NAME=linkchat-images
-R2_PUBLIC_BASE_URL=           # Public R2 URL
-R2_ACCESS_KEY_ID=
-R2_SECRET_ACCESS_KEY=
-
-# SaaS Maker (required for AI chat)
-SAASMAKER_API_URL=            # SaaS Maker API base URL
-SAASMAKER_ADMIN_KEY=          # Admin key for index/document management
-
-# App
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
-
-## Current State
-
-**Done:**
-- Full auth flow (Google OAuth)
-- Public marketing landing page with persistent public header
-- Guest draft preview flow before login / claim
-- Page creation with slug, display name, bio, avatar
-- Link management (CRUD, sorting, enable/disable)
-- Project portfolio (CRUD with image uploads to R2)
-- Custom page sections (text, social, testimonial, CTA, contact form)
-- Theme system (4 presets with custom colors, chat position)
-- AI chat widget with streaming responses (SaaS Maker RAG)
-- Chat conversation history (persisted per visitor)
-- Contact form with lead capture
-- Native analytics (page views, link clicks, section views)
-- Rate limiting on chat API (20 req/min/IP)
-- Input validation on all API endpoints
-- SaaS Maker widgets (feedback, testimonials, changelog, analytics)
-- Mobile-responsive public pages and dashboard shell
-- Public production deployment on Vercel
-
-**Not done:**
-- No tests (unit, integration, or e2e)
-- No pre-push/pre-pull hooks
-- No proper DB migrations (uses runtime `CREATE TABLE IF NOT EXISTS` for some tables)
-- No custom domain support yet
-  - Recommended direction: keep hosting on Vercel, add a `pageDomains` table, use Vercel domain APIs for add/verify/remove, and resolve public pages by `Host` header
-- No multi-page support (one page per user)
-- Rate limiter is in-memory (resets on deploy)
