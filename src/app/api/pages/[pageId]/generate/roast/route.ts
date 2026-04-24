@@ -2,10 +2,12 @@ import { db, ensureProjectsTable } from '@/db';
 import { pages, users, infoBlocks, links, projects, generatedPages } from '@/db/schema';
 import type { PageSettings } from '@/db/schema';
 import { eq, and, asc } from 'drizzle-orm';
-import { generateCompletion, parseAIResponse } from '@/lib/saasmaker';
+import { createAIModel, type AIConfig } from '@saas-maker/ai/server';
+import { generateText } from 'ai';
+import { parseAIResponse } from '@/lib/saasmaker';
 import { ROAST_SYSTEM_PROMPT } from '@/lib/ai-prompts';
 import { rateLimit } from '@/lib/rate-limit';
-import type { RoastContent } from '@/lib/generated-page-types';
+import { asGeneratedPageContent, type RoastContent } from '@/lib/generated-page-types';
 import { getScrapedContext } from '@/lib/scrape-page-content';
 
 export async function POST(
@@ -35,11 +37,17 @@ export async function POST(
   }
 
   const [user] = await db.select().from(users).where(eq(users.id, page.userId));
-  if (!user?.smApiKey || !user?.smIndexId) {
+  if (!user?.aiEndpointUrl || !user?.aiApiKey || !user?.aiModel) {
     return new Response(JSON.stringify({ error: 'AI not configured' }), {
       status: 503,
     });
   }
+
+  const aiConfig: AIConfig = {
+    endpointUrl: user.aiEndpointUrl,
+    apiKey: user.aiApiKey,
+    model: user.aiModel,
+  };
 
   // Check for existing recent roast (cache for 24h)
   const existing = await db
@@ -92,12 +100,11 @@ export async function POST(
   }
 
   try {
-    const raw = await generateCompletion(
-      user.smApiKey,
-      user.smIndexId,
-      `Roast this person based on their profile:\n\n${context}`,
-      systemPrompt
-    );
+    const { text: raw } = await generateText({
+      model: createAIModel(aiConfig),
+      system: systemPrompt,
+      prompt: `Roast this person based on their profile:\n\n${context}`,
+    });
 
     const roast = parseAIResponse<RoastContent>(raw);
 
@@ -106,7 +113,7 @@ export async function POST(
       await db
         .update(generatedPages)
         .set({
-          content: roast as any,
+          content: asGeneratedPageContent(roast),
           status: 'ready',
           updatedAt: new Date(),
         })
@@ -115,13 +122,13 @@ export async function POST(
       await db.insert(generatedPages).values({
         pageId,
         type: 'roast',
-        content: roast as any,
+        content: asGeneratedPageContent(roast),
         status: 'ready',
       });
     }
 
     return Response.json(roast);
-  } catch (e) {
+  } catch {
     return new Response(JSON.stringify({ error: 'Failed to generate roast' }), {
       status: 500,
     });
