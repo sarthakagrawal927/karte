@@ -2,8 +2,7 @@ import { db, ensureProjectsTable } from '@/db';
 import { pages, users, infoBlocks, links, projects, generatedPages } from '@/db/schema';
 import type { PageSettings } from '@/db/schema';
 import { eq, and, asc } from 'drizzle-orm';
-import { createAIModel, type AIConfig } from '@saas-maker/ai/server';
-import { generateText } from 'ai';
+import { generate, type AiConfig as AIConfig } from '@/lib/ai-client';
 import { parseAIResponse } from '@/lib/saasmaker';
 import { NEWSPAPER_SYSTEM_PROMPT } from '@/lib/ai-prompts';
 import { rateLimit } from '@/lib/rate-limit';
@@ -93,8 +92,7 @@ export async function POST(
   }
 
   try {
-    const { text: raw } = await generateText({
-      model: createAIModel(aiConfig),
+    const raw = await generate(aiConfig, {
       system: systemPrompt,
       prompt: `Write a newspaper front page about this person:\n\n${context}`,
     });
