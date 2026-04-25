@@ -78,5 +78,8 @@ pnpm drizzle-kit studio     # Drizzle Studio UI
 - **`@saas-maker/ai`** referenced via local file path — will break on other machines.
 - Env vars: `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, R2 vars, `SAASMAKER_API_URL`, `SAASMAKER_ADMIN_KEY`, `NEXT_PUBLIC_APP_URL`.
 - Husky pre-push hook configured.
+- **Auth fix (2026-04-25)**: `AUTH_URL` secret was missing from CF Workers deployment, causing `UntrustedHost` errors in Auth.js v5. Added `AUTH_URL=https://linkchat.sarthakagrawal927.workers.dev` via `wrangler secret put`. Auth flow now correctly redirects to Google OAuth.
+- **Known issue — `AUTH_GOOGLE_ID` empty**: The CF secret `AUTH_GOOGLE_ID` is set but contains an empty string (visible in OAuth redirect as `client_id=`). Google OAuth app credentials were never configured for this deployment. Requires creating/configuring a Google Cloud Console OAuth app with redirect URI `https://linkchat.sarthakagrawal927.workers.dev/api/auth/callback/google`, then running `echo "<client_id>" | wrangler secret put AUTH_GOOGLE_ID --name linkchat` and same for `AUTH_GOOGLE_SECRET`.
+- **DB migration warning**: `ensureProjectsTable()` logs `[unenv] https.request is not implemented yet!` on cold start. Non-fatal — error is caught and app continues. Root cause: libsql `@libsql/client/web` uses WebSocket (wss://) for Turso but the initial handshake may touch https internally. Doesn't affect DB reads/writes once connected. Investigate upgrading `@libsql/client` if this causes issues.
 
 ## Active context
