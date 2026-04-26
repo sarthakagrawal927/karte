@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/auth-server';
-import { authLibsql } from '@/lib/auth';
+import { authDbExecute } from '@/lib/auth';
 import { Sidebar } from '@/components/dashboard/sidebar';
 import { db, ensureProjectsTable } from '@/db';
 import { pages } from '@/db/schema';
@@ -15,11 +15,11 @@ export default async function DashboardLayout({
   if (!session?.user) redirect('/login');
 
   // Sync better-auth user into app's users table (lazy, idempotent)
-  await authLibsql.execute({
-    sql: `INSERT INTO users (id, email, name, image) VALUES (?, ?, ?, ?)
-          ON CONFLICT(email) DO UPDATE SET name = excluded.name, image = excluded.image`,
-    args: [session.user.id, session.user.email!, session.user.name ?? '', session.user.image ?? ''],
-  }).catch(() => { /* non-fatal */ });
+  await authDbExecute(
+    `INSERT INTO users (id, email, name, image) VALUES (?, ?, ?, ?)
+     ON CONFLICT(email) DO UPDATE SET name = excluded.name, image = excluded.image`,
+    [session.user.id, session.user.email!, session.user.name ?? '', session.user.image ?? ''],
+  ).catch(() => { /* non-fatal */ });
 
   await ensureProjectsTable();
 
