@@ -15,10 +15,12 @@ export function isValidSlug(slug: string): boolean {
   return SLUG_RE.test(slug);
 }
 
+const ALLOWED_URL_PROTOCOLS = new Set(['http:', 'https:']);
+
 export function isValidUrl(url: string): boolean {
   try {
-    new URL(url);
-    return true;
+    const parsed = new URL(url);
+    return ALLOWED_URL_PROTOCOLS.has(parsed.protocol);
   } catch {
     return false;
   }
@@ -42,3 +44,4 @@ export const MAX_PROJECT_URL_LENGTH = 2_048;
 export const MAX_SECTION_CONTENT_LENGTH = 2_000;
 export const MAX_CONTACT_MESSAGE_LENGTH = 2_000;
 export const MAX_CONTACT_NAME_LENGTH = 100;
+export const MAX_CHAT_SYSTEM_PROMPT_LENGTH = 2_000;

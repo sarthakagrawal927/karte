@@ -13,7 +13,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ slug: s
   if (!ok) {
     return new Response(JSON.stringify({ error: 'Too many requests' }), {
       status: 429,
-      headers: { 'Retry-After': '60' },
+      headers: { 'Content-Type': 'application/json', 'Retry-After': '60' },
     });
   }
 
@@ -21,23 +21,35 @@ export async function POST(req: Request, { params }: { params: Promise<{ slug: s
   const { query } = body;
 
   if (!query?.trim()) {
-    return new Response(JSON.stringify({ error: 'query required' }), { status: 400 });
+    return new Response(JSON.stringify({ error: 'query required' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   // Get page + user config
   const [page] = await db.select().from(pages).where(and(eq(pages.slug, slug), eq(pages.published, true)));
   if (!page || !page.chatEnabled) {
-    return new Response(JSON.stringify({ error: 'Chat not available' }), { status: 404 });
+    return new Response(JSON.stringify({ error: 'Chat not available' }), {
+      status: 404,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   const [user] = await db.select().from(users).where(eq(users.id, page.userId));
 
   // Need SaaS Maker for RAG retrieval AND custom AI endpoint for generation
   if (!user?.smApiKey || !user?.smIndexId) {
-    return new Response(JSON.stringify({ error: 'Chat not configured — document index missing' }), { status: 503 });
+    return new Response(JSON.stringify({ error: 'Chat not configured — document index missing' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
   if (!user?.aiEndpointUrl || !user?.aiApiKey || !user?.aiModel) {
-    return new Response(JSON.stringify({ error: 'Chat not configured — AI endpoint missing' }), { status: 503 });
+    return new Response(JSON.stringify({ error: 'Chat not configured — AI endpoint missing' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   const aiConfig: AIConfig = {
@@ -64,6 +76,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ slug: s
     // Step 3: Stream LLM response via custom AI endpoint
     return streamResponse(aiConfig, { system: systemPrompt, prompt: query });
   } catch {
-    return new Response(JSON.stringify({ error: 'Chat service unavailable' }), { status: 502 });
+    return new Response(JSON.stringify({ error: 'Chat service unavailable' }), {
+      status: 502,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }

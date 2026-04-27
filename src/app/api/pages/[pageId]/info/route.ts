@@ -6,6 +6,12 @@ import { eq, and, desc } from 'drizzle-orm';
 import { ingestDocument } from '@/lib/saasmaker';
 import { MAX_CONTENT_LENGTH } from '@/lib/validation';
 
+const ALLOWED_INFO_BLOCK_TYPES = new Set(['text', 'resume', 'faq']);
+
+function isValidInfoBlockType(type: string): boolean {
+  return ALLOWED_INFO_BLOCK_TYPES.has(type);
+}
+
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ pageId: string }> },
@@ -58,6 +64,13 @@ export async function POST(
   if (!type || !content) {
     return NextResponse.json(
       { error: 'type and content are required' },
+      { status: 400 },
+    );
+  }
+
+  if (!isValidInfoBlockType(type)) {
+    return NextResponse.json(
+      { error: 'Invalid block type. Must be one of: text, resume, faq' },
       { status: 400 },
     );
   }

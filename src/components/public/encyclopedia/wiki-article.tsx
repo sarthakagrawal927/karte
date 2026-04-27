@@ -1,3 +1,4 @@
+import DOMPurify from 'isomorphic-dompurify';
 import type { EncyclopediaContent } from '@/lib/generated-page-types';
 import { WikiInfobox } from './wiki-infobox';
 import { WikiTocFromHtml } from './wiki-toc';
@@ -52,10 +53,10 @@ export function WikiArticle({ content, displayName, avatarUrl, accentColor }: Wi
         {/* Table of Contents (extracted from HTML headings) */}
         <WikiTocFromHtml html={content.markdown} accentColor={accentColor} />
 
-        {/* Article body rendered from HTML */}
+        {/* Article body rendered from HTML — sanitized to prevent XSS */}
         <div
           className="wiki-prose clear-none"
-          dangerouslySetInnerHTML={{ __html: content.markdown }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content.markdown) }}
         />
 
         {/* Categories */}
