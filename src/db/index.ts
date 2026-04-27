@@ -1,19 +1,32 @@
 import { drizzle } from 'drizzle-orm/libsql';
-import { createClient } from '@libsql/client/web';
+import { createClient, type Client } from '@libsql/client/web';
 import * as schema from './schema';
 
-const client = createClient({
-  url: process.env.TURSO_DATABASE_URL!,
-  authToken: process.env.TURSO_AUTH_TOKEN,
+let _client: Client | undefined;
+function getClient(): Client {
+  if (!_client) {
+    _client = createClient({
+      url: process.env.TURSO_DATABASE_URL!,
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    });
+  }
+  return _client;
+}
+
+const clientProxy = new Proxy({} as Client, {
+  get(_, prop) {
+    return Reflect.get(getClient(), prop);
+  },
 });
 
-export const db = drizzle(client, { schema });
+export const db = drizzle(clientProxy, { schema });
 
 let featureTablesReady: Promise<void> | null = null;
 
 export async function ensureProjectsTable() {
   if (!featureTablesReady) {
     featureTablesReady = (async () => {
+      const client = getClient();
       await client.execute(`
         CREATE TABLE IF NOT EXISTS projects (
           id TEXT PRIMARY KEY NOT NULL,
@@ -151,7 +164,5 @@ export async function ensureProjectsTable() {
   await featureTablesReady;
 }
 
-// Eagerly start migration on module load so columns exist before any query
-ensureProjectsTable().catch((error) => {
-  console.error('[db] ensureProjectsTable migration failed:', error);
-});
+// Migration is triggered lazily at request time via ensureProjectsTable()
+// (not at module load, so CI builds without env vars succeed)
