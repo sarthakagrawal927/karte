@@ -24,7 +24,7 @@ export const getFullPageData = cache(async (slug: string) => {
   if (!row) return null;
 
   const page = row.pages;
-  const user = row.users;
+  const user = row.user;
 
   // 2. Fetch remaining data in parallel (3 queries instead of 5)
   const [pageLinks, pageProjects, publicSections, readyGeneratedPages] = await Promise.all([

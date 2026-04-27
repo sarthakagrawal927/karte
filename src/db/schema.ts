@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, primaryKey } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import type { ThemeConfig } from '@/lib/themes';
 import type { ScrapedCache } from '@/lib/scraper';
 
@@ -9,67 +9,74 @@ export type PageSettings = {
   encyclopedia?: { style?: string; context?: string };
 };
 
-// ── Users (extends NextAuth default) ──────────────────────────────────
-export const users = sqliteTable('users', {
-  id: text('id')
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text('name'),
+// ── User (better-auth default + linkchat custom fields) ──────────────
+// Table name `user` (singular) — matches better-auth defaults so its
+// drizzleAdapter resolves without a custom schema mapping.
+export const user = sqliteTable('user', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
   email: text('email').notNull().unique(),
-  emailVerified: integer('emailVerified', { mode: 'timestamp' }),
+  emailVerified: integer('emailVerified', { mode: 'boolean' })
+    .notNull()
+    .default(false),
   image: text('image'),
+  // linkchat-specific user settings
   smProjectId: text('smProjectId'),
   smApiKey: text('smApiKey'),
   smIndexId: text('smIndexId'),
   aiEndpointUrl: text('aiEndpointUrl'),
   aiApiKey: text('aiApiKey'),
   aiModel: text('aiModel'),
-  createdAt: integer('createdAt', { mode: 'timestamp' }).$defaultFn(
-    () => new Date(),
-  ),
+  createdAt: integer('createdAt', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updatedAt', { mode: 'timestamp' }).notNull(),
 });
 
-// ── Accounts (NextAuth) ───────────────────────────────────────────────
-export const accounts = sqliteTable('accounts', {
-  id: text('id')
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+// Backward-compat alias — many call sites still import `users`.
+// New code should prefer `user`.
+export const users = user;
+
+// ── Account (better-auth) ────────────────────────────────────────────
+export const account = sqliteTable('account', {
+  id: text('id').primaryKey(),
+  accountId: text('accountId').notNull(),
+  providerId: text('providerId').notNull(),
   userId: text('userId')
     .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  type: text('type').notNull(),
-  provider: text('provider').notNull(),
-  providerAccountId: text('providerAccountId').notNull(),
-  refresh_token: text('refresh_token'),
-  access_token: text('access_token'),
-  expires_at: integer('expires_at'),
-  token_type: text('token_type'),
+    .references(() => user.id, { onDelete: 'cascade' }),
+  accessToken: text('accessToken'),
+  refreshToken: text('refreshToken'),
+  idToken: text('idToken'),
+  accessTokenExpiresAt: integer('accessTokenExpiresAt', { mode: 'timestamp' }),
+  refreshTokenExpiresAt: integer('refreshTokenExpiresAt', { mode: 'timestamp' }),
   scope: text('scope'),
-  id_token: text('id_token'),
-  session_state: text('session_state'),
+  password: text('password'),
+  createdAt: integer('createdAt', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updatedAt', { mode: 'timestamp' }).notNull(),
 });
 
-// ── Sessions (NextAuth) ───────────────────────────────────────────────
-export const sessions = sqliteTable('sessions', {
-  sessionToken: text('sessionToken').primaryKey(),
+// ── Session (better-auth) ────────────────────────────────────────────
+export const session = sqliteTable('session', {
+  id: text('id').primaryKey(),
+  expiresAt: integer('expiresAt', { mode: 'timestamp' }).notNull(),
+  token: text('token').notNull().unique(),
+  createdAt: integer('createdAt', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updatedAt', { mode: 'timestamp' }).notNull(),
+  ipAddress: text('ipAddress'),
+  userAgent: text('userAgent'),
   userId: text('userId')
     .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  expires: integer('expires', { mode: 'timestamp' }).notNull(),
+    .references(() => user.id, { onDelete: 'cascade' }),
 });
 
-// ── Verification Tokens (NextAuth) ───────────────────────────────────
-export const verificationTokens = sqliteTable(
-  'verificationTokens',
-  {
-    identifier: text('identifier').notNull(),
-    token: text('token').notNull(),
-    expires: integer('expires', { mode: 'timestamp' }).notNull(),
-  },
-  (table) => ({
-    compositePk: primaryKey({ columns: [table.identifier, table.token] }),
-  }),
-);
+// ── Verification (better-auth) ───────────────────────────────────────
+export const verification = sqliteTable('verification', {
+  id: text('id').primaryKey(),
+  identifier: text('identifier').notNull(),
+  value: text('value').notNull(),
+  expiresAt: integer('expiresAt', { mode: 'timestamp' }).notNull(),
+  createdAt: integer('createdAt', { mode: 'timestamp' }),
+  updatedAt: integer('updatedAt', { mode: 'timestamp' }),
+});
 
 // ── Pages (user profile pages) ───────────────────────────────────────
 export const pages = sqliteTable('pages', {
