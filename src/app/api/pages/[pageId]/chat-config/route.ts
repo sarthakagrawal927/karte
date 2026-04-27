@@ -4,6 +4,7 @@ import { db } from '@/db';
 import { pages } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { isChatPosition, resolveThemeConfig } from '@/lib/themes';
+import { MAX_CHAT_SYSTEM_PROMPT_LENGTH } from '@/lib/validation';
 
 export async function PUT(
   req: Request,
@@ -26,6 +27,17 @@ export async function PUT(
 
   const body = await req.json();
   const { chatEnabled, chatSystemPrompt, chatPosition } = body;
+
+  if (
+    chatSystemPrompt !== undefined &&
+    chatSystemPrompt !== null &&
+    (typeof chatSystemPrompt !== 'string' || chatSystemPrompt.length > MAX_CHAT_SYSTEM_PROMPT_LENGTH)
+  ) {
+    return NextResponse.json(
+      { error: `chatSystemPrompt must be a string of at most ${MAX_CHAT_SYSTEM_PROMPT_LENGTH} characters` },
+      { status: 400 },
+    );
+  }
 
   if (
     chatPosition !== undefined &&
