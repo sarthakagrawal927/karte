@@ -13,13 +13,18 @@ function getClient(): Client {
   return _client;
 }
 
-const clientProxy = new Proxy({} as Client, {
+type DB = ReturnType<typeof drizzle<typeof schema>>;
+let _db: DB | undefined;
+function getDb(): DB {
+  if (!_db) _db = drizzle(getClient(), { schema });
+  return _db;
+}
+
+export const db = new Proxy({} as DB, {
   get(_, prop) {
-    return Reflect.get(getClient(), prop);
+    return Reflect.get(getDb() as object, prop);
   },
 });
-
-export const db = drizzle(clientProxy, { schema });
 
 let featureTablesReady: Promise<void> | null = null;
 
