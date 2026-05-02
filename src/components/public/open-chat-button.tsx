@@ -4,11 +4,15 @@ type WidgetMode = 'chat' | 'contact';
 
 export function OpenChatButton({
   mode = 'chat',
+  prompt,
+  autoSend = false,
   children,
   className = '',
   style,
 }: {
   mode?: WidgetMode;
+  prompt?: string;
+  autoSend?: boolean;
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -19,7 +23,9 @@ export function OpenChatButton({
       className={className}
       style={style}
       onClick={() => {
-        window.dispatchEvent(new CustomEvent('linkchat:open-widget', { detail: { mode } }));
+        window.dispatchEvent(new CustomEvent('linkchat:open-widget', {
+          detail: { mode, prompt, autoSend },
+        }));
       }}
     >
       {children}

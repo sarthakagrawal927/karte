@@ -82,26 +82,6 @@ export function ChatWidget({
     visitorIdRef.current = getOrCreateVisitorId();
   }, []);
 
-  useEffect(() => {
-    function handleOpenWidget(event: Event) {
-      const detail = (event as CustomEvent<{ mode?: 'chat' | 'contact' }>).detail;
-      const requestedMode = detail?.mode;
-
-      if (requestedMode === 'contact' && dmEnabled) {
-        setMode('contact');
-      } else if (chatEnabled) {
-        setMode('chat');
-      } else if (dmEnabled) {
-        setMode('contact');
-      }
-
-      setOpen(true);
-    }
-
-    window.addEventListener('linkchat:open-widget', handleOpenWidget);
-    return () => window.removeEventListener('linkchat:open-widget', handleOpenWidget);
-  }, [chatEnabled, dmEnabled]);
-
   const saveMessage = useCallback(
     async (convId: string, role: 'user' | 'assistant', content: string) => {
       try {
@@ -133,12 +113,20 @@ export function ChatWidget({
     return data.id;
   }
 
-  async function handleSend() {
-    const query = input.trim();
+  const sendQuery = useCallback(async (rawQuery: string) => {
+    const query = rawQuery.trim();
     if (!query || loading) return;
 
+    const cacheKey = `linkchat:chat:${slug}:${query}`;
+    const cached = typeof window !== 'undefined' ? window.localStorage.getItem(cacheKey) : null;
     setInput('');
     setMessages((prev) => [...prev, { role: 'user', content: query }]);
+
+    if (cached) {
+      setMessages((prev) => [...prev, { role: 'assistant', content: cached }]);
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -194,6 +182,9 @@ export function ChatWidget({
       }
 
       if (fullResponse) {
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem(cacheKey, fullResponse);
+        }
         void saveMessage(convId, 'assistant', fullResponse);
       }
     } catch {
@@ -204,7 +195,44 @@ export function ChatWidget({
     } finally {
       setLoading(false);
     }
+  }, [ensureConversation, loading, saveMessage, slug]);
+
+  async function handleSend() {
+    await sendQuery(input);
   }
+
+  useEffect(() => {
+    function handleOpenWidget(event: Event) {
+      const detail = (event as CustomEvent<{
+        mode?: 'chat' | 'contact';
+        prompt?: string;
+        autoSend?: boolean;
+      }>).detail;
+      const requestedMode = detail?.mode;
+      const prompt = detail?.prompt?.trim();
+
+      if (requestedMode === 'contact' && dmEnabled) {
+        setMode('contact');
+      } else if (chatEnabled) {
+        setMode('chat');
+        if (prompt) {
+          setInput(prompt);
+          if (detail?.autoSend) {
+            window.setTimeout(() => {
+              void sendQuery(prompt);
+            }, 0);
+          }
+        }
+      } else if (dmEnabled) {
+        setMode('contact');
+      }
+
+      setOpen(true);
+    }
+
+    window.addEventListener('linkchat:open-widget', handleOpenWidget);
+    return () => window.removeEventListener('linkchat:open-widget', handleOpenWidget);
+  }, [chatEnabled, dmEnabled, sendQuery]);
 
   const launcherPositionClass =
     position === 'bottom-left' ? 'left-4 sm:left-6' : 'right-4 sm:right-6';
