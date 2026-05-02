@@ -1,6 +1,13 @@
-const MAX_URLS = 10;
-const TIMEOUT_MS = 5000;
-const MAX_CONTENT_LENGTH = 500;
+const DEFAULT_MAX_URLS = 10;
+const DEFAULT_TIMEOUT_MS = 5000;
+const DEFAULT_MAX_CONTENT_LENGTH = 500;
+
+export type ScrapeOptions = {
+  maxUrls?: number;
+  timeoutMs?: number;
+  maxContentLength?: number;
+  useReaderFallback?: boolean;
+};
 
 function isBlockedUrl(urlStr: string): boolean {
   try {
@@ -45,12 +52,18 @@ export interface ScrapedPage {
  * Scrape an array of URLs, extracting title, meta description, and body text.
  * Limits to 10 URLs, 5s timeout each. Failures are silently skipped.
  */
-export async function scrapeUrls(urls: string[]): Promise<ScrapedPage[]> {
-  const unique = [...new Set(urls.filter(Boolean))].slice(0, MAX_URLS);
+export async function scrapeUrls(
+  urls: string[],
+  options: ScrapeOptions = {},
+): Promise<ScrapedPage[]> {
+  const unique = [...new Set(urls.filter(Boolean))].slice(
+    0,
+    options.maxUrls ?? DEFAULT_MAX_URLS,
+  );
   if (unique.length === 0) return [];
 
   const results = await Promise.allSettled(
-    unique.map((url) => scrapeSingleUrl(url))
+    unique.map((url) => scrapeSingleUrl(url, options))
   );
 
   return results
@@ -61,27 +74,48 @@ export async function scrapeUrls(urls: string[]): Promise<ScrapedPage[]> {
     .map((r) => r.value!);
 }
 
-async function scrapeSingleUrl(url: string): Promise<ScrapedPage | null> {
+async function scrapeSingleUrl(
+  url: string,
+  options: ScrapeOptions,
+): Promise<ScrapedPage | null> {
   try {
     // Ensure the URL has a protocol
     const fullUrl = url.startsWith('http') ? url : `https://${url}`;
 
     if (isBlockedUrl(fullUrl)) return null;
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+    const html = await fetchText(fullUrl, options.timeoutMs ?? DEFAULT_TIMEOUT_MS);
+    const extracted = html ? pageFromHtml(url, html, options.maxContentLength) : null;
+    if (extracted && hasUsefulContent(extracted)) return extracted;
 
-    const res = await fetch(fullUrl, {
+    if (options.useReaderFallback) {
+      const readerText = await fetchReaderText(fullUrl, options.timeoutMs ?? DEFAULT_TIMEOUT_MS);
+      if (readerText) {
+        return pageFromReader(url, readerText, options.maxContentLength);
+      }
+    }
+
+    return extracted;
+  } catch {
+    // Timeout, network error, etc. — skip silently
+    return null;
+  }
+}
+
+async function fetchText(url: string, timeoutMs: number): Promise<string | null> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const res = await fetch(url, {
       signal: controller.signal,
       headers: {
         'User-Agent':
           'Mozilla/5.0 (compatible; LinkChatBot/1.0; +https://linkchat.dev)',
-        Accept: 'text/html,application/xhtml+xml',
+        Accept: 'text/html,application/xhtml+xml,text/plain',
       },
       redirect: 'follow',
     });
-
-    clearTimeout(timeout);
 
     if (!res.ok) return null;
 
@@ -90,18 +124,85 @@ async function scrapeSingleUrl(url: string): Promise<ScrapedPage | null> {
       return null;
     }
 
-    const html = await res.text();
-
-    return {
-      url,
-      title: extractTitle(html),
-      description: extractMetaDescription(html),
-      content: extractBodyText(html).slice(0, MAX_CONTENT_LENGTH),
-    };
-  } catch {
-    // Timeout, network error, etc. — skip silently
-    return null;
+    return await res.text();
+  } finally {
+    clearTimeout(timeout);
   }
+}
+
+async function fetchReaderText(url: string, timeoutMs: number): Promise<string | null> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  const readerUrl = `https://r.jina.ai/http://r.jina.ai/http://${url}`;
+
+  try {
+    const res = await fetch(readerUrl, {
+      signal: controller.signal,
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (compatible; LinkChatBot/1.0; +https://linkchat.dev)',
+        Accept: 'text/plain,text/markdown',
+      },
+      redirect: 'follow',
+    });
+
+    if (!res.ok) return null;
+    return await res.text();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function pageFromHtml(
+  url: string,
+  html: string,
+  maxContentLength = DEFAULT_MAX_CONTENT_LENGTH,
+): ScrapedPage {
+  return {
+    url,
+    title: extractTitle(html),
+    description: extractMetaDescription(html),
+    content: extractBodyText(html).slice(0, maxContentLength),
+  };
+}
+
+function pageFromReader(
+  url: string,
+  text: string,
+  maxContentLength = DEFAULT_MAX_CONTENT_LENGTH,
+): ScrapedPage {
+  const titleMatch = text.match(/^Title:\s*(.+)$/im);
+  const descriptionMatch = text.match(/^Description:\s*(.+)$/im);
+  const cleaned = text
+    .replace(/^Title:\s*.+$/gim, ' ')
+    .replace(/^URL Source:\s*.+$/gim, ' ')
+    .replace(/^Markdown Content:\s*/gim, ' ')
+    .replace(/^Description:\s*.+$/gim, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return {
+    url,
+    title: titleMatch?.[1]?.trim() ?? '',
+    description: descriptionMatch?.[1]?.trim() ?? '',
+    content: cleaned.slice(0, maxContentLength),
+  };
+}
+
+function hasUsefulContent(page: ScrapedPage): boolean {
+  const content = `${page.title} ${page.description} ${page.content}`.toLowerCase();
+  const isShell = (
+    content.includes('enable javascript') ||
+    content.includes('just a moment') ||
+    content.includes('sign in') ||
+    content.includes('log in') ||
+    content.includes('abs.twimg.com') ||
+    content.includes('responsive-web/client-web')
+  );
+  if (isShell) return false;
+  return page.content.length > 220;
 }
 
 function extractTitle(html: string): string {
