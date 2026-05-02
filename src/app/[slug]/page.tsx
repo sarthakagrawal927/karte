@@ -127,12 +127,26 @@ export default async function ProfilePage({ params }: Props) {
                 <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/45">
                   Ask the profile
                 </p>
-                <div className="mt-4 rounded-2xl border border-[#f2c879]/14 bg-white/[0.045] px-4 py-3 text-sm text-white/58">
-                  What is {firstName} building?
-                </div>
-                <div className="mt-3 rounded-2xl border border-[#f2c879]/14 bg-white/[0.045] px-4 py-3 text-sm text-white/58">
-                  What should I know before reaching out?
-                </div>
+                {page.chatEnabled && (
+                  <div className="mt-4 space-y-3">
+                    <OpenChatButton
+                      mode="chat"
+                      prompt={`What is ${firstName} building?`}
+                      autoSend
+                      className="block w-full rounded-2xl border border-[#f2c879]/14 bg-white/[0.045] px-4 py-3 text-left text-sm text-white/58 transition hover:border-[#f2c879]/35 hover:bg-white/[0.075] hover:text-white"
+                    >
+                      What is {firstName} building?
+                    </OpenChatButton>
+                    <OpenChatButton
+                      mode="chat"
+                      prompt="What should I know before reaching out?"
+                      autoSend
+                      className="block w-full rounded-2xl border border-[#f2c879]/14 bg-white/[0.045] px-4 py-3 text-left text-sm text-white/58 transition hover:border-[#f2c879]/35 hover:bg-white/[0.075] hover:text-white"
+                    >
+                      What should I know before reaching out?
+                    </OpenChatButton>
+                  </div>
+                )}
                 {hasMessenger && (
                   <OpenChatButton
                     mode={page.chatEnabled ? 'chat' : 'contact'}
