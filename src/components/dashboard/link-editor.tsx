@@ -20,6 +20,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import posthog from 'posthog-js';
 import { useState } from 'react';
 
 interface Link {
@@ -299,6 +300,10 @@ export function LinkEditor({
         throw new Error(data.error || 'Failed to preview import');
       }
 
+      posthog.capture('linktree_import_preview', {
+        linkCount: Array.isArray(data.links) ? data.links.length : 0,
+      });
+
       const nextLinks = Array.isArray(data.links) ? data.links as ImportedLink[] : [];
       setImportedLinks(nextLinks);
       setSelectedImportUrls(new Set(nextLinks.map((item) => item.url)));
@@ -335,6 +340,10 @@ export function LinkEditor({
       if (!res.ok) {
         throw new Error(data.error || 'Failed to import selected links');
       }
+
+      posthog.capture('linktree_import_complete', {
+        linkCount: Array.isArray(data.imported) ? data.imported.length : 0,
+      });
 
       const inserted = Array.isArray(data.imported) ? data.imported as Link[] : [];
       setLinks((prev) => normalizeLinks([...prev, ...inserted]));

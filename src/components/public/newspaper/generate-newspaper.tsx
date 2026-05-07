@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import posthog from 'posthog-js';
 import { useState } from 'react';
 
 interface GenerateNewspaperProps {
@@ -27,6 +28,10 @@ export function GenerateNewspaper({ pageId, slug, accentColor }: GenerateNewspap
         const data = await res.json().catch(() => ({ error: 'Generation failed' }));
         throw new Error(data.error || 'Failed to generate newspaper');
       }
+
+      posthog.capture('profile_mode_generated', {
+        mode: 'newspaper',
+      });
 
       router.refresh();
     } catch (err) {

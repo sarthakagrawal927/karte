@@ -1,5 +1,6 @@
 'use client';
 
+import posthog from 'posthog-js';
 import { useCallback,useRef, useState } from 'react';
 
 import type { RoastContent } from '@/lib/generated-page-types';
@@ -46,6 +47,9 @@ export function RoastPageClient({
         throw new Error(data.error || 'Failed to generate roast');
       }
       const data: RoastContent = await res.json();
+      posthog.capture('profile_mode_generated', {
+        mode: 'roast',
+      });
       setRoast(data);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong');

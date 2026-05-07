@@ -1,37 +1,66 @@
-# Visitor Analytics Identity
+# Analytics Event Map
 
-Linkchat uses a combination of first-party cookies and `localStorage` to track unique visitors while maintaining anonymity.
+This document tracks how product usage and visitor behavior are measured in LinkChat.
 
-## Implementation Details
+## Internal Product Analytics (PostHog)
+
+We use PostHog to understand activation, retention, and feature usage for authenticated users.
+
+Privacy mandate:
+- No PII names or emails are sent to PostHog.
+- No private content such as DMs, chat history, memory blocks, or scraped text is sent to PostHog.
+- Users are identified by their database ID only.
+
+| Event Name | Description | Location |
+|------------|-------------|----------|
+| `user_signup` | User signs up for the first time | Detected in AnalyticsProvider |
+| `user_login` | User logs in | Detected in AnalyticsProvider |
+| `dashboard_activated` | User lands on the main dashboard | Dashboard layout/page |
+| `page_created` | User successfully creates their first profile page | PageSettings (POST) |
+| `linktree_import_preview` | User previews an import from another profile | LinkEditor |
+| `linktree_import_complete` | User completes an import of links | LinkEditor |
+| `ai_profile_revamp_generate` | User generates an AI revamp plan | ProfileRevampAssistant |
+| `ai_profile_revamp_apply` | User applies an AI revamp plan | ProfileRevampAssistant |
+| `profile_enrichment_run` | User runs the auto-enrichment process | InfoEditor/Enrich API |
+| `profile_mode_generated` | User generates an Encyclopedia/Newspaper/Roast mode | EncyclopediaEditor/etc. |
+
+## Public Visitor Analytics
+
+Visitor interactions on public profile pages are tracked in LinkChat-owned storage to provide analytics to creators. Raw events are written to Workers Analytics Engine and the database; durable daily aggregates are written for dashboard totals.
+
+| Event Name | Description | Location |
+|------------|-------------|----------|
+| `page_view` | Visitor views a public profile page | PageAnalyticsTracker |
+| `outbound_click` | Visitor clicks an external link on a profile | PageAnalyticsTracker |
+| `section_view` | Visitor views a public page section | TrackableSection |
+| `hook_open` | Visitor opens the chat hook | Chat widget |
+| `chat_cta_click` | Visitor clicks a chat CTA | Chat widget |
+| `dm_start` | Visitor starts the DM flow | Chat widget |
+| `dm_submit` | Visitor submits a direct message | Contact API |
+| `contact_submit` | Visitor submits a contact form | Contact API |
+
+## Visitor Identity
+
+LinkChat uses a combination of first-party cookies and `localStorage` to track unique visitors while maintaining anonymity.
 
 ### `lc_vid` Cookie
-- **Name**: `lc_vid`
-- **Type**: First-party cookie.
-- **Value**: A random opaque UUID (v4).
-- **Expiry**: 2 years from the last interaction.
-- **Attributes**:
-  - `SameSite=Lax`: Balanced security and usability.
-  - `Secure`: Enabled in production to ensure the cookie is only sent over HTTPS.
-  - `httpOnly=false`: Allows client-side JavaScript to read the cookie for synchronization with `localStorage`.
+
+- Name: `lc_vid`
+- Type: first-party cookie.
+- Value: a random opaque UUID.
+- Expiry: 2 years from the last interaction.
+- Attributes:
+  - `SameSite=Lax`
+  - `Secure` in production
+  - `httpOnly=false` so client JavaScript can mirror the value to `localStorage`
 
 ### `localStorage` Fallback
-The `linkchat_visitor_id` key in `localStorage` serves as a fallback and mirror for the `lc_vid` cookie. This ensures that:
-1. Identity is preserved if cookies are disabled but `localStorage` is available.
-2. Identity is more stable if `localStorage` is cleared but cookies remain.
-3. Client-side event batching can consistently identify the visitor even before the first tracking API response is received.
 
-## Identity Stability & Limits
+The `linkchat_visitor_id` key in `localStorage` serves as a fallback and mirror for the `lc_vid` cookie. This keeps client-side event batching stable before the first tracking API response is received.
 
-While this dual-storage approach improves the stability of visitor counting, the following scenarios will still result in a visitor being counted as "new":
+## Privacy Limits
 
-1. **Incognito / Private Browsing**: Most browsers clear both cookies and `localStorage` when the private session ends.
-2. **Manual Clearing**: Users manually clearing their browser history, cookies, or site data.
-3. **Multiple Devices / Browsers**: A user visiting from a phone and then a laptop (or switching from Chrome to Safari) will be treated as two separate visitors.
-4. **Privacy Extensions / Settings**: Some advanced privacy settings or extensions might block first-party cookies or `localStorage` entirely.
-5. **Cross-Site Tracking Prevention**: While we use first-party cookies, some browsers have aggressive expiration policies for all cookies set via JavaScript or API responses (e.g., Apple's ITP may limit cookie life to 7 days in certain scenarios).
-
-## Privacy Compliance
-
-- **No PII**: The visitor ID is a completely random UUID and contains no personally identifiable information.
-- **No Fingerprinting**: We do not use browser fingerprinting techniques (canvas hashing, font enumeration, etc.) to link identities across clearing events.
-- **Anonymous**: Visitor IDs are not linked to any user accounts unless the user explicitly logs in or provides contact information.
+- The visitor ID is a random UUID and contains no personally identifiable information.
+- LinkChat does not use browser fingerprinting techniques.
+- Visitor IDs are not linked to user accounts unless a visitor explicitly logs in or provides contact information.
+- Incognito browsing, manual data clearing, multiple devices, and some privacy settings can still create new visitor IDs.

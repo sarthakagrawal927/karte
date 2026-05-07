@@ -1,5 +1,6 @@
 'use client';
 
+import posthog from 'posthog-js';
 import { useState } from 'react';
 
 import {
@@ -131,6 +132,10 @@ export function PageToggles({
         setMessage(data.error || `Failed to generate ${type}`);
         return;
       }
+      posthog.capture('profile_mode_generated', {
+        mode: type,
+        source: 'dashboard_toggles',
+      });
       setMessage(`${type.charAt(0).toUpperCase() + type.slice(1)} generated!`);
     } catch {
       setMessage(`Failed to generate ${type}`);
