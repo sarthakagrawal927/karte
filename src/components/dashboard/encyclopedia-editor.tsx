@@ -1,5 +1,6 @@
 'use client';
 
+import posthog from 'posthog-js';
 import { useCallback, useRef,useState } from 'react';
 
 import {
@@ -158,6 +159,9 @@ export function EncyclopediaEditor({
       }
 
       const newContent: EncyclopediaContent = await res.json();
+      posthog.capture('profile_mode_generated', {
+        mode: 'encyclopedia',
+      });
       setContent(newContent);
       markdownRef.current = newContent.markdown;
       setMessage('Regenerated successfully');

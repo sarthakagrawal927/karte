@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import posthog from 'posthog-js';
 import { useState } from 'react';
 
 interface GenerateEncyclopediaProps {
@@ -27,6 +28,10 @@ export function GenerateEncyclopedia({ pageId, slug, accentColor }: GenerateEncy
         const data = await res.json().catch(() => ({ error: 'Something went wrong' }));
         throw new Error(data.error || 'Failed to generate encyclopedia');
       }
+
+      posthog.capture('profile_mode_generated', {
+        mode: 'encyclopedia',
+      });
 
       router.refresh();
     } catch (err) {
