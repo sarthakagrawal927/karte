@@ -135,6 +135,58 @@ export async function ensureProjectsTable() {
         ON projects (pageId, sortOrder)
       `);
 
+      // Durable Aggregates
+      await client.execute(`
+        CREATE TABLE IF NOT EXISTS dailyStats (
+          id TEXT PRIMARY KEY NOT NULL,
+          pageId TEXT NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
+          date TEXT NOT NULL,
+          eventType TEXT NOT NULL,
+          count INTEGER NOT NULL DEFAULT 0,
+          visitors INTEGER NOT NULL DEFAULT 0
+        )
+      `);
+
+      await client.execute(`
+        CREATE UNIQUE INDEX IF NOT EXISTS daily_stats_uniqueness_idx
+        ON dailyStats (pageId, date, eventType)
+      `);
+
+      await client.execute(`
+        CREATE TABLE IF NOT EXISTS dailyResourceStats (
+          id TEXT PRIMARY KEY NOT NULL,
+          pageId TEXT NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
+          date TEXT NOT NULL,
+          eventType TEXT NOT NULL,
+          resourceType TEXT NOT NULL,
+          resourceId TEXT NOT NULL,
+          resourceLabel TEXT,
+          count INTEGER NOT NULL DEFAULT 0,
+          visitors INTEGER NOT NULL DEFAULT 0
+        )
+      `);
+
+      await client.execute(`
+        CREATE UNIQUE INDEX IF NOT EXISTS daily_resource_stats_uniqueness_idx
+        ON dailyResourceStats (pageId, date, eventType, resourceId)
+      `);
+
+      await client.execute(`
+        CREATE TABLE IF NOT EXISTS dailyVisitorEvents (
+          id TEXT PRIMARY KEY NOT NULL,
+          pageId TEXT NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
+          visitorId TEXT NOT NULL,
+          date TEXT NOT NULL,
+          eventType TEXT NOT NULL,
+          resourceId TEXT
+        )
+      `);
+
+      await client.execute(`
+        CREATE UNIQUE INDEX IF NOT EXISTS daily_visitor_events_uniqueness_idx
+        ON dailyVisitorEvents (pageId, visitorId, date, eventType, resourceId)
+      `);
+
       // Generated pages (AI content cache)
       await client.execute(`
         CREATE TABLE IF NOT EXISTS generatedPages (

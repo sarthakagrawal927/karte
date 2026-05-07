@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 import { db, ensureProjectsTable } from '@/db';
 import { pageEvents, pages } from '@/db/schema';
+import { recordAggregate } from '@/lib/analytics';
 import { isValidSlug } from '@/lib/validation';
 
 const EVENT_TYPES = new Set([
@@ -10,6 +11,8 @@ const EVENT_TYPES = new Set([
   'outbound_click',
   'contact_submit',
   'section_view',
+  'hook_open',
+  'chat_cta_click',
 ]);
 
 export async function POST(
@@ -68,6 +71,15 @@ export async function POST(
     resourceId,
     resourceLabel,
     metadata,
+  });
+
+  void recordAggregate({
+    pageId: page.id,
+    visitorId,
+    eventType,
+    resourceType,
+    resourceId,
+    resourceLabel,
   });
 
   return NextResponse.json({ success: true }, { status: 201 });

@@ -2,7 +2,8 @@ import { and, eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
 import { db, ensureProjectsTable } from '@/db';
-import { contactSubmissions, pageEvents,pages } from '@/db/schema';
+import { contactSubmissions, pageEvents, pages } from '@/db/schema';
+import { recordAggregate } from '@/lib/analytics';
 import { getSession } from '@/lib/auth-server';
 import { rateLimit } from '@/lib/rate-limit';
 import {
@@ -134,6 +135,15 @@ export async function POST(
       senderType,
       verified: Boolean(verifiedSender),
     },
+  });
+
+  void recordAggregate({
+    pageId: page.id,
+    visitorId,
+    eventType: 'contact_submit',
+    resourceType: 'contact',
+    resourceId: sectionId,
+    resourceLabel: submissionName,
   });
 
   return NextResponse.json(submission, { status: 201 });
