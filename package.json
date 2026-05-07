@@ -7,6 +7,7 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
+    "backfill:aggregates": "node scripts/backfill-aggregates.mjs",
     "enrich:profile": "node scripts/enrich-profile-from-links.mjs",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "cf:build": "opennextjs-cloudflare build",

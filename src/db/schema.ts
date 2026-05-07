@@ -225,6 +225,38 @@ export const pageEvents = sqliteTable('pageEvents', {
   ),
 });
 
+// ── Daily Aggregates (durable analytics) ─────────────────────────────
+export const dailyStats = sqliteTable('dailyStats', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  pageId: text('pageId').notNull().references(() => pages.id, { onDelete: 'cascade' }),
+  date: text('date').notNull(), // YYYY-MM-DD
+  eventType: text('eventType').notNull(),
+  count: integer('count').notNull().default(0),
+  visitors: integer('visitors').notNull().default(0),
+});
+
+export const dailyResourceStats = sqliteTable('dailyResourceStats', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  pageId: text('pageId').notNull().references(() => pages.id, { onDelete: 'cascade' }),
+  date: text('date').notNull(), // YYYY-MM-DD
+  eventType: text('eventType').notNull(),
+  resourceType: text('resourceType').notNull(),
+  resourceId: text('resourceId').notNull(),
+  resourceLabel: text('resourceLabel'),
+  count: integer('count').notNull().default(0),
+  visitors: integer('visitors').notNull().default(0),
+});
+
+// ── Duplicate-tolerant helper ────────────────────────────────────────
+export const dailyVisitorEvents = sqliteTable('dailyVisitorEvents', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  pageId: text('pageId').notNull().references(() => pages.id, { onDelete: 'cascade' }),
+  visitorId: text('visitorId').notNull(),
+  date: text('date').notNull(), // YYYY-MM-DD
+  eventType: text('eventType').notNull(),
+  resourceId: text('resourceId'), // Optional, for resource-specific uniques
+});
+
 // ── Conversations (chat history) ──────────────────────────────────
 export const conversations = sqliteTable('conversations', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),

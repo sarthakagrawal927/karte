@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 
 import { db, ensureProjectsTable } from '@/db';
 import { pages } from '@/db/schema';
+import { recordAggregate } from '@/lib/analytics-aggregates';
 import { type EventType, recordEvent } from '@/lib/analytics-server';
 import { isValidSlug } from '@/lib/validation';
 
@@ -48,7 +49,6 @@ export async function POST(
     typeof body.visitorId === 'string' && body.visitorId.trim()
       ? body.visitorId.trim()
       : null;
-
   const visitorId = visitorCookie?.value || bodyVisitorId || crypto.randomUUID();
 
   const resourceType =
@@ -83,15 +83,22 @@ export async function POST(
     metadata,
   });
 
-  const response = NextResponse.json({ success: true }, { status: 201 });
+  void recordAggregate({
+    pageId: page.id,
+    visitorId,
+    eventType,
+    resourceType,
+    resourceId,
+    resourceLabel,
+  });
 
-  // Set/Refresh the visitor cookie with a long expiry (2 years)
+  const response = NextResponse.json({ success: true }, { status: 201 });
   response.cookies.set('lc_vid', visitorId, {
-    maxAge: 60 * 60 * 24 * 365 * 2, // 2 years
+    maxAge: 60 * 60 * 24 * 365 * 2,
     path: '/',
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
-    httpOnly: false, // Accessible by client JS for mirroring to localStorage
+    httpOnly: false,
   });
 
   return response;

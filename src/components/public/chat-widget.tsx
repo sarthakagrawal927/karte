@@ -52,6 +52,7 @@ export function ChatWidget({
   dmMode?: DmMode;
 }) {
   const [open, setOpen] = useState(false);
+  const prevOpenRef = useRef(false);
   const [mode, setMode] = useState<'chat' | 'contact'>(chatEnabled ? 'chat' : 'contact');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -66,6 +67,21 @@ export function ChatWidget({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  useEffect(() => {
+    if (open && !prevOpenRef.current) {
+      void fetch(`/api/track/${slug}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eventType: 'hook_open',
+          visitorId: visitorIdRef.current,
+        }),
+        keepalive: true,
+      });
+    }
+    prevOpenRef.current = open;
+  }, [open, slug]);
 
   useEffect(() => {
     if (open && mode === 'chat') {

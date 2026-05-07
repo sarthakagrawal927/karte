@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 import { db, ensureProjectsTable } from '@/db';
 import { contactSubmissions, pages } from '@/db/schema';
+import { recordAggregate } from '@/lib/analytics-aggregates';
 import { recordEvent } from '@/lib/analytics-server';
 import { getSession } from '@/lib/auth-server';
 import { rateLimit } from '@/lib/rate-limit';
@@ -136,6 +137,15 @@ export async function POST(
       senderType,
       verified: Boolean(verifiedSender),
     },
+  });
+
+  void recordAggregate({
+    pageId: page.id,
+    visitorId,
+    eventType: 'contact_submit',
+    resourceType: 'contact',
+    resourceId: sectionId,
+    resourceLabel: submissionName,
   });
 
   return NextResponse.json(submission, { status: 201 });
