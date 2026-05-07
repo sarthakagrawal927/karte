@@ -1,4 +1,5 @@
 import { and, eq } from 'drizzle-orm';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 import { db, ensureProjectsTable } from '@/db';
@@ -35,10 +36,17 @@ export async function POST(
 
   const body = await req.json().catch(() => ({}));
   const eventType = typeof body.eventType === 'string' ? body.eventType : '';
-  const visitorId =
+
+  // Resolve visitor ID: Cookie > Body > New UUID
+  const cookieStore = await cookies();
+  const visitorCookie = cookieStore.get('lc_vid');
+  const bodyVisitorId =
     typeof body.visitorId === 'string' && body.visitorId.trim()
       ? body.visitorId.trim()
       : null;
+
+  const visitorId = visitorCookie?.value || bodyVisitorId || crypto.randomUUID();
+
   const resourceType =
     typeof body.resourceType === 'string' && body.resourceType.trim()
       ? body.resourceType.trim()
@@ -70,5 +78,16 @@ export async function POST(
     metadata,
   });
 
-  return NextResponse.json({ success: true }, { status: 201 });
+  const response = NextResponse.json({ success: true }, { status: 201 });
+
+  // Set/Refresh the visitor cookie with a long expiry (2 years)
+  response.cookies.set('lc_vid', visitorId, {
+    maxAge: 60 * 60 * 24 * 365 * 2, // 2 years
+    path: '/',
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: false, // Accessible by client JS for mirroring to localStorage
+  });
+
+  return response;
 }
