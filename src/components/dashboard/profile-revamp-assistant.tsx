@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import posthog from 'posthog-js';
 import { useState } from 'react';
 
 type RevampBlock = {
@@ -64,6 +65,10 @@ export function ProfileRevampAssistant({
       if (!response.ok) {
         throw new Error(data.error || 'Failed to revamp profile');
       }
+
+      posthog.capture(apply ? 'ai_profile_revamp_apply' : 'ai_profile_revamp_generate', {
+        theme: data.plan?.themePresetId,
+      });
 
       setPlan(data.plan);
       setMessage(apply ? 'Revamp applied. Your public page has been updated.' : 'Revamp plan generated.');

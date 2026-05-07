@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import posthog from 'posthog-js';
 import { useEffect, useRef, useState } from 'react';
 
 import { ImageUploadField } from '@/components/dashboard/image-upload-field';
@@ -215,6 +216,10 @@ export function PageSettings({
         if (typeof window !== 'undefined') {
           window.localStorage.removeItem(PAGE_DRAFT_STORAGE_KEY);
         }
+        posthog.capture('page_created', {
+          slug,
+          theme: themePresetId,
+        });
         setMessage('Page created successfully');
         router.refresh();
       } else {
