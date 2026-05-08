@@ -12,6 +12,7 @@ const navItems = [
   { label: 'AI Revamp', href: '/dashboard/revamp' },
   { label: 'AI Chat', href: '/dashboard/memory' },
   { label: 'Inbox', href: '/dashboard/inbox' },
+  { label: 'Lead Radar', href: '/dashboard/leads' },
   { label: 'Analytics', href: '/dashboard/analytics' },
   { label: 'Chats', href: '/dashboard/chats' },
   { label: 'Blocks & Blogs', href: '/dashboard/sections' },
