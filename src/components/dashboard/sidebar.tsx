@@ -14,6 +14,7 @@ const navItems = [
   { label: 'Inbox', href: '/dashboard/inbox' },
   { label: 'Lead Radar', href: '/dashboard/leads' },
   { label: 'Analytics', href: '/dashboard/analytics' },
+  { label: 'Experiments', href: '/dashboard/experiments' },
   { label: 'Chats', href: '/dashboard/chats' },
   { label: 'Blocks & Blogs', href: '/dashboard/sections' },
   { label: 'Appearance', href: '/dashboard/appearance' },

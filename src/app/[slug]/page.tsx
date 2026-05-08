@@ -8,19 +8,25 @@ import { OpenChatButton } from '@/components/public/open-chat-button';
 import { PageSectionRenderer } from '@/components/public/page-section-renderer';
 import { ProjectCard } from '@/components/public/project-card';
 import { TrackableSection } from '@/components/public/trackable-section';
+import { getProfileVariant } from '@/lib/profile-variants';
 import { resolveThemeConfig } from '@/lib/themes';
 
 import { getFullPageData } from './_lib/get-page-data';
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ variant?: string }>;
+};
 
-export default async function ProfilePage({ params }: Props) {
+export default async function ProfilePage({ params, searchParams }: Props) {
   const { slug } = await params;
+  const { variant: variantParam } = (await searchParams) ?? {};
   const data = await getFullPageData(slug);
   if (!data) notFound();
 
   const { page, links: pageLinks, projects: pageProjects, sections: publicSections, readyPages } = data;
   const theme = resolveThemeConfig(page.themeConfig);
+  const variant = getProfileVariant(variantParam);
 
   const enabledPages = {
     encyclopedia: (page.encyclopediaEnabled ?? false) && readyPages.has('encyclopedia'),
@@ -105,7 +111,7 @@ export default async function ProfilePage({ params }: Props) {
                 )}
                 <div className="min-w-0">
                   <p className="text-[11px] font-medium uppercase tracking-[0.32em] text-white/45">
-                    Personal site
+                    {variant.eyebrow}
                   </p>
                   <h1 className="mt-2 text-3xl font-semibold leading-none text-white sm:text-5xl">
                     {page.displayName}
@@ -131,19 +137,19 @@ export default async function ProfilePage({ params }: Props) {
                   <div className="mt-4 space-y-3">
                     <OpenChatButton
                       mode="chat"
-                      prompt={`What is ${firstName} building?`}
+                      prompt={variant.promptOne(firstName)}
                       autoSend
                       className="block w-full rounded-2xl border border-[#f2c879]/14 bg-white/[0.045] px-4 py-3 text-left text-sm text-white/58 transition hover:border-[#f2c879]/35 hover:bg-white/[0.075] hover:text-white"
                     >
-                      What is {firstName} building?
+                      {variant.promptOne(firstName)}
                     </OpenChatButton>
                     <OpenChatButton
                       mode="chat"
-                      prompt="What should I know before reaching out?"
+                      prompt={variant.promptTwo}
                       autoSend
                       className="block w-full rounded-2xl border border-[#f2c879]/14 bg-white/[0.045] px-4 py-3 text-left text-sm text-white/58 transition hover:border-[#f2c879]/35 hover:bg-white/[0.075] hover:text-white"
                     >
-                      What should I know before reaching out?
+                      {variant.promptTwo}
                     </OpenChatButton>
                   </div>
                 )}
@@ -153,7 +159,7 @@ export default async function ProfilePage({ params }: Props) {
                     className="mt-5 w-full rounded-2xl px-4 py-3 text-sm font-semibold text-[#17120a] transition hover:brightness-110"
                     style={{ backgroundColor: theme.accentColor }}
                   >
-                    {page.chatEnabled ? 'Start chat' : 'Send message'}
+                    {page.chatEnabled ? variant.primaryCta : 'Send message'}
                   </OpenChatButton>
                 )}
               </div>

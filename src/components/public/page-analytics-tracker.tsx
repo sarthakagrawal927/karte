@@ -35,22 +35,29 @@ function isExternalUrl(href: string) {
   }
 }
 
+function getProfileVariantFromLocation() {
+  return new URLSearchParams(window.location.search).get('variant') || 'baseline';
+}
+
 export function PageAnalyticsTracker() {
   const pathname = usePathname();
   const lastTrackedPath = useRef<string | null>(null);
 
   useEffect(() => {
     const slug = getPublicSlug(pathname);
-    if (!slug || lastTrackedPath.current === pathname) {
+    const profileVariant = getProfileVariantFromLocation();
+    const trackedPath = `${pathname}?variant=${profileVariant}`;
+    if (!slug || lastTrackedPath.current === trackedPath) {
       return;
     }
 
-    lastTrackedPath.current = pathname;
+    lastTrackedPath.current = trackedPath;
 
     trackEvent(slug, {
       eventType: 'page_view',
       metadata: {
         pathname,
+        profileVariant,
         referrer: document.referrer || null,
       },
     });
@@ -79,6 +86,8 @@ export function PageAnalyticsTracker() {
         return;
       }
 
+      const profileVariant = getProfileVariantFromLocation();
+
       trackEvent(slug, {
         eventType: 'outbound_click',
         resourceType: anchor.getAttribute('data-track-type') || 'outbound',
@@ -90,6 +99,7 @@ export function PageAnalyticsTracker() {
           href,
         metadata: {
           href,
+          profileVariant,
         },
       });
     }
