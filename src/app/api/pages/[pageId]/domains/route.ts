@@ -4,13 +4,13 @@ import { NextResponse } from 'next/server';
 import { db, ensureProjectsTable } from '@/db';
 import { pageDomains, pages } from '@/db/schema';
 import { getSession } from '@/lib/auth-server';
+import { addDomain, getDnsInstructions } from '@/lib/cloudflare-domains';
 import {
   findConflictingDomain,
   getAppHost,
   isAppHost,
   normalizeHostname,
 } from '@/lib/page-domains';
-import { addDomain, getDnsInstructions } from '@/lib/vercel-domains';
 
 async function requirePageOwner(pageId: string, userId: string) {
   await ensureProjectsTable();
@@ -80,11 +80,11 @@ export async function POST(
     );
   }
 
-  const vercel = await addDomain(hostname).catch((err: unknown) => ({
+  const provider = await addDomain(hostname).catch((err: unknown) => ({
     status: 'error' as const,
     verification: [],
     configured: true,
-    errorMessage: err instanceof Error ? err.message : 'Vercel request failed',
+    errorMessage: err instanceof Error ? err.message : 'Domain provider request failed',
   }));
 
   const now = new Date();
@@ -93,9 +93,9 @@ export async function POST(
     .values({
       pageId,
       hostname,
-      status: vercel.status,
-      verification: vercel.verification,
-      errorMessage: vercel.errorMessage,
+      status: provider.status,
+      verification: provider.verification,
+      errorMessage: provider.errorMessage,
       lastCheckedAt: now,
       isPrimary: false,
     })

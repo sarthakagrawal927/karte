@@ -57,16 +57,31 @@ export type DnsInstruction = {
   type: 'A' | 'CNAME';
   name: string;
   value: string;
+  note?: string;
 };
 
+export function getCustomDomainCnameTarget(): string {
+  const explicit =
+    process.env.NEXT_PUBLIC_CUSTOM_DOMAIN_CNAME_TARGET ??
+    process.env.CLOUDFLARE_CUSTOM_HOSTNAME_CNAME_TARGET;
+  if (explicit) return normalizeHostname(explicit) ?? explicit.trim();
+  return getAppHost() ?? 'linkchat.sarthakagrawal927.workers.dev';
+}
+
 export function getDnsInstructions(hostname: string): DnsInstruction[] {
+  const target = getCustomDomainCnameTarget();
   const isApex = hostname.split('.').length === 2;
   if (isApex) {
     return [
-      { type: 'A', name: '@', value: '76.76.21.21' },
-      { type: 'CNAME', name: 'www', value: 'cname.vercel-dns.com' },
+      {
+        type: 'CNAME',
+        name: '@',
+        value: target,
+        note: 'Use CNAME flattening, ALIAS, or ANAME if your DNS provider does not allow apex CNAMEs.',
+      },
+      { type: 'CNAME', name: 'www', value: target },
     ];
   }
   const sub = hostname.split('.').slice(0, -2).join('.') || '@';
-  return [{ type: 'CNAME', name: sub, value: 'cname.vercel-dns.com' }];
+  return [{ type: 'CNAME', name: sub, value: target }];
 }

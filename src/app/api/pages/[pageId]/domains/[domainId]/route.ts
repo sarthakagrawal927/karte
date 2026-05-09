@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server';
 import { db, ensureProjectsTable } from '@/db';
 import { pageDomains, pages } from '@/db/schema';
 import { getSession } from '@/lib/auth-server';
+import { removeDomain } from '@/lib/cloudflare-domains';
 import { invalidateHostCache } from '@/lib/page-domains';
-import { removeDomain } from '@/lib/vercel-domains';
 
 async function loadOwned(pageId: string, domainId: string, userId: string) {
   await ensureProjectsTable();

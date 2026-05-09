@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server';
 import { db, ensureProjectsTable } from '@/db';
 import { pageDomains, pages } from '@/db/schema';
 import { getSession } from '@/lib/auth-server';
+import { getDnsInstructions, getDomainStatus } from '@/lib/cloudflare-domains';
 import { invalidateHostCache } from '@/lib/page-domains';
-import { getDnsInstructions, getDomainStatus } from '@/lib/vercel-domains';
 
 export async function POST(
   _req: Request,

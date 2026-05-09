@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 type Verification = { type: string; domain: string; value: string; reason?: string };
-type DnsInstruction = { type: 'A' | 'CNAME'; name: string; value: string };
+type DnsInstruction = { type: 'A' | 'CNAME'; name: string; value: string; note?: string };
 
 export type DomainRow = {
   id: string;
@@ -105,10 +105,10 @@ export function DomainEditor({
         className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 sm:flex-row sm:items-end"
       >
         <label className="flex flex-1 flex-col gap-1 text-xs uppercase tracking-wider text-gray-400">
-          Add a domain
+          Add a custom hostname
           <input
             type="text"
-            placeholder="example.com"
+            placeholder="links.example.com"
             required
             value={hostname}
             onChange={(e) => setHostname(e.target.value)}
@@ -184,26 +184,33 @@ export function DomainEditor({
               )}
 
               <div className="mt-3 grid gap-2 text-xs text-gray-300">
-                <p className="text-gray-400">Add these DNS records:</p>
+                <p className="text-gray-400">
+                  Add these records at your DNS provider, then retry verification:
+                </p>
                 {d.dnsInstructions.map((rec, i) => (
-                  <div
-                    key={`${rec.type}-${i}`}
-                    className="grid grid-cols-3 gap-2 rounded-lg border border-white/10 bg-gray-950 px-3 py-2 font-mono text-[11px]"
-                  >
-                    <span>
-                      <span className="text-gray-500">type</span> {rec.type}
-                    </span>
-                    <span>
-                      <span className="text-gray-500">name</span> {rec.name}
-                    </span>
-                    <span className="truncate">
-                      <span className="text-gray-500">value</span> {rec.value}
-                    </span>
+                  <div key={`${rec.type}-${i}`} className="space-y-1">
+                    <div className="grid grid-cols-3 gap-2 rounded-lg border border-white/10 bg-gray-950 px-3 py-2 font-mono text-[11px]">
+                      <span>
+                        <span className="text-gray-500">type</span> {rec.type}
+                      </span>
+                      <span>
+                        <span className="text-gray-500">name</span> {rec.name}
+                      </span>
+                      <span className="truncate">
+                        <span className="text-gray-500">value</span> {rec.value}
+                      </span>
+                    </div>
+                    {rec.note && (
+                      <p className="text-[11px] text-gray-500">{rec.note}</p>
+                    )}
                   </div>
                 ))}
                 {d.verification && d.verification.length > 0 && (
                   <>
-                    <p className="text-gray-400">Vercel verification records:</p>
+                    <p className="text-gray-400">
+                      Cloudflare may also require these ownership or certificate
+                      validation records:
+                    </p>
                     {d.verification.map((v, i) => (
                       <div
                         key={`v-${i}`}

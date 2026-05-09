@@ -46,15 +46,21 @@ function isAppHost(host, appHost) {
 }
 
 function getDnsInstructions(hostname) {
+  const target = 'linkchat.sarthakagrawal927.workers.dev';
   const isApex = hostname.split('.').length === 2;
   if (isApex) {
     return [
-      { type: 'A', name: '@', value: '76.76.21.21' },
-      { type: 'CNAME', name: 'www', value: 'cname.vercel-dns.com' },
+      {
+        type: 'CNAME',
+        name: '@',
+        value: target,
+        note: 'Use CNAME flattening, ALIAS, or ANAME if your DNS provider does not allow apex CNAMEs.',
+      },
+      { type: 'CNAME', name: 'www', value: target },
     ];
   }
   const sub = hostname.split('.').slice(0, -2).join('.') || '@';
-  return [{ type: 'CNAME', name: sub, value: 'cname.vercel-dns.com' }];
+  return [{ type: 'CNAME', name: sub, value: target }];
 }
 
 test('normalizeHostname accepts apex domains', () => {
@@ -108,12 +114,14 @@ test('isAppHost rejects unrelated custom domains', () => {
   assert.equal(isAppHost('', 'linkchat.app'), false);
 });
 
-test('getDnsInstructions returns A + CNAME for apex', () => {
+test('getDnsInstructions returns CNAME records for apex', () => {
   const recs = getDnsInstructions('example.com');
   assert.equal(recs.length, 2);
-  assert.equal(recs[0].type, 'A');
+  assert.equal(recs[0].type, 'CNAME');
+  assert.equal(recs[0].name, '@');
   assert.equal(recs[1].type, 'CNAME');
   assert.equal(recs[1].name, 'www');
+  assert.equal(recs[1].value, 'linkchat.sarthakagrawal927.workers.dev');
 });
 
 test('getDnsInstructions returns single CNAME for subdomain', () => {

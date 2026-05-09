@@ -5,7 +5,10 @@ import { DomainEditor } from '@/components/dashboard/domain-editor';
 import { db, ensureProjectsTable } from '@/db';
 import { pageDomains, pages } from '@/db/schema';
 import { getSession } from '@/lib/auth-server';
-import { getDnsInstructions, isVercelConfigured } from '@/lib/vercel-domains';
+import {
+  getDnsInstructions,
+  isCloudflareCustomHostnamesConfigured,
+} from '@/lib/cloudflare-domains';
 
 export default async function DomainsPage() {
   const session = await getSession();
@@ -47,14 +50,14 @@ export default async function DomainsPage() {
       <p className="mb-6 text-sm text-gray-400">
         Connect a domain you own to your published profile. Slug routes (
         <code className="rounded bg-white/10 px-1">/{page.slug}</code>) keep
-        working alongside any custom domain.
+        working while Cloudflare verifies and routes your custom hostname.
       </p>
-      {!isVercelConfigured() && (
+      {!isCloudflareCustomHostnamesConfigured() && (
         <div className="mb-4 rounded-2xl border border-amber-300/30 bg-amber-300/5 p-4 text-xs text-amber-100">
-          Vercel domain integration is not configured on this deployment. You
-          can still attach a domain — it will stay <code>pending</code> until
-          <code className="mx-1">VERCEL_TOKEN</code>+
-          <code>VERCEL_PROJECT_ID</code> are set and DNS resolves to the host.
+          Cloudflare Custom Hostnames are not configured on this deployment. You
+          can still attach a domain and copy the DNS instructions; it will stay{' '}
+          <code>pending</code> until <code>CLOUDFLARE_API_TOKEN</code> and{' '}
+          <code>CLOUDFLARE_ZONE_ID</code> are configured.
         </div>
       )}
       <DomainEditor pageId={page.id} initial={initial} />
