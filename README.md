@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# linkchat
 
-## Getting Started
+Link-in-bio platform with AI-enhanced profile modes — chat, encyclopedia, roast, and newspaper — deployed on Cloudflare via OpenNext.
 
-First, run the development server:
+## Stack
+
+- **Framework**: Next.js 16 (App Router, React 19, React Compiler ON)
+- **DB**: Turso (libSQL) via Drizzle ORM; D1 for auth tables
+- **Auth**: better-auth + Google provider via Drizzle adapter
+- **AI**: `@ai-sdk/openai-compatible`, OpenAI-style gateway
+- **Storage**: Cloudflare R2 for avatars / project images
+- **Deploy**: Cloudflare Workers via `@opennextjs/cloudflare`
+
+See `AGENTS.md` for full architecture notes.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+cp .env.example .env.local           # then fill in the values below
+pnpm drizzle-kit push                 # apply schema to your Turso DB
+pnpm dev                              # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable                  | Required | Purpose                                        |
+| ------------------------- | -------- | ---------------------------------------------- |
+| `BETTER_AUTH_SECRET`      | Yes      | `openssl rand -base64 32`                      |
+| `BETTER_AUTH_URL`         | Yes      | e.g. `http://localhost:3000`                   |
+| `AUTH_GOOGLE_ID`          | Yes      | Google OAuth client id                         |
+| `AUTH_GOOGLE_SECRET`      | Yes      | Google OAuth client secret                     |
+| `TURSO_DATABASE_URL`      | Yes      | `libsql://...` (or `file:local.db` for dev)    |
+| `TURSO_AUTH_TOKEN`        | Turso    | `turso db tokens create <db>`                  |
+| `NEXT_PUBLIC_APP_URL`     | Yes      | Public origin used in links + emails           |
+| `LINKCHAT_DEFAULT_AI_API_KEY`         | Yes (chat) | Fallback AI API key for chat            |
+| `LINKCHAT_DEFAULT_AI_ENDPOINT_URL`    | No       | Defaults to the free-ai-gateway worker         |
+| `LINKCHAT_DEFAULT_AI_MODEL`           | No       | Defaults to `workers-ai-llama-3.3-70b`         |
+| `CLOUDFLARE_ACCOUNT_ID`               | R2       | For avatar / project image uploads             |
+| `R2_BUCKET_NAME`                      | R2       | R2 bucket name                                 |
+| `R2_PUBLIC_BASE_URL`                  | R2       | Public R2 base URL                             |
+| `R2_ACCESS_KEY_ID`                    | R2       | R2 credential                                  |
+| `R2_SECRET_ACCESS_KEY`                | R2       | R2 credential                                  |
+| `SAASMAKER_API_URL`                   | Optional | SaasMaker RAG endpoint                         |
+| `SAASMAKER_ADMIN_KEY`                 | Optional | SaasMaker admin token                          |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Commands
 
-## Learn More
+```bash
+pnpm dev                  # next dev
+pnpm build                # next build
+pnpm lint                 # eslint
+pnpm test                 # node:test unit tests (hostname, scraper, ...)
+pnpm test:e2e             # playwright (assumes pnpm dev on :3000)
+pnpm preview              # opennextjs-cloudflare build + local preview
+pnpm deploy:cf            # opennextjs-cloudflare build + deploy to CF Workers
 
-To learn more about Next.js, take a look at the following resources:
+pnpm drizzle-kit generate   # generate migration from schema
+pnpm drizzle-kit push       # push schema (dev shortcut)
+pnpm drizzle-kit studio     # Drizzle Studio UI
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Routes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Route                               | Description                              |
+| ----------------------------------- | ---------------------------------------- |
+| `/`                                 | Landing                                  |
+| `/login`                            | better-auth Google sign-in               |
+| `/create`                           | Page creation wizard                     |
+| `/dashboard/*`                      | Auth dashboard (auth gated)              |
+| `/[slug]`                           | Public profile page (SSR)                |
+| `/api/auth/*`                       | better-auth handler                      |
+| `/api/pages/*`                      | CRUD: pages, links, projects, sections   |
+| `/api/chat/[slug]`                  | Public chat (streaming SSE)              |
+| `/api/contact/[slug]`               | Public contact form                      |
+| `/api/track/[slug]`                 | Analytics events                         |
 
-## Deploy on Vercel
+## Architecture highlights
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **React Compiler ON** — don't hand-write `useMemo`/`useCallback`.
+- **Dual deploy** — local uses `file:local.db`; production uses Turso + D1 on CF Workers.
+- **Generated content** lifecycle: `pending → generating → ready | error`.
+- **Rate limiter is in-memory** (`src/lib/rate-limit.ts`) — resets on deploy.
+- **SaasMaker RAG** — each user has `smProjectId`/`smApiKey`/`smIndexId`; `infoBlocks` sync to SaasMaker as documents.
+- **SSRF-safe scraping** — `src/lib/scraper.ts` blocks loopback / RFC 1918 / link-local addresses before fetching.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy
+
+```bash
+pnpm deploy:cf
+```
