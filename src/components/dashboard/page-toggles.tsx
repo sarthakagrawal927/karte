@@ -13,6 +13,7 @@ import {
   Toggle,
 } from '@/components/ui';
 import type { PageSettings } from '@/db/schema';
+import { trackCoreAction } from '@/lib/analytics-events';
 
 interface PageTogglesProps {
   pageId: string;
@@ -136,6 +137,8 @@ export function PageToggles({
         mode: type,
         source: 'dashboard_toggles',
       });
+      // Owner-facing analytics — generating a shareable mode is a core action.
+      trackCoreAction('mode_generated');
       setMessage(`${type.charAt(0).toUpperCase() + type.slice(1)} generated!`);
     } catch {
       setMessage(`Failed to generate ${type}`);

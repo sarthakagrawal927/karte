@@ -53,3 +53,8 @@ next-env.d.ts
 # fallow cache
 .fallow/
 cache.bin
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/

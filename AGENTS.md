@@ -11,7 +11,7 @@ Link-in-bio platform with AI-enhanced profile modes — chat, encyclopedia, roas
 - Framework: Next.js 16 (App Router, React 19, React Compiler ON)
 - Language: TypeScript (strict)
 - Styling: Tailwind CSS v4 (dark theme, glassmorphism)
-- DB: Turso (libSQL) via Drizzle ORM — schema at `src/db/schema.ts`
+- DB: Turso (libSQL) via Drizzle ORM for app data — schema at `src/db/schema.ts`; Cloudflare D1 `linkchat-auth` for better-auth
 - Auth: better-auth (Google provider + Drizzle adapter)
 - Testing: Playwright configured (minimal tests)
 - Deploy: Cloudflare Workers via `@opennextjs/cloudflare` (`pnpm deploy:cf`)
@@ -81,10 +81,10 @@ pnpm drizzle-kit studio     # Drizzle Studio UI
 - **R2 storage**: avatar/project images in CF R2. Requires `CLOUDFLARE_ACCOUNT_ID`, `R2_BUCKET_NAME`, `R2_PUBLIC_BASE_URL`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`.
 - **Visitor Identity**: Uses a dual-storage approach for anonymous tracking. A first-party cookie `lc_vid` (2-year expiry, SameSite=Lax, Secure in prod) provides long-term stability, while `localStorage` (`linkchat_visitor_id`) serves as a fallback and mirror for client-side persistence. Managed via `src/lib/visitor-id.ts` and `/api/track/[slug]`. See `docs/analytics.md` for details.
 - **`@saas-maker/ai`** referenced via local file path — will break on other machines.
-- Env vars: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, R2 vars, `SAASMAKER_API_URL`, `SAASMAKER_ADMIN_KEY`, `NEXT_PUBLIC_APP_URL`. (`AUTH_SECRET` / `AUTH_URL` notes below are from the pre-migration NextAuth era and remain in the CF Worker secrets for reference; the live code reads `BETTER_AUTH_*`.)
+- Env vars: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, R2 vars, `SAASMAKER_API_URL`, `SAASMAKER_ADMIN_KEY`, `NEXT_PUBLIC_APP_URL`.
 - Husky pre-push hook configured.
-- **Auth fix (2026-04-25)**: `AUTH_URL` secret was missing from CF Workers deployment, causing `UntrustedHost` errors in Auth.js v5. Added `AUTH_URL=https://linkchat.sarthakagrawal927.workers.dev` via `wrangler secret put`. Auth flow now correctly redirects to Google OAuth.
-- **Known issue — `AUTH_GOOGLE_ID` empty**: The CF secret `AUTH_GOOGLE_ID` is set but contains an empty string (visible in OAuth redirect as `client_id=`). Google OAuth app credentials were never configured for this deployment. Requires creating/configuring a Google Cloud Console OAuth app with redirect URI `https://linkchat.sarthakagrawal927.workers.dev/api/auth/callback/google`, then running `echo "<client_id>" | wrangler secret put AUTH_GOOGLE_ID --name linkchat` and same for `AUTH_GOOGLE_SECRET`.
+- **Auth (better-auth)**: Auth uses better-auth with the Google provider. `BETTER_AUTH_URL` must be set to the deployed origin (`https://linkchat.sarthakagrawal927.workers.dev`) along with `BETTER_AUTH_SECRET` via `wrangler secret put`, otherwise auth redirects/callbacks fail. better-auth state is backed by Cloudflare D1 `linkchat-auth`.
+- **Google OAuth setup**: Requires a Google Cloud Console OAuth app with redirect URI `https://linkchat.sarthakagrawal927.workers.dev/api/auth/callback/google`. Set credentials with `echo "<client_id>" | wrangler secret put GOOGLE_CLIENT_ID --name linkchat` and same for `GOOGLE_CLIENT_SECRET`.
 - **DB migration warning**: `ensureProjectsTable()` logs `[unenv] https.request is not implemented yet!` on cold start. Non-fatal — error is caught and app continues. Root cause: libsql `@libsql/client/web` uses WebSocket (wss://) for Turso but the initial handshake may touch https internally. Doesn't affect DB reads/writes once connected. Investigate upgrading `@libsql/client` if this causes issues.
 
 <!-- FLEET-GUIDANCE:START -->

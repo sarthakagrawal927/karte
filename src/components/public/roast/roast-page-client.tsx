@@ -3,6 +3,7 @@
 import posthog from 'posthog-js';
 import { useCallback,useRef, useState } from 'react';
 
+import { captureActionFailure } from '@/lib/foundry-monitoring';
 import type { RoastContent } from '@/lib/generated-page-types';
 
 import { RoastScoreCard } from './roast-score-card';
@@ -52,7 +53,12 @@ export function RoastPageClient({
       });
       setRoast(data);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Something went wrong');
+      captureActionFailure(e, { action: 'generate_roast' });
+      setError(
+        e instanceof Error
+          ? e.message
+          : 'Something went wrong. Try again in a moment.',
+      );
     } finally {
       setLoading(false);
     }

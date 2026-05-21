@@ -2,6 +2,18 @@
 
 Link-in-bio platform with AI-enhanced profile modes — chat, encyclopedia, roast, and newspaper — deployed on Cloudflare via OpenNext.
 
+## Deployment & External Services
+
+| Concern | Service |
+|---------|---------|
+| Hosting | Cloudflare Workers (`linkchat`) via `@opennextjs/cloudflare` |
+| Database | Turso (libSQL) for app data; Cloudflare D1 (`linkchat-auth`) for better-auth tables |
+| Auth | better-auth + Google OAuth |
+| File storage | Cloudflare R2 (`linkchat-images`) for avatars / project images |
+| Analytics | PostHog (product analytics); Cloudflare Analytics Engine (`ANALYTICS` binding) |
+| AI | free-ai gateway (OpenAI-compatible) via `@ai-sdk/openai-compatible` |
+| CI/CD | GitHub Actions (`.github/workflows/deploy.yml`) — auto-deploy on push to `main` |
+
 ## Stack
 
 - **Framework**: Next.js 16 (App Router, React 19, React Compiler ON)

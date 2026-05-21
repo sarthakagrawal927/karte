@@ -277,6 +277,26 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="border-t border-white/10 bg-[#10100f] px-5 py-16 text-center sm:px-6">
+        <div className="mx-auto max-w-2xl">
+          <h2 className={`${jakarta.className} text-3xl font-semibold tracking-tight text-white sm:text-4xl`}>
+            Build the profile people remember.
+          </h2>
+          <p className="mt-4 text-sm leading-7 text-gray-400">
+            Start your page before you sign in — claim your username when
+            you&apos;re ready.
+          </p>
+          <div className="mt-8">
+            <Link
+              href="/create"
+              className="inline-flex rounded-xl bg-cyan-300 px-7 py-3 text-sm font-semibold text-gray-950 transition hover:bg-cyan-200"
+            >
+              Build Your Profile
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-white/10 px-5 py-8 text-center sm:px-6">
         <p className="text-sm text-gray-500">© 2026 LinkChat.</p>
       </footer>

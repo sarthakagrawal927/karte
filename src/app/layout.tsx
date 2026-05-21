@@ -16,9 +16,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = "https://linkchat.sarthakagrawal927.workers.dev";
+const SITE_DESCRIPTION =
+  "Replace Linktree with a personal website and an AI version of you. Then give visitors shareable ways to experience your profile: Encyclopedia, Newspaper, and Roast Me.";
+
 export const metadata: Metadata = {
-  title: "LinkChat — Your links, your story, your AI",
-  description: "Create a beautiful personal page with all your links and let visitors chat with an AI that knows everything about you.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "LinkChat — Your links, your story, your AI",
+    template: "%s — LinkChat",
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: "LinkChat",
+  keywords: [
+    "link in bio",
+    "personal website",
+    "AI profile",
+    "Linktree alternative",
+  ],
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "LinkChat",
+    title: "LinkChat — Your links, your story, your AI",
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LinkChat — Your links, your story, your AI",
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({

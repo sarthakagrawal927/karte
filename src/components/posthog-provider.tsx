@@ -4,6 +4,7 @@ import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { useEffect, useRef } from 'react';
 
+import { trackReturned, trackSignup } from '@/lib/analytics-events';
 import { authClient } from '@/lib/auth-client';
 import { installBrowserMonitoring } from '@/lib/foundry-monitoring';
 
@@ -38,6 +39,21 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
       if (trackedSessionId.current !== session.session.id) {
         posthog.capture('user_login');
         trackedSessionId.current = session.session.id;
+
+        // Owner-facing analytics — emit the fixed-taxonomy session event.
+        // `signup` fires the first time a user is seen in this browser;
+        // `returned` fires on every later session for a known user.
+        try {
+          const key = `linkchat:seen:${session.user.id}`;
+          if (window.localStorage.getItem(key)) {
+            trackReturned();
+          } else {
+            window.localStorage.setItem(key, String(Date.now()));
+            trackSignup();
+          }
+        } catch {
+          // localStorage may be unavailable — never break on analytics.
+        }
       }
     } else {
       posthog.reset();

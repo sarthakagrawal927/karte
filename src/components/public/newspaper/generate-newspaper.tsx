@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import posthog from 'posthog-js';
 import { useState } from 'react';
 
+import { captureActionFailure } from '@/lib/foundry-monitoring';
+
 interface GenerateNewspaperProps {
   pageId: string;
   slug: string;
@@ -35,7 +37,12 @@ export function GenerateNewspaper({ pageId, slug, accentColor }: GenerateNewspap
 
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+      captureActionFailure(err, { action: 'generate_newspaper' });
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Something went wrong. Try again in a moment.',
+      );
       setLoading(false);
     }
   }

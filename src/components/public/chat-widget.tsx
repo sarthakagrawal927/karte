@@ -5,6 +5,7 @@ import { useCallback,useEffect, useRef, useState } from 'react';
 import { ContactFormSection } from '@/components/public/contact-form-section';
 import type { DmMode } from '@/db/schema';
 import { trackEvent } from '@/lib/analytics';
+import { captureActionFailure } from '@/lib/foundry-monitoring';
 import { getOrCreateVisitorId } from '@/lib/visitor-id';
 
 interface Message {
@@ -204,10 +205,15 @@ export function ChatWidget({
         }
         void saveMessage(convId, 'assistant', fullResponse);
       }
-    } catch {
+    } catch (err) {
+      captureActionFailure(err, { action: 'chat_send' });
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'Failed to connect to chat service' },
+        {
+          role: 'assistant',
+          content:
+            "Couldn't reach the chat service. Check your connection and try sending again.",
+        },
       ]);
     } finally {
       setLoading(false);

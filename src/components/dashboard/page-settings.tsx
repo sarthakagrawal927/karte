@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { ImageUploadField } from '@/components/dashboard/image-upload-field';
 import type { DmMode } from '@/db/schema';
+import { trackActivated, trackCoreAction } from '@/lib/analytics-events';
 import {
   DEFAULT_THEME_PRESET,
   resolveThemeConfig,
@@ -223,6 +224,12 @@ export function PageSettings({
         setMessage('Page created successfully');
         router.refresh();
       } else {
+        // Owner-facing analytics — a profile going live is the core action,
+        // and the first publish is the activation milestone.
+        if (published && !page.published) {
+          trackCoreAction('page_published');
+          trackActivated();
+        }
         setMessage('Saved successfully');
       }
     } catch {

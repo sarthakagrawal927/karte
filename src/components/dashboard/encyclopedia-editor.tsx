@@ -10,6 +10,7 @@ import {
   Input,
   Label,
 } from '@/components/ui';
+import { trackCoreAction } from '@/lib/analytics-events';
 import type { EncyclopediaContent } from '@/lib/generated-page-types';
 
 import { NovelEditor } from './novel-editor';
@@ -162,6 +163,8 @@ export function EncyclopediaEditor({
       posthog.capture('profile_mode_generated', {
         mode: 'encyclopedia',
       });
+      // Owner-facing analytics — generating a shareable mode is a core action.
+      trackCoreAction('mode_generated');
       setContent(newContent);
       markdownRef.current = newContent.markdown;
       setMessage('Regenerated successfully');
