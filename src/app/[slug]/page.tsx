@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -17,6 +18,29 @@ type Props = {
   params: Promise<{ slug: string }>;
   searchParams?: Promise<{ variant?: string; room?: string }>;
 };
+
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+  const { room } = (await searchParams) ?? {};
+  if (!room) return {};
+
+  const { slug } = await params;
+  const data = await getFullPageData(slug);
+  if (!data) return {};
+
+  const { page } = data;
+  const name = page.displayName;
+  const title = `Chat with ${name}`;
+  const description = `You've been invited to a conversation with ${name} on LinkChat. Click to join and continue the chat.`;
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      ...(page.avatarUrl && { images: [page.avatarUrl] }),
+    },
+  };
+}
 
 export default async function ProfilePage({ params, searchParams }: Props) {
   const { slug } = await params;
