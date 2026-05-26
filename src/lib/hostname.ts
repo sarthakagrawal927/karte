@@ -27,6 +27,10 @@ export function normalizeHostname(input: string | null | undefined): string | nu
   return host;
 }
 
+// Karte's own brand domains — baked in because Next.js inlines NEXT_PUBLIC_*
+// env vars at build time, making runtime env var bridging unreliable.
+const KARTE_APP_HOSTS = new Set(['karte.cc', 'www.karte.cc']);
+
 export function isAppHost(host: string, appHost: string | null | undefined): boolean {
   if (!host) return false;
   const normalized = host.toLowerCase().split(':')[0];
@@ -34,6 +38,7 @@ export function isAppHost(host: string, appHost: string | null | undefined): boo
   if (normalized === '127.0.0.1' || normalized === '0.0.0.0') return true;
   if (normalized.endsWith('.workers.dev')) return true;
   if (normalized.endsWith('.vercel.app')) return true;
+  if (KARTE_APP_HOSTS.has(normalized)) return true;
   if (appHost) {
     const app = appHost.toLowerCase().split(':')[0];
     if (normalized === app) return true;
