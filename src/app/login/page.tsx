@@ -11,30 +11,40 @@ export default async function LoginPage() {
   if (session?.user) redirect('/dashboard');
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#10100f] text-white">
+    <main className="min-h-screen overflow-hidden bg-[#0a0a0a] text-zinc-200 antialiased">
       <PublicTopBar current="login" variant="minimal" />
 
-      <section className="relative min-h-[calc(100vh-4.5rem)] border-t border-white/10">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px)] bg-[size:44px_44px]" />
+      <section className="relative min-h-[calc(100vh-4rem)]">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(ellipse_at_top_left,#000_20%,transparent_70%)]" />
+          <div className="absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full bg-cyan-400/[0.10] blur-[160px]" />
+        </div>
 
-        <div className="relative mx-auto grid min-h-[calc(100vh-4.5rem)] max-w-6xl items-center gap-10 px-5 py-12 sm:px-6 lg:grid-cols-[1fr_420px]">
+        <div className="relative mx-auto grid min-h-[calc(100vh-4rem)] max-w-6xl items-center gap-12 px-6 py-16 lg:grid-cols-[1fr_420px] lg:gap-16">
           <div className="max-w-2xl">
-            <p className="text-sm font-medium uppercase tracking-[0.32em] text-cyan-200">
-              Welcome back
+            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-zinc-500">
+              <span className="text-cyan-300/80">·</span> Welcome back
             </p>
-            <h1 className="mt-5 text-4xl font-bold tracking-tight text-white sm:text-6xl">
-              Manage the profile people can explore, ask, and message.
+            <h1 className="mt-6 text-4xl font-semibold leading-[1.05] tracking-[-0.025em] text-white sm:text-5xl lg:text-6xl">
+              Manage the profile people{' '}
+              <span
+                className="font-serif italic font-normal text-cyan-200"
+                style={{ fontFamily: 'var(--font-instrument-serif), serif' }}
+              >
+                actually
+              </span>{' '}
+              talk to.
             </h1>
-            <p className="mt-5 text-base leading-7 text-gray-400 sm:text-lg">
+            <p className="mt-6 max-w-xl text-[15px] leading-[1.65] tracking-[-0.005em] text-zinc-400 sm:text-base">
               Sign in to update your links, train your AI chat, review Inbox
               messages, and publish generated profile modes.
             </p>
 
-            <div className="mt-8 grid max-w-xl gap-3 sm:grid-cols-2">
+            <div className="mt-10 grid max-w-xl gap-2 sm:grid-cols-2">
               {modeLabels.map((label) => (
                 <div
                   key={label}
-                  className="rounded-xl border border-white/10 bg-white/[0.035] px-4 py-3 text-sm font-medium text-white"
+                  className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-[13px] font-medium text-zinc-300"
                 >
                   {label}
                 </div>
@@ -42,40 +52,55 @@ export default async function LoginPage() {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-white/15 bg-white/[0.04] p-3 shadow-2xl shadow-black/40 backdrop-blur-xl">
-            <div className="rounded-2xl border border-white/10 bg-[#151514] p-6">
-              <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-300 text-sm font-bold text-gray-950">
-                  LC
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-white">Karte</p>
-                  <p className="text-xs text-gray-400">Creator dashboard</p>
-                </div>
+          <div className="rounded-3xl border border-white/[0.08] bg-[#0c0c0b] p-6">
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-300">
+                <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" className="h-6 w-6">
+                  <path
+                    d="M8 7 h16 a4 4 0 0 1 4 4 v9 a4 4 0 0 1 -4 4 h-9 l-4 4 v-4 h-3 a4 4 0 0 1 -4 -4 v-9 a4 4 0 0 1 4 -4 Z"
+                    fill="#0a0a0a"
+                  />
+                  <circle cx="13" cy="15.5" r="1.25" fill="#67e8f9" />
+                  <circle cx="16.5" cy="15.5" r="1.25" fill="#67e8f9" />
+                  <circle cx="20" cy="15.5" r="1.25" fill="#67e8f9" />
+                </svg>
               </div>
+              <div>
+                <p className="text-[15px] font-semibold tracking-[-0.005em] text-white">Karte</p>
+                <p className="text-[12px] text-zinc-500">Creator dashboard</p>
+              </div>
+            </div>
 
-              <h2 className="text-2xl font-semibold text-white">
-                Sign in to continue
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-gray-400">
-                Your Google account verifies ownership and powers email-verified
-                messaging.
+            <h2 className="text-xl font-semibold tracking-[-0.01em] text-white">
+              Sign in to continue
+            </h2>
+            <p className="mt-2 text-[14px] leading-[1.6] text-zinc-400">
+              Your Google account verifies ownership and powers email-verified
+              messaging.
+            </p>
+
+            <div className="mt-6">
+              <GoogleSignInButton />
+            </div>
+
+            <div className="mt-6 border-t border-white/[0.06] pt-5">
+              <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-zinc-500">
+                <span className="text-cyan-300/80">·</span> After sign in
               </p>
-
-              <div className="mt-7">
-                <GoogleSignInButton />
-              </div>
-
-              <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
-                <p className="text-xs font-medium uppercase tracking-[0.22em] text-cyan-200">
-                  After sign in
-                </p>
-                <div className="mt-3 space-y-2 text-sm text-gray-300">
-                  <p>Set your visitor intent.</p>
-                  <p>Enable anonymous or email-verified DMs.</p>
-                  <p>Generate profile modes that make your page memorable.</p>
-                </div>
-              </div>
+              <ul className="mt-3 space-y-2 text-[13px] leading-[1.55] text-zinc-300">
+                <li className="flex items-center gap-2">
+                  <span className="h-1 w-1 shrink-0 rounded-full bg-cyan-300/60" />
+                  Set your visitor intent.
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-1 w-1 shrink-0 rounded-full bg-cyan-300/60" />
+                  Enable anonymous or email-verified DMs.
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-1 w-1 shrink-0 rounded-full bg-cyan-300/60" />
+                  Generate profile modes that make your page memorable.
+                </li>
+              </ul>
             </div>
           </div>
         </div>

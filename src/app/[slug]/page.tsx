@@ -128,11 +128,11 @@ export default async function ProfilePage({ params, searchParams }: Props) {
                     width={84}
                     height={84}
                     sizes="84px"
-                    className="h-16 w-16 rounded-2xl border border-white/15 object-cover shadow-2xl shadow-black/50 sm:h-20 sm:w-20"
+                    className="h-16 w-16 rounded-2xl border border-white/[0.10] object-cover sm:h-20 sm:w-20"
                   />
                 )}
                 {!page.avatarUrl && (
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-[#f2c879]/25 bg-[#f2c879] text-xl font-semibold text-[#17120a] shadow-2xl shadow-black/50 sm:h-20 sm:w-20 sm:text-2xl">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-white/[0.10] bg-cyan-300 text-xl font-semibold text-zinc-950 sm:h-20 sm:w-20 sm:text-2xl">
                     {initials || firstName[0]?.toUpperCase()}
                   </div>
                 )}

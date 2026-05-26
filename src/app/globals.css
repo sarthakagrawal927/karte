@@ -1,8 +1,39 @@
 @import "tailwindcss";
 
+/* ─── Karte design tokens ────────────────────────────────────────────── */
+/* The single source of truth for landing, dashboard, and default public  */
+/* profile chrome. User-customizable profile themes still override via    */
+/* THEME_PRESETS + resolveThemeConfig.                                    */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surfaces */
+  --karte-bg: #0a0a0a;          /* primary background */
+  --karte-surface: #0c0c0b;     /* slightly raised surface (aside, P.S., etc) */
+  --karte-surface-2: #121211;   /* cards / numbered chips */
+
+  /* Text — off-white pair, three levels of muting */
+  --karte-text: #ededed;        /* primary headlines */
+  --karte-text-2: #d4d4d8;      /* zinc-300, body */
+  --karte-text-3: #a1a1aa;      /* zinc-400, secondary */
+  --karte-text-4: #71717a;      /* zinc-500, eyebrows / hints */
+
+  /* Borders — hairlines, no shadows */
+  --karte-border: rgb(255 255 255 / 0.06);
+  --karte-border-strong: rgb(255 255 255 / 0.12);
+  --karte-border-emphasis: rgb(255 255 255 / 0.15);
+
+  /* Single accent — cyan-300 with a softer companion */
+  --karte-accent: #67e8f9;      /* cyan-300, used for CTAs, italic accents, dots */
+  --karte-accent-soft: #a5f3fc; /* cyan-200, used for italic phrases in headlines */
+  --karte-accent-glow: rgb(103 232 249 / 0.10);
+
+  /* Motion */
+  --karte-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --karte-duration: 200ms;
+
+  /* Legacy tokens — kept so existing components don't break */
+  --background: var(--karte-bg);
+  --foreground: var(--karte-text);
 }
 
 @theme inline {
@@ -10,19 +41,28 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Karte tokens — accessible as bg-karte-bg, text-karte-text, etc */
+  --color-karte-bg: var(--karte-bg);
+  --color-karte-surface: var(--karte-surface);
+  --color-karte-surface-2: var(--karte-surface-2);
+  --color-karte-text: var(--karte-text);
+  --color-karte-text-2: var(--karte-text-2);
+  --color-karte-text-3: var(--karte-text-3);
+  --color-karte-text-4: var(--karte-text-4);
+  --color-karte-border: var(--karte-border);
+  --color-karte-border-strong: var(--karte-border-strong);
+  --color-karte-accent: var(--karte-accent);
+  --color-karte-accent-soft: var(--karte-accent-soft);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--karte-bg);
+  color: var(--karte-text-2);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @keyframes page-enter {

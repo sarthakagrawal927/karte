@@ -21,8 +21,8 @@ export function ProjectCard({
       data-track-type="project"
       data-track-id={id ?? url}
       data-track-label={title}
-      className="group flex h-full min-w-0 flex-col overflow-hidden rounded-3xl border border-white/15 bg-[#141414]/86 p-6 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#f2c879]/35 hover:bg-[#191813] hover:shadow-2xl hover:shadow-black/45"
-      style={accentColor ? { borderColor: `${accentColor}33` } : undefined}
+      className="group flex h-full min-w-0 flex-col overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.02] p-6 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-white/[0.18] hover:bg-white/[0.04]"
+      style={accentColor ? { borderColor: `${accentColor}28` } : undefined}
     >
       {imageUrl && (
         <div

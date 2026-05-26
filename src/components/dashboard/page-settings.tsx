@@ -68,7 +68,7 @@ function getInitials(value: string) {
     .filter(Boolean)
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase() ?? '')
-    .join('') || 'LC';
+    .join('') || 'K';
 }
 
 export function PageSettings({
