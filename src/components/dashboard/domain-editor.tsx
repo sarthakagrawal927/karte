@@ -2,6 +2,13 @@
 
 import { useState } from 'react';
 
+// Feature flag: custom domains register + verify on CF, but don't actually
+// serve traffic without a Workers-for-Platforms migration. Until that ships,
+// hide the add-domain form behind a notify-me CTA so we collect interest
+// signal without exposing broken UX. Flip to true once the migration in
+// docs/plans/custom-domains-migration.md is complete.
+const CUSTOM_DOMAINS_LIVE = false;
+
 type Verification = { type: string; domain: string; value: string; reason?: string };
 type DnsInstruction = { type: 'A' | 'CNAME'; name: string; value: string; note?: string };
 
@@ -155,26 +162,11 @@ export function DomainEditor({
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-amber-300/25 bg-amber-300/[0.04] p-4">
-        <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-amber-200">
-          <span className="text-amber-300">·</span> Beta · limited
-        </p>
-        <p className="mt-2 text-[13px] leading-[1.55] text-karte-text-2">
-          Custom hostnames register and verify cleanly, but{' '}
-          <span className="text-karte-text">don&apos;t yet serve traffic</span> —
-          Cloudflare for SaaS on bare Workers has a platform constraint we
-          haven&apos;t worked around yet. Verified hostnames return HTTP 522 when
-          visited. For now: share your profile via{' '}
-          <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-[12px]">
-            karte.cc/&lt;your-slug&gt;
-          </code>{' '}
-          instead. See <code className="text-karte-text-3">docs/custom-domains.md</code>{' '}
-          for the architecture migration needed to unblock this.
-        </p>
-      </div>
+      {!CUSTOM_DOMAINS_LIVE && <NotifyCard />}
 
       <form
         onSubmit={add}
+        hidden={!CUSTOM_DOMAINS_LIVE}
         className="flex flex-col gap-3 rounded-2xl border border-karte-border bg-white/[0.03] p-4 sm:flex-row sm:items-end"
       >
         <label className="flex flex-1 flex-col gap-1.5 text-[11px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
@@ -199,13 +191,13 @@ export function DomainEditor({
         </button>
       </form>
 
-      {error && (
+      {CUSTOM_DOMAINS_LIVE && error && (
         <div className="rounded-2xl border border-rose-300/30 bg-rose-300/10 px-4 py-3 text-sm text-rose-100">
           {error}
         </div>
       )}
 
-      {domains.length === 0 ? (
+      {!CUSTOM_DOMAINS_LIVE ? null : domains.length === 0 ? (
         <p className="text-sm text-karte-text-4">No custom domains yet.</p>
       ) : (
         <ul className="space-y-4">
@@ -622,6 +614,89 @@ function CopyField({
         {isCopied ? '✓ Copied' : 'Copy'}
       </span>
     </button>
+  );
+}
+
+// Coming-soon CTA: collects interest signal via PostHog when present, otherwise
+// just shows the success state locally. No DB write — we'll count signals from
+// analytics when deciding whether to trigger the WfP migration.
+function NotifyCard() {
+  const [signaled, setSignaled] = useState(false);
+  const [pending, setPending] = useState(false);
+
+  async function notify() {
+    setPending(true);
+    try {
+      // Fire-and-forget. Use the PostHog client if the provider has mounted it.
+      // We don't await — UI feedback is immediate.
+      if (typeof window !== 'undefined') {
+        const ph = (window as unknown as { posthog?: { capture?: (e: string, p?: Record<string, unknown>) => void } }).posthog;
+        ph?.capture?.('custom_domain_interest', {
+          source: 'dashboard/domains',
+        });
+      }
+      setSignaled(true);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <div className="rounded-2xl border border-karte-border bg-gradient-to-br from-white/[0.04] to-white/[0.01] p-6">
+      <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
+        <span className="text-karte-accent/80">·</span> Roadmap
+      </p>
+      <h3 className="mt-3 text-[20px] font-semibold tracking-[-0.01em] text-karte-text">
+        Custom domains — coming soon
+      </h3>
+      <p className="mt-2 max-w-prose text-[14px] leading-[1.6] text-karte-text-3">
+        Soon you&apos;ll be able to point your own domain (like{' '}
+        <code className="rounded bg-white/[0.05] px-1.5 py-0.5 font-mono text-[12.5px] text-karte-text-2">
+          you.com
+        </code>{' '}
+        or{' '}
+        <code className="rounded bg-white/[0.05] px-1.5 py-0.5 font-mono text-[12.5px] text-karte-text-2">
+          links.you.com
+        </code>
+        ) at your profile. Until it ships, your profile lives at{' '}
+        <code className="rounded bg-white/[0.05] px-1.5 py-0.5 font-mono text-[12.5px] text-karte-text-2">
+          karte.cc/&lt;your-slug&gt;
+        </code>
+        .
+      </p>
+
+      <div className="mt-5 flex flex-wrap items-center gap-3">
+        {signaled ? (
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-emerald-300/[0.08] px-4 py-2 text-[13px] font-medium text-emerald-200">
+            <span>✓</span> We&apos;ll email you when it&apos;s ready
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={notify}
+            disabled={pending}
+            className="group inline-flex items-center justify-center gap-1.5 rounded-full bg-white px-5 py-2 text-[13px] font-medium text-zinc-950 transition-all duration-200 ease-[var(--karte-ease)] hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {pending ? (
+              <>
+                <Spinner />
+                Recording…
+              </>
+            ) : (
+              <>
+                Notify me when it launches
+                <span className="transition-transform duration-200 ease-[var(--karte-ease)] group-hover:translate-x-0.5">
+                  →
+                </span>
+              </>
+            )}
+          </button>
+        )}
+        <span className="text-[12px] text-karte-text-4">
+          No spam. One email when it ships.
+        </span>
+      </div>
+    </div>
   );
 }
 
