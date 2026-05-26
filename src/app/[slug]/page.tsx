@@ -30,7 +30,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const { page } = data;
   const name = page.displayName;
   const title = `Chat with ${name}`;
-  const description = `You've been invited to a conversation with ${name} on LinkChat. Click to join and continue the chat.`;
+  const description = `You've been invited to a conversation with ${name} on Karte. Click to join and continue the chat.`;
   return {
     title,
     description,
@@ -66,6 +66,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
     .map((part) => part[0]?.toUpperCase())
     .join('');
   const hasMessenger = (page.chatEnabled ?? false) || page.dmMode !== 'off';
+  const hasChatPanel = hasMessenger;
   const modeCards = [
     {
       key: 'encyclopedia',
@@ -98,6 +99,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
       visual: 'roast',
     },
   ];
+  const enabledModeCards = modeCards.filter((card) => card.enabled);
 
   return (
     <main
@@ -116,7 +118,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
           className="overflow-hidden rounded-[28px] border border-[#f2c879]/18 bg-[#121212]/92 backdrop-blur-2xl sm:rounded-[32px]"
           style={{ boxShadow: `0 40px 140px -72px ${theme.accentColor}` }}
         >
-          <div className="grid gap-0 lg:grid-cols-[1fr_360px]">
+          <div className={`grid gap-0 ${hasChatPanel ? 'lg:grid-cols-[1fr_360px]' : ''}`}>
             <div className="p-5 sm:p-10">
               <div className="flex items-center gap-3 sm:gap-4">
                 {page.avatarUrl && (
@@ -153,10 +155,11 @@ export default async function ProfilePage({ params, searchParams }: Props) {
               <div className="mt-7 sm:mt-9" />
             </div>
 
+            {hasChatPanel && (
             <div className="border-t border-[#f2c879]/12 bg-white/[0.025] p-4 sm:p-5 lg:border-l lg:border-t-0">
               <div className="rounded-[24px] border border-[#f2c879]/14 bg-black/35 p-5">
                 <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/45">
-                  Ask the profile
+                  Ask {firstName}
                 </p>
                 {page.chatEnabled && (
                   <div className="mt-4 space-y-3">
@@ -189,6 +192,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
                 )}
               </div>
             </div>
+            )}
           </div>
         </section>
 
@@ -226,99 +230,81 @@ export default async function ProfilePage({ params, searchParams }: Props) {
           </section>
         )}
 
+        {enabledModeCards.length > 0 && (
         <section className="mt-5 grid gap-3 md:grid-cols-3">
-          {modeCards.map((card) => {
-            const content = (
-              <>
-                <div className="mb-6 h-28 overflow-hidden rounded-2xl border border-white/10 bg-black/28">
-                  {card.visual === 'wiki' && (
-                    <div className="grid h-full grid-cols-[72px_1fr] gap-3 p-4">
-                      <div className="space-y-2 border-r border-white/10 pr-3">
-                        <div className="h-2 w-10 rounded-full bg-white/45" />
-                        <div className="h-2 w-8 rounded-full bg-white/20" />
-                        <div className="h-2 w-11 rounded-full bg-white/20" />
-                      </div>
-                      <div>
-                        <div className="h-3 w-32 rounded-full bg-white/70" />
-                        <div className="mt-4 space-y-2">
-                          <div className="h-2 rounded-full bg-white/25" />
-                          <div className="h-2 w-11/12 rounded-full bg-white/18" />
-                          <div className="h-2 w-8/12 rounded-full bg-white/18" />
-                        </div>
+          {enabledModeCards.map((card) => (
+            <Link
+              key={card.key}
+              href={card.href}
+              className="group min-h-64 rounded-[28px] border border-[#f2c879]/14 bg-[#141414]/84 p-6 backdrop-blur-xl transition hover:-translate-y-1 hover:border-[#f2c879]/30 hover:bg-[#191813]"
+            >
+              <div className="mb-6 h-28 overflow-hidden rounded-2xl border border-white/10 bg-black/28">
+                {card.visual === 'wiki' && (
+                  <div className="grid h-full grid-cols-[72px_1fr] gap-3 p-4">
+                    <div className="space-y-2 border-r border-white/10 pr-3">
+                      <div className="h-2 w-10 rounded-full bg-white/45" />
+                      <div className="h-2 w-8 rounded-full bg-white/20" />
+                      <div className="h-2 w-11 rounded-full bg-white/20" />
+                    </div>
+                    <div>
+                      <div className="h-3 w-32 rounded-full bg-white/70" />
+                      <div className="mt-4 space-y-2">
+                        <div className="h-2 rounded-full bg-white/25" />
+                        <div className="h-2 w-11/12 rounded-full bg-white/18" />
+                        <div className="h-2 w-8/12 rounded-full bg-white/18" />
                       </div>
                     </div>
-                  )}
-                  {card.visual === 'newspaper' && (
-                    <div className="h-full bg-[#f4efe4] p-4 text-[#17130d]">
-                      <div className="border-b border-[#17130d]/30 pb-2 text-center font-serif text-lg font-bold leading-none">
-                        The Profile Times
-                      </div>
-                      <div className="mt-3 grid grid-cols-3 gap-3">
-                        <div className="space-y-1">
-                          <div className="h-2 bg-[#17130d]/70" />
-                          <div className="h-1.5 bg-[#17130d]/30" />
-                          <div className="h-1.5 bg-[#17130d]/30" />
-                        </div>
-                        <div className="space-y-1">
-                          <div className="h-2 bg-[#17130d]/70" />
-                          <div className="h-1.5 bg-[#17130d]/30" />
-                          <div className="h-1.5 bg-[#17130d]/30" />
-                        </div>
-                        <div className="space-y-1">
-                          <div className="h-2 bg-[#17130d]/70" />
-                          <div className="h-1.5 bg-[#17130d]/30" />
-                          <div className="h-1.5 bg-[#17130d]/30" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {card.visual === 'roast' && (
-                    <div className="relative h-full bg-[#170611] p-4">
-                      <div className="absolute left-4 top-4 rotate-[-4deg] border-2 border-[#f2c879] bg-black px-3 py-2 text-xs font-black uppercase tracking-[0.18em] text-[#f2c879] shadow-[6px_6px_0_#f08b5f]">
-                        Public Vibe Inspection
-                      </div>
-                      <div className="absolute bottom-4 right-4 flex h-14 w-14 items-center justify-center rounded-full border-4 border-[#f08b5f] text-xl font-black text-white shadow-[0_0_30px_rgba(240,139,95,0.32)]">
-                        82
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center">
-                  <div
-                    className="rounded-full border border-white/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em]"
-                    style={{ color: card.accent }}
-                  >
-                    {card.mark}
                   </div>
-                </div>
-                <h2 className="mt-5 text-2xl font-semibold text-white">{card.title}</h2>
-                <p className="mt-4 text-sm leading-6 text-white/60">{card.description}</p>
-                {!card.enabled && (
-                  <p className="mt-7 text-sm font-semibold text-white/38">
-                    Not ready yet
-                  </p>
                 )}
-              </>
-            );
-
-            return card.enabled ? (
-              <Link
-                key={card.key}
-                href={card.href}
-                className="group min-h-64 rounded-[28px] border border-[#f2c879]/14 bg-[#141414]/84 p-6 backdrop-blur-xl transition hover:-translate-y-1 hover:border-[#f2c879]/30 hover:bg-[#191813]"
-              >
-                {content}
-              </Link>
-            ) : (
-              <div
-                key={card.key}
-                className="min-h-64 rounded-[28px] border border-[#f2c879]/10 bg-[#141414]/74 p-6 opacity-55 backdrop-blur-xl"
-              >
-                {content}
+                {card.visual === 'newspaper' && (
+                  <div className="h-full bg-[#f4efe4] p-4 text-[#17130d]">
+                    <div className="border-b border-[#17130d]/30 pb-2 text-center font-serif text-lg font-bold leading-none">
+                      The Profile Times
+                    </div>
+                    <div className="mt-3 grid grid-cols-3 gap-3">
+                      <div className="space-y-1">
+                        <div className="h-2 bg-[#17130d]/70" />
+                        <div className="h-1.5 bg-[#17130d]/30" />
+                        <div className="h-1.5 bg-[#17130d]/30" />
+                      </div>
+                      <div className="space-y-1">
+                        <div className="h-2 bg-[#17130d]/70" />
+                        <div className="h-1.5 bg-[#17130d]/30" />
+                        <div className="h-1.5 bg-[#17130d]/30" />
+                      </div>
+                      <div className="space-y-1">
+                        <div className="h-2 bg-[#17130d]/70" />
+                        <div className="h-1.5 bg-[#17130d]/30" />
+                        <div className="h-1.5 bg-[#17130d]/30" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {card.visual === 'roast' && (
+                  <div className="relative h-full bg-[#170611] p-4">
+                    <div className="absolute left-4 top-4 rotate-[-4deg] border-2 border-[#f2c879] bg-black px-3 py-2 text-xs font-black uppercase tracking-[0.18em] text-[#f2c879] shadow-[6px_6px_0_#f08b5f]">
+                      Public Vibe Inspection
+                    </div>
+                    <div className="absolute bottom-4 right-4 flex h-14 w-14 items-center justify-center rounded-full border-4 border-[#f08b5f] text-xl font-black text-white shadow-[0_0_30px_rgba(240,139,95,0.32)]">
+                      82
+                    </div>
+                  </div>
+                )}
               </div>
-            );
-          })}
+              <div className="flex items-center">
+                <div
+                  className="rounded-full border border-white/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em]"
+                  style={{ color: card.accent }}
+                >
+                  {card.mark}
+                </div>
+              </div>
+              <h2 className="mt-5 text-2xl font-semibold text-white">{card.title}</h2>
+              <p className="mt-4 text-sm leading-6 text-white/60">{card.description}</p>
+            </Link>
+          ))}
         </section>
+        )}
 
         {pageProjects.length > 0 && (
           <section className="mt-10 w-full">
@@ -391,7 +377,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
             href="/"
             className="font-medium text-white/50 transition-colors hover:text-white"
           >
-            LinkChat
+            Karte
           </Link>
         </p>
       </div>
