@@ -1,9 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type DemoMode = 'chat' | 'encyclopedia' | 'newspaper' | 'roast';
+
+const MODE_CYCLE: DemoMode[] = ['chat', 'encyclopedia', 'newspaper', 'roast'];
+const CYCLE_MS = 4500;
 
 type ChatPrompt = {
   id: string;
@@ -16,7 +19,7 @@ type ChatPrompt = {
 const DEMO_PROFILE = {
   slug: 'sarthak',
   name: 'Sarthak Agrawal',
-  handle: 'sarthak.linkchat',
+  handle: 'karte.cc/sarthak',
   tagline: 'Builder, researcher, product person.',
   initials: 'SA',
 };
@@ -27,7 +30,7 @@ const CHAT_PROMPTS: ChatPrompt[] = [
     label: 'What is Sarthak building?',
     userMessage: 'What is Sarthak building?',
     assistantMessage:
-      'LinkChat is the main bet — profiles with chat, Encyclopedia, Newspaper, and Roast modes grounded in your memory. Also shipping fleet tooling and AI product experiments.',
+      'Karte is the main bet — digital cards with chat, Encyclopedia, Newspaper, and Roast modes grounded in your memory. Also shipping fleet tooling and AI product experiments.',
     source: 'Projects + bio',
   },
   {
@@ -43,7 +46,7 @@ const CHAT_PROMPTS: ChatPrompt[] = [
     label: 'Which project should I open first?',
     userMessage: 'Which project should I open first?',
     assistantMessage:
-      'Open LinkChat if you care about link-in-bio + AI profile modes. Open the fleet tooling repos if you want to see how the builder stack ships in production.',
+      'Open Karte if you care about digital cards + AI profile modes. Open the fleet tooling repos if you want to see how the builder stack ships in production.',
     source: 'Projects',
   },
 ];
@@ -68,7 +71,7 @@ function ModePreview({ mode }: { mode: DemoMode }) {
         <div>
           <p className="text-lg font-semibold text-white">Sarthak Agrawal</p>
           <p className="mt-3 text-sm leading-6 text-gray-300">
-            Sarthak Agrawal is a builder working on LinkChat — a link-in-bio platform
+            Sarthak Agrawal is a builder working on Karte — a digital card platform
             where visitors query a memory-backed profile instead of scrolling static links.
           </p>
           <p className="mt-3 text-sm leading-6 text-gray-400">
@@ -94,7 +97,7 @@ function ModePreview({ mode }: { mode: DemoMode }) {
             Builder edition · Generated from memory
           </p>
           <h3 className="mt-2 font-serif text-2xl font-bold leading-tight">
-            LinkChat turns bios into profiles people actually talk to
+            Karte turns your bio into a card people actually talk to
           </h3>
           <p className="mt-3 text-sm leading-6 text-[#17130d]/75">
             Sarthak Agrawal ships a link page that answers questions, publishes
@@ -126,16 +129,41 @@ function ModePreview({ mode }: { mode: DemoMode }) {
   return null;
 }
 
-export function HomeProfileDemo() {
+type HomeProfileDemoProps = {
+  autoCycle?: boolean;
+};
+
+export function HomeProfileDemo({ autoCycle = true }: HomeProfileDemoProps = {}) {
   const [mode, setMode] = useState<DemoMode>('chat');
   const [activePromptId, setActivePromptId] = useState(CHAT_PROMPTS[0].id);
+  const [paused, setPaused] = useState(false);
+  const [locked, setLocked] = useState(false);
   const activePrompt =
     CHAT_PROMPTS.find((prompt) => prompt.id === activePromptId) ?? CHAT_PROMPTS[0];
 
+  useEffect(() => {
+    if (!autoCycle || paused || locked) return;
+    const id = window.setInterval(() => {
+      setMode((m) => {
+        const i = MODE_CYCLE.indexOf(m);
+        return MODE_CYCLE[(i + 1) % MODE_CYCLE.length];
+      });
+      setActivePromptId((pid) => {
+        const i = CHAT_PROMPTS.findIndex((p) => p.id === pid);
+        return CHAT_PROMPTS[(i + 1) % CHAT_PROMPTS.length].id;
+      });
+    }, CYCLE_MS);
+    return () => window.clearInterval(id);
+  }, [autoCycle, paused, locked]);
+
+  const cycleActive = autoCycle && !paused && !locked;
+
   return (
     <div
-      className="rounded-[28px] border border-white/15 bg-[#181817]/95 p-4 shadow-2xl shadow-black/40 sm:p-5"
+      className="relative overflow-hidden rounded-[28px] border border-white/15 bg-[#181817]/95 p-4 shadow-2xl shadow-black/40 sm:p-5"
       data-testid="home-profile-demo"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
       <div className="flex items-center gap-4 border-b border-white/10 pb-4">
         <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-cyan-300 text-lg font-bold text-gray-950 sm:h-16 sm:w-16 sm:text-xl">
@@ -152,22 +180,29 @@ export function HomeProfileDemo() {
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-4 flex flex-wrap items-center gap-2">
         {MODE_TABS.map((tab) => (
           <button
             key={tab.id}
             type="button"
-            onClick={() => setMode(tab.id)}
+            onClick={() => {
+              setMode(tab.id);
+              setLocked(true);
+            }}
             aria-pressed={mode === tab.id}
-            className={`rounded-full px-3 py-1.5 text-xs font-medium transition sm:text-sm ${
+            className={`relative rounded-full px-3 py-1.5 text-xs font-medium transition sm:text-sm ${
               mode === tab.id
                 ? 'bg-cyan-300 text-gray-950'
-                : 'border border-white/10 bg-white/[0.03] text-gray-300 hover:bg-white/[0.06]'
+                : 'border border-white/10 bg-white/[0.03] text-gray-300 hover:bg-white/[0.06] hover:text-white'
             }`}
           >
             {tab.label}
           </button>
         ))}
+        <span className="ml-auto flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.18em] text-gray-500">
+          <span className={`h-1.5 w-1.5 rounded-full ${cycleActive ? 'animate-pulse bg-cyan-300' : 'bg-gray-600'}`} />
+          {locked ? 'Locked' : cycleActive ? 'Auto' : 'Paused'}
+        </span>
       </div>
 
       <div className="mt-4 min-h-[220px] rounded-2xl border border-white/10 bg-black/25 p-4">
@@ -226,6 +261,16 @@ export function HomeProfileDemo() {
         >
           Open live profile
         </Link>
+      </div>
+
+      {/* auto-cycle progress bar */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px] overflow-hidden">
+        <div
+          key={`${mode}-${cycleActive ? 'on' : 'off'}`}
+          className={`h-full origin-left bg-cyan-300/80 ${
+            cycleActive ? 'animate-[progress-fill_4500ms_linear_forwards]' : 'w-0'
+          }`}
+        />
       </div>
     </div>
   );
