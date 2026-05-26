@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 
 import { DashboardTracker } from '@/components/dashboard/dashboard-tracker';
+import { NavProgress } from '@/components/dashboard/nav-progress';
 import { Sidebar } from '@/components/dashboard/sidebar';
 import { appDbExecute, db, ensureProjectsTable } from '@/db';
 import { pages, users } from '@/db/schema';
@@ -143,6 +144,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-zinc-200 antialiased lg:flex">
+      <NavProgress />
       <DashboardTracker />
       <Sidebar slug={page?.slug} />
       <main className="min-w-0 flex-1 px-5 pb-10 pt-4 sm:px-8 lg:h-screen lg:overflow-y-auto lg:p-10">

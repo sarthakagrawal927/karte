@@ -40,6 +40,11 @@ type CloudflareValidationRecord = {
   txt_value?: string;
 };
 
+type CloudflareDcvDelegationRecord = {
+  cname?: string;
+  cname_target?: string;
+};
+
 type CloudflareCustomHostname = {
   id?: string;
   hostname?: string;
@@ -53,6 +58,7 @@ type CloudflareCustomHostname = {
     status?: string;
     validation_errors?: { message?: string }[];
     validation_records?: CloudflareValidationRecord[];
+    dcv_delegation_records?: CloudflareDcvDelegationRecord[];
   };
   verification_errors?: string[];
 };
@@ -92,26 +98,33 @@ function mapProviderStatus(hostname: CloudflareCustomHostname): PageDomainStatus
   return 'verifying';
 }
 
+// Verification records are tagged with a `reason` prefix so the UI can group
+// them and explain each option to the user. Any single one of these is enough
+// to validate the hostname — users don't need to add all of them.
 function mapVerification(hostname: CloudflareCustomHostname): PageDomainVerification[] {
   const records: PageDomainVerification[] = [];
 
-  const ownership = hostname.ownership_verification;
-  if (ownership?.type && ownership.name && ownership.value) {
+  // Option: pre-validation TXT — derived from the hostname's CF resource UUID.
+  // Validates instantly (no waiting for ACME poll) when the user's DNS is on
+  // a Cloudflare zone in this same account.
+  if (hostname.id && hostname.hostname) {
     records.push({
-      type: ownership.type,
-      domain: ownership.name,
-      value: ownership.value,
-      reason: 'Cloudflare hostname ownership verification',
+      type: 'TXT',
+      domain: `_cf-custom-hostname.${hostname.hostname}`,
+      value: hostname.id,
+      reason: 'prevalidation-txt',
     });
   }
 
+  // Option: ACME TXT — what Let's Encrypt actually polls for. Slowest path
+  // (DNS propagation + CF polling cycle) but works everywhere.
   for (const record of hostname.ssl?.validation_records ?? []) {
     if (record.txt_name && record.txt_value) {
       records.push({
         type: 'TXT',
         domain: record.txt_name,
         value: record.txt_value,
-        reason: record.status,
+        reason: 'acme-txt',
       });
     }
     if (record.cname && record.cname_target) {
@@ -119,7 +132,7 @@ function mapVerification(hostname: CloudflareCustomHostname): PageDomainVerifica
         type: 'CNAME',
         domain: record.cname,
         value: record.cname_target,
-        reason: record.status,
+        reason: 'acme-cname',
       });
     }
     if (record.http_url && record.http_body) {
@@ -127,9 +140,33 @@ function mapVerification(hostname: CloudflareCustomHostname): PageDomainVerifica
         type: 'HTTP',
         domain: record.http_url,
         value: record.http_body,
-        reason: record.status,
+        reason: 'acme-http',
       });
     }
+  }
+
+  // Option: DCV delegation CNAME — set once, CF rotates certs forever after.
+  // Recommended over a bare TXT for long-term operation.
+  for (const record of hostname.ssl?.dcv_delegation_records ?? []) {
+    if (record.cname && record.cname_target) {
+      records.push({
+        type: 'CNAME',
+        domain: record.cname,
+        value: record.cname_target,
+        reason: 'dcv-delegation',
+      });
+    }
+  }
+
+  // Ownership verification (only present in some flows; kept for parity).
+  const ownership = hostname.ownership_verification;
+  if (ownership?.type && ownership.name && ownership.value) {
+    records.push({
+      type: ownership.type,
+      domain: ownership.name,
+      value: ownership.value,
+      reason: 'hostname-ownership',
+    });
   }
 
   return records;
