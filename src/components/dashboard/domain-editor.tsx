@@ -282,49 +282,243 @@ export function DomainEditor({
                   <p className="mt-3 text-[12px] text-rose-200">{d.errorMessage}</p>
                 )}
 
-                <div className="mt-5 space-y-3">
-                  <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
-                    <span className="text-karte-accent/80">·</span> Add these
-                    records at your DNS provider
-                  </p>
-                  {d.dnsInstructions.map((rec, i) => (
-                    <DnsRecordRow
-                      key={`${d.id}-rec-${i}`}
-                      rowKey={`${d.id}-rec-${i}`}
-                      type={rec.type}
-                      name={rec.name}
-                      value={rec.value}
-                      note={rec.note}
-                      copiedKey={copiedKey}
-                      onCopy={copy}
-                    />
-                  ))}
-
-                  {d.verification && d.verification.length > 0 && (
-                    <>
-                      <p className="mt-5 text-[11px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
-                        <span className="text-karte-accent/80">·</span> Cloudflare
-                        ownership / certificate validation
-                      </p>
-                      {d.verification.map((v, i) => (
-                        <DnsRecordRow
-                          key={`${d.id}-v-${i}`}
-                          rowKey={`${d.id}-v-${i}`}
-                          type={v.type}
-                          name={v.domain}
-                          value={v.value}
-                          copiedKey={copiedKey}
-                          onCopy={copy}
-                        />
-                      ))}
-                    </>
-                  )}
-                </div>
+                <ValidationSections
+                  domain={d}
+                  copiedKey={copiedKey}
+                  onCopy={copy}
+                />
               </li>
             );
           })}
         </ul>
       )}
+    </div>
+  );
+}
+
+// Groups the verification records into the three labeled validation options
+// users can choose from. Each section explains what the option does and what
+// trade-off it represents.
+function ValidationSections({
+  domain,
+  copiedKey,
+  onCopy,
+}: {
+  domain: DomainRow;
+  copiedKey: string | null;
+  onCopy: (key: string, value: string) => void;
+}) {
+  const verification = domain.verification ?? [];
+  const dcvCname = verification.find((v) => v.reason === 'dcv-delegation');
+  const prevalTxt = verification.find((v) => v.reason === 'prevalidation-txt');
+  const acmeTxt = verification.find((v) => v.reason === 'acme-txt');
+  const acmeCname = verification.find((v) => v.reason === 'acme-cname');
+  const acmeHttp = verification.find((v) => v.reason === 'acme-http');
+  const ownership = verification.find((v) => v.reason === 'hostname-ownership');
+
+  const hasAnyValidation =
+    Boolean(dcvCname) ||
+    Boolean(prevalTxt) ||
+    Boolean(acmeTxt) ||
+    Boolean(acmeCname) ||
+    Boolean(acmeHttp);
+
+  return (
+    <div className="mt-5 space-y-6">
+      {/* CNAME for the hostname itself */}
+      {domain.dnsInstructions.length > 0 && (
+        <Section
+          eyebrow="Step 1 · Point the hostname"
+          tagline="Required. CNAME your hostname to Karte so traffic reaches us."
+        >
+          {domain.dnsInstructions.map((rec, i) => (
+            <DnsRecordRow
+              key={`${domain.id}-rec-${i}`}
+              rowKey={`${domain.id}-rec-${i}`}
+              type={rec.type}
+              name={rec.name}
+              value={rec.value}
+              note={rec.note}
+              copiedKey={copiedKey}
+              onCopy={onCopy}
+            />
+          ))}
+        </Section>
+      )}
+
+      {hasAnyValidation && (
+        <Section
+          eyebrow="Step 2 · Prove ownership for SSL"
+          tagline="Pick ONE of the options below. You don't need to add all of them."
+        >
+          {/* Option A — DCV delegation CNAME (recommended) */}
+          {dcvCname && (
+            <OptionCard
+              tag="Recommended"
+              title="A. CNAME delegation"
+              blurb="Set this once. Cloudflare auto-renews your SSL cert from now on — you never have to touch DNS for SSL again."
+              tone="recommended"
+            >
+              <DnsRecordRow
+                rowKey={`${domain.id}-dcv`}
+                type={dcvCname.type}
+                name={dcvCname.domain}
+                value={dcvCname.value}
+                copiedKey={copiedKey}
+                onCopy={onCopy}
+              />
+            </OptionCard>
+          )}
+
+          {/* Option B — Pre-validation TXT (instant if user's DNS is on Cloudflare) */}
+          {prevalTxt && (
+            <OptionCard
+              tag="Instant if you use Cloudflare DNS"
+              title="B. Pre-validation TXT"
+              blurb="Validates immediately when your hostname's DNS is also on Cloudflare. Otherwise no faster than Option C."
+              tone="info"
+            >
+              <DnsRecordRow
+                rowKey={`${domain.id}-preval`}
+                type={prevalTxt.type}
+                name={prevalTxt.domain}
+                value={prevalTxt.value}
+                copiedKey={copiedKey}
+                onCopy={onCopy}
+              />
+            </OptionCard>
+          )}
+
+          {/* Option C — ACME TXT (universal fallback) */}
+          {(acmeTxt || acmeCname || acmeHttp) && (
+            <OptionCard
+              title="C. ACME validation record"
+              blurb="Works on any DNS provider. Slowest path (DNS propagation + Let's Encrypt polling). You'll need to repeat this whenever the cert renews."
+              tone="default"
+            >
+              {acmeTxt && (
+                <DnsRecordRow
+                  rowKey={`${domain.id}-acme-txt`}
+                  type={acmeTxt.type}
+                  name={acmeTxt.domain}
+                  value={acmeTxt.value}
+                  copiedKey={copiedKey}
+                  onCopy={onCopy}
+                />
+              )}
+              {acmeCname && (
+                <DnsRecordRow
+                  rowKey={`${domain.id}-acme-cname`}
+                  type={acmeCname.type}
+                  name={acmeCname.domain}
+                  value={acmeCname.value}
+                  copiedKey={copiedKey}
+                  onCopy={onCopy}
+                />
+              )}
+              {acmeHttp && (
+                <DnsRecordRow
+                  rowKey={`${domain.id}-acme-http`}
+                  type={acmeHttp.type}
+                  name={acmeHttp.domain}
+                  value={acmeHttp.value}
+                  copiedKey={copiedKey}
+                  onCopy={onCopy}
+                />
+              )}
+            </OptionCard>
+          )}
+        </Section>
+      )}
+
+      {ownership && (
+        <Section
+          eyebrow="Hostname ownership"
+          tagline="Cloudflare may also ask for this record if hostname pre-validation is required."
+        >
+          <DnsRecordRow
+            rowKey={`${domain.id}-ownership`}
+            type={ownership.type}
+            name={ownership.domain}
+            value={ownership.value}
+            copiedKey={copiedKey}
+            onCopy={onCopy}
+          />
+        </Section>
+      )}
+    </div>
+  );
+}
+
+function Section({
+  eyebrow,
+  tagline,
+  children,
+}: {
+  eyebrow: string;
+  tagline?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-3">
+      <div>
+        <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
+          <span className="text-karte-accent/80">·</span> {eyebrow}
+        </p>
+        {tagline && (
+          <p className="mt-1.5 text-[13px] leading-[1.55] text-karte-text-3">
+            {tagline}
+          </p>
+        )}
+      </div>
+      <div className="space-y-2.5">{children}</div>
+    </div>
+  );
+}
+
+function OptionCard({
+  tag,
+  title,
+  blurb,
+  tone,
+  children,
+}: {
+  tag?: string;
+  title: string;
+  blurb: string;
+  tone: 'recommended' | 'info' | 'default';
+  children: React.ReactNode;
+}) {
+  const accentClass =
+    tone === 'recommended'
+      ? 'border-emerald-300/25 bg-emerald-300/[0.04]'
+      : tone === 'info'
+        ? 'border-sky-300/20 bg-sky-300/[0.03]'
+        : 'border-karte-border bg-white/[0.02]';
+
+  const tagClass =
+    tone === 'recommended'
+      ? 'bg-emerald-300/15 text-emerald-200'
+      : tone === 'info'
+        ? 'bg-sky-300/15 text-sky-200'
+        : 'bg-white/[0.06] text-karte-text-3';
+
+  return (
+    <div className={`rounded-xl border ${accentClass} p-3.5 space-y-2.5`}>
+      <div className="flex flex-wrap items-baseline gap-2">
+        <h4 className="text-[13px] font-semibold tracking-[-0.005em] text-karte-text">
+          {title}
+        </h4>
+        {tag && (
+          <span
+            className={`rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.16em] ${tagClass}`}
+          >
+            {tag}
+          </span>
+        )}
+      </div>
+      <p className="text-[12px] leading-[1.55] text-karte-text-3">{blurb}</p>
+      <div className="space-y-1.5">{children}</div>
     </div>
   );
 }
