@@ -71,12 +71,32 @@ export function ChatWidget({
     'idle' | 'loading' | 'error' | 'loaded'
   >('idle');
   const [shareCopied, setShareCopied] = useState(false);
+  const [hasJoined, setHasJoined] = useState(false);
   const historyAttemptedRef = useRef(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const visitorIdRef = useRef<string | null>(null);
   const accentTextColor = getButtonTextColor(accentColor);
   const dmEnabled = dmMode !== 'off';
+  const isGuestPreview =
+    !!initialRoomId && historyStatus === 'loaded' && messages.length > 0 && !hasJoined;
+  const isFirstMessage =
+    mode === 'chat' && chatEnabled && messages.length === 0 && historyStatus !== 'loading';
+  const starterPrompts = [
+    `What does ${displayName} do?`,
+    `Latest projects?`,
+    `How can I reach out?`,
+  ];
+
+  function handleJoinChat() {
+    setHasJoined(true);
+    window.setTimeout(() => inputRef.current?.focus(), 0);
+  }
+
+  function handleStarterPrompt(prompt: string) {
+    setInput(prompt);
+    window.setTimeout(() => inputRef.current?.focus(), 0);
+  }
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -210,7 +230,7 @@ export function ChatWidget({
     }
 
     setShareCopied(true);
-    window.setTimeout(() => setShareCopied(false), 2000);
+    window.setTimeout(() => setShareCopied(false), 3000);
   }
 
   const saveMessage = useCallback(
@@ -249,7 +269,7 @@ export function ChatWidget({
     const query = rawQuery.trim();
     if (!query || loading) return;
 
-    const cacheKey = `linkchat:chat:${slug}:${query}`;
+    const cacheKey = `karte:chat:${slug}:${query}`;
     const cached = typeof window !== 'undefined' ? window.localStorage.getItem(cacheKey) : null;
     setInput('');
     setMessages((prev) => [...prev, { role: 'user', content: query }]);
@@ -396,8 +416,8 @@ export function ChatWidget({
       setOpen(true);
     }
 
-    window.addEventListener('linkchat:open-widget', handleOpenWidget);
-    return () => window.removeEventListener('linkchat:open-widget', handleOpenWidget);
+    window.addEventListener('karte:open-widget', handleOpenWidget);
+    return () => window.removeEventListener('karte:open-widget', handleOpenWidget);
   }, [chatEnabled, dmEnabled, sendQuery, slug]);
 
   const launcherPositionClass =
@@ -438,15 +458,24 @@ export function ChatWidget({
                 {title}
               </h3>
               <div className="flex items-center gap-2">
-                {mode === 'chat' && chatEnabled && conversationId && (
+                {!!initialRoomId && (
+                  <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/50">
+                    Invited via link
+                  </span>
+                )}
+                {mode === 'chat' && chatEnabled && conversationId && !isGuestPreview && (
                   <>
                     <button
                       type="button"
                       onClick={() => void handleShareRoom()}
-                      className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] font-medium text-white/70 transition hover:text-white"
+                      className={`rounded-full border px-2.5 py-1 text-[11px] font-medium transition ${
+                        shareCopied
+                          ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
+                          : 'border-white/10 text-white/70 hover:text-white'
+                      }`}
                       aria-label="Copy invite link to this chat"
                     >
-                      {shareCopied ? 'Copied!' : 'Share'}
+                      {shareCopied ? '✓ Link copied' : 'Share'}
                     </button>
                     <button
                       type="button"
@@ -494,6 +523,13 @@ export function ChatWidget({
                 </button>
               </div>
             </div>
+            {mode === 'chat' && chatEnabled && conversationId && (
+              <p className={`mt-1.5 text-[10px] leading-4 transition-colors ${shareCopied ? 'text-emerald-400/60' : 'text-white/25'}`}>
+                {shareCopied
+                  ? 'Paste that link anywhere to invite someone — they\'ll see the full conversation.'
+                  : 'Anyone with the link can read this room · no expiry · avoid sensitive info'}
+              </p>
+            )}
           </div>
 
           {mode === 'chat' && chatEnabled ? (
@@ -512,11 +548,30 @@ export function ChatWidget({
                 {historyStatus !== 'loading' &&
                   messages.length === 0 &&
                   historyStatus !== 'error' && (
-                    <div className="mt-10 flex flex-col items-center gap-3 px-4 text-center">
-                      <div className="text-4xl opacity-20">💬</div>
-                      <p className="text-xs leading-5 text-white/40">
-                        Ask anything about <span className="text-white/60">{displayName}</span>.
-                        Your chat saves automatically and can be shared.
+                    <div className="mt-4 flex flex-col items-center gap-4 px-2 text-center sm:mt-8">
+                      <div className="text-5xl sm:text-4xl">👋</div>
+                      <div className="space-y-1.5">
+                        <p className="text-base font-semibold text-white sm:text-sm">
+                          Ask {displayName} anything
+                        </p>
+                        <p className="text-sm leading-5 text-white/60 sm:text-xs">
+                          Tap a question below or type your own — you&apos;ll get an answer in seconds.
+                        </p>
+                      </div>
+                      <div className="flex w-full flex-wrap justify-center gap-2 pt-1">
+                        {starterPrompts.map((prompt) => (
+                          <button
+                            key={prompt}
+                            type="button"
+                            onClick={() => handleStarterPrompt(prompt)}
+                            className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm text-white/90 transition hover:bg-white/15 active:scale-95 sm:py-1.5 sm:text-xs"
+                          >
+                            {prompt}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-[10px] leading-4 text-white/25">
+                        Anyone with the invite link can read this room · Rooms don&apos;t expire · Avoid sharing sensitive info
                       </p>
                     </div>
                   )}
@@ -550,45 +605,91 @@ export function ChatWidget({
                 <div ref={messagesEndRef} />
               </div>
 
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  void handleSend();
-                }}
-                className="border-t border-white/10 px-4 py-3"
-              >
-                <div className="flex items-end gap-2">
-                  <textarea
-                    ref={inputRef}
-                    value={input}
-                    rows={1}
-                    onChange={(e) => {
-                      setInput(e.target.value);
-                      e.target.style.height = 'auto';
-                      e.target.style.height = `${Math.min(e.target.scrollHeight, 96)}px`;
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        void handleSend();
-                      }
-                    }}
-                    placeholder="Type a message..."
-                    disabled={loading || historyStatus === 'loading'}
-                    className="min-w-0 flex-1 resize-none rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm leading-5 text-white placeholder-white/40 outline-none focus:border-[#f2c879]"
-                    style={{ maxHeight: '96px', overflowY: 'auto' }}
-                  />
+              {isGuestPreview ? (
+                <div className="border-t border-white/10 px-4 py-4 text-center">
+                  <p className="mb-3 text-xs text-white/50">
+                    You&apos;re previewing a shared conversation
+                  </p>
                   <button
-                    type="submit"
-                    disabled={loading || historyStatus === 'loading' || !input.trim()}
-                    className="shrink-0 self-end rounded-lg border border-black/10 px-3 py-2 text-sm font-medium transition-opacity disabled:opacity-40"
+                    type="button"
+                    onClick={handleJoinChat}
+                    className="w-full rounded-xl border border-black/10 px-4 py-2.5 text-sm font-semibold transition hover:brightness-110"
                     style={{ backgroundColor: accentColor, color: accentTextColor }}
                   >
-                    Send
+                    Join chat
                   </button>
                 </div>
-                <p className="mt-1.5 text-[10px] text-white/25">Enter to send · Shift+Enter for newline</p>
-              </form>
+              ) : (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void handleSend();
+                  }}
+                  className={`border-t px-4 py-3 transition-colors ${
+                    isFirstMessage
+                      ? 'border-white/25 bg-white/[0.04]'
+                      : 'border-white/10'
+                  }`}
+                >
+                  {isFirstMessage && (
+                    <p className="mb-2 text-center text-[11px] font-medium uppercase tracking-wide text-white/60 sm:hidden">
+                      Type your first message ↓
+                    </p>
+                  )}
+                  <div className="flex items-end gap-2">
+                    <textarea
+                      ref={inputRef}
+                      value={input}
+                      rows={1}
+                      onChange={(e) => {
+                        setInput(e.target.value);
+                        e.target.style.height = 'auto';
+                        e.target.style.height = `${Math.min(e.target.scrollHeight, 96)}px`;
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          void handleSend();
+                        }
+                      }}
+                      placeholder={isFirstMessage ? `Ask ${displayName} a question…` : 'Type a message...'}
+                      disabled={loading || historyStatus === 'loading'}
+                      className={`min-w-0 flex-1 resize-none rounded-lg border bg-white/5 px-3 py-3 text-base leading-5 text-white placeholder-white/40 outline-none transition focus:border-[#f2c879] sm:py-2 sm:text-sm ${
+                        isFirstMessage
+                          ? 'border-white/30 ring-1 ring-white/15 focus:ring-2 focus:ring-[#f2c879]/40'
+                          : 'border-white/10'
+                      }`}
+                      style={{ maxHeight: '96px', overflowY: 'auto' }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={loading || historyStatus === 'loading' || !input.trim()}
+                      className={`flex shrink-0 items-center justify-center gap-1.5 self-end rounded-lg border border-black/10 px-4 py-3 text-base font-semibold shadow-md transition-opacity disabled:opacity-40 sm:px-3 sm:py-2 sm:text-sm ${
+                        isFirstMessage && input.trim() ? 'animate-pulse' : ''
+                      }`}
+                      style={{ backgroundColor: accentColor, color: accentTextColor }}
+                      aria-label="Send message"
+                    >
+                      <span>Send</span>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <line x1="22" y1="2" x2="11" y2="13" />
+                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                      </svg>
+                    </button>
+                  </div>
+                  <p className="mt-1.5 hidden text-[10px] text-white/25 sm:block">Enter to send · Shift+Enter for newline</p>
+                </form>
+              )}
             </>
           ) : (
             <div className="flex-1 overflow-y-auto px-4 py-4">
