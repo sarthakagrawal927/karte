@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { HeroChatDock } from '@/components/public/hero-chat-dock';
 import { OpenChatButton } from '@/components/public/open-chat-button';
 import { SocialIconRow } from '@/components/public/social-icon-row';
+import { TypewriterBubble } from '@/components/public/typewriter-bubble';
 
 interface QuickAction {
   label: string;
@@ -57,6 +58,7 @@ export function ProfileHero({
   newsletterUrl,
   tipUrl,
   socialLinks,
+  greetingLines,
 }: {
   displayName: string;
   bio: string | null;
@@ -76,6 +78,7 @@ export function ProfileHero({
     url: string;
     icon: string | null;
   }>;
+  greetingLines: ReadonlyArray<string>;
 }) {
   const firstName = displayName.split(/\s+/)[0] || displayName;
   const restOfName = displayName.slice(firstName.length).trim();
@@ -113,8 +116,8 @@ export function ProfileHero({
         }
       `}</style>
 
-      {/* Avatar with accent glow */}
-      <div className="relative flex items-start gap-4">
+      {/* Avatar with accent glow + speech bubble */}
+      <div className="relative flex items-end gap-4">
         <div className="relative shrink-0">
           <div
             aria-hidden="true"
@@ -146,19 +149,20 @@ export function ProfileHero({
           )}
         </div>
 
-        {location && (
-          <div
-            className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/[0.04] px-3 py-1 text-[11px] font-medium text-karte-text-3"
-            style={{ borderColor: `${accentColor}28` }}
-          >
-            <span
-              aria-hidden="true"
-              className="h-1.5 w-1.5 rounded-full"
-              style={{ backgroundColor: accentColor }}
-            />
-            {location}
-          </div>
-        )}
+        {/* Speech bubble — the aha: the profile speaks to you on arrival */}
+        <div className="relative min-w-0 flex-1 pb-2">
+          <TypewriterBubble lines={greetingLines} accentColor={accentColor} />
+          {location && (
+            <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white/[0.04] px-2.5 py-0.5 text-[10px] font-medium text-karte-text-3">
+              <span
+                aria-hidden="true"
+                className="h-1 w-1 rounded-full"
+                style={{ backgroundColor: accentColor }}
+              />
+              {location}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Name — manifesto scale */}

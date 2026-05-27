@@ -111,6 +111,32 @@ export default async function ProfilePage({ params }: Props) {
       preview: modePreviews?.[card.key] || '',
     }));
 
+  // The aha moment — speech bubble next to the avatar that types
+  // through real AI-generated lines. Prefer the newspaper headline
+  // (shortest + most quotable), then the wiki first sentence, then
+  // the roast hook. Falls back to a friendly greeting + bio if none
+  // are ready. Each line is plain text, <= 180 chars.
+  const greetingLines: string[] = [];
+  const newspaperPreview = modePreviews?.newspaper;
+  if (newspaperPreview) {
+    const headline = newspaperPreview.split('—')[0]?.trim();
+    if (headline) greetingLines.push(`📰 ${headline}`);
+  }
+  const wikiPreview = modePreviews?.encyclopedia;
+  if (wikiPreview) {
+    const firstSentence = wikiPreview.split(/(?<=[.!?])\s+/)[0] ?? '';
+    if (firstSentence) greetingLines.push(firstSentence);
+  }
+  const roastPreview = modePreviews?.roast;
+  if (roastPreview) {
+    const firstClause = roastPreview.split(/[.—]/)[0]?.trim();
+    if (firstClause) greetingLines.push(`🔥 ${firstClause}.`);
+  }
+  if (greetingLines.length === 0) {
+    greetingLines.push(`Hey, I'm ${firstName}.`);
+    if (page.bio) greetingLines.push(page.bio);
+  }
+
   // Social links live in the hero column as icon-only chips (identity,
   // not content). Projects stay in the right-column stream alongside
   // the AI mode cards (content, with visual weight).
@@ -157,6 +183,7 @@ export default async function ProfilePage({ params }: Props) {
             newsletterUrl={page.newsletterUrl}
             tipUrl={page.tipUrl}
             socialLinks={socialLinks}
+            greetingLines={greetingLines}
           />
 
           {/* Right column — scrolling content stream */}
