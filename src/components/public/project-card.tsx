@@ -33,11 +33,11 @@ export function ProjectCard({
 
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h3 className="text-xl font-semibold text-white">{title}</h3>
+          <h3 className="text-xl font-semibold text-karte-text">{title}</h3>
         </div>
 
         <span
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition group-hover:text-white"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition group-hover:text-karte-text"
           style={accentColor ? { borderColor: `${accentColor}33` } : undefined}
           aria-label="Visit project"
         >

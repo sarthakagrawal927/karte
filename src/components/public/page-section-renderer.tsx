@@ -53,7 +53,7 @@ export function PageSectionRenderer({
         >
           Social
         </p>
-        <h3 className="mt-3 text-2xl font-semibold text-white">
+        <h3 className="mt-3 text-2xl font-semibold text-karte-text">
           {section.title}
         </h3>
         <div className="mt-6 flex flex-wrap gap-3">
@@ -66,7 +66,7 @@ export function PageSectionRenderer({
               data-track-type="social"
               data-track-id={item.url}
               data-track-label={item.label}
-              className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+              className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/10"
               style={{ borderColor: `${accentColor}33` }}
             >
               {item.label}
@@ -89,7 +89,7 @@ export function PageSectionRenderer({
           >
             Blog
           </p>
-          <h3 className="mt-3 text-2xl font-semibold text-white">
+          <h3 className="mt-3 text-2xl font-semibold text-karte-text">
             {section.title}
           </h3>
         </div>
@@ -105,7 +105,7 @@ export function PageSectionRenderer({
                     <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-white/35">
                       Post {String(index + 1).padStart(2, '0')}
                     </p>
-                    <h4 className="mt-3 text-xl font-semibold leading-tight text-white group-hover:text-white/90">
+                    <h4 className="mt-3 text-xl font-semibold leading-tight text-karte-text group-hover:text-white/90">
                       {post.title}
                     </h4>
                   </div>
@@ -159,7 +159,7 @@ export function PageSectionRenderer({
         >
           Contact
         </p>
-        <h3 className="mt-3 text-2xl font-semibold text-white">
+        <h3 className="mt-3 text-2xl font-semibold text-karte-text">
           {section.title}
         </h3>
         {section.content && (
@@ -187,7 +187,7 @@ export function PageSectionRenderer({
         >
           Testimonial
         </p>
-        <p className="mt-4 text-lg leading-8 text-white">
+        <p className="mt-4 text-lg leading-8 text-karte-text">
           &ldquo;{section.content}&rdquo;
         </p>
         <p className="mt-5 text-sm font-medium text-white/80">
@@ -206,7 +206,7 @@ export function PageSectionRenderer({
         >
           Spotlight
         </p>
-        <h3 className="mt-3 text-2xl font-semibold text-white">
+        <h3 className="mt-3 text-2xl font-semibold text-karte-text">
           {section.title}
         </h3>
         {section.content && (
@@ -240,7 +240,7 @@ export function PageSectionRenderer({
       >
         Section
       </p>
-      <h3 className="mt-3 text-2xl font-semibold text-white">
+      <h3 className="mt-3 text-2xl font-semibold text-karte-text">
         {section.title}
       </h3>
       {section.content && (

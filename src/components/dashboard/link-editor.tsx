@@ -91,12 +91,12 @@ function LinkCard({
           </div>
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex flex-wrap items-center gap-2">
-              <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-gray-300">
+              <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-karte-text-2">
                 #{index + 1}
               </span>
-              <p className="truncate font-medium text-white">{link.title}</p>
+              <p className="truncate font-medium text-karte-text">{link.title}</p>
             </div>
-            <p className="truncate text-sm text-gray-400">{link.url}</p>
+            <p className="truncate text-sm text-karte-text-3">{link.url}</p>
           </div>
         </div>
         <div className="flex w-full shrink-0 flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
@@ -131,12 +131,12 @@ function LinkCard({
         </button>
         <div className="min-w-0 flex-1">
           <div className="mb-1 flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-gray-300">
+            <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-karte-text-2">
               #{index + 1}
             </span>
-            <p className="truncate font-medium text-white">{link.title}</p>
+            <p className="truncate font-medium text-karte-text">{link.title}</p>
           </div>
-          <p className="truncate text-sm text-gray-400">{link.url}</p>
+          <p className="truncate text-sm text-karte-text-3">{link.url}</p>
         </div>
       </div>
       <div className="flex w-full shrink-0 flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
@@ -377,11 +377,11 @@ export function LinkEditor({
             <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-cyan-200">
               Import
             </p>
-            <h2 className="mt-2 text-lg font-semibold text-white">
+            <h2 className="mt-2 text-lg font-semibold text-karte-text">
               Bring links from Linktree or another profile
             </h2>
           </div>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-karte-text-4">
             Preview first, then choose what to import.
           </p>
         </div>
@@ -392,7 +392,7 @@ export function LinkEditor({
             placeholder="https://linktr.ee/yourname"
             value={importUrl}
             onChange={(e) => setImportUrl(e.target.value)}
-            className="min-w-0 flex-1 rounded-lg border border-white/20 bg-black/20 px-4 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-white/40"
+            className="min-w-0 flex-1 rounded-lg border border-white/20 bg-black/20 px-4 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40"
           />
           <button
             type="submit"
@@ -404,7 +404,7 @@ export function LinkEditor({
         </form>
 
         {importMessage && (
-          <p className="mt-3 text-sm text-gray-300">{importMessage}</p>
+          <p className="mt-3 text-sm text-karte-text-2">{importMessage}</p>
         )}
 
         {importedLinks.length > 0 && (
@@ -422,10 +422,10 @@ export function LinkEditor({
                     className="mt-1 h-4 w-4 accent-cyan-300"
                   />
                   <span className="min-w-0">
-                    <span className="block truncate text-sm font-medium text-white">
+                    <span className="block truncate text-sm font-medium text-karte-text">
                       {item.title}
                     </span>
-                    <span className="block truncate text-xs text-gray-500">
+                    <span className="block truncate text-xs text-karte-text-4">
                       {item.url}
                     </span>
                   </span>
@@ -451,7 +451,7 @@ export function LinkEditor({
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white placeholder-gray-400 outline-none focus:border-white/40"
+          className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-white/40"
           required
         />
         <input
@@ -459,7 +459,7 @@ export function LinkEditor({
           placeholder="https://example.com"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white placeholder-gray-400 outline-none focus:border-white/40"
+          className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-white/40"
           required
         />
         <button
@@ -476,7 +476,7 @@ export function LinkEditor({
       {/* Links list */}
       {links.length === 0 ? (
         <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
-          <p className="text-gray-400">
+          <p className="text-karte-text-3">
             No links yet. Add your first link above.
           </p>
         </div>

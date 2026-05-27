@@ -62,19 +62,19 @@ function ModePreview({ mode }: { mode: DemoMode }) {
   if (mode === 'encyclopedia') {
     return (
       <div className="grid gap-4 sm:grid-cols-[140px_1fr]">
-        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-gray-400">
-          <p className="font-semibold text-white">Sarthak Agrawal</p>
+        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-karte-text-3">
+          <p className="font-semibold text-karte-text">Sarthak Agrawal</p>
           <p className="mt-2">Builder</p>
           <p>Product</p>
           <p>AI tools</p>
         </div>
         <div>
-          <p className="text-lg font-semibold text-white">Sarthak Agrawal</p>
-          <p className="mt-3 text-sm leading-6 text-gray-300">
+          <p className="text-lg font-semibold text-karte-text">Sarthak Agrawal</p>
+          <p className="mt-3 text-sm leading-6 text-karte-text-2">
             Sarthak Agrawal is a builder working on Karte — a digital card platform
             where visitors query a memory-backed profile instead of scrolling static links.
           </p>
-          <p className="mt-3 text-sm leading-6 text-gray-400">
+          <p className="mt-3 text-sm leading-6 text-karte-text-3">
             The product ships chat, Encyclopedia, Newspaper, and Roast modes from the
             same profile memory: links, projects, bio, FAQs, and voice.
           </p>
@@ -115,7 +115,7 @@ function ModePreview({ mode }: { mode: DemoMode }) {
           <p className="text-sm font-semibold text-orange-100">Roast score</p>
           <p className="text-3xl font-bold text-orange-200">87</p>
         </div>
-        <p className="mt-4 text-sm leading-6 text-gray-200">
+        <p className="mt-4 text-sm leading-6 text-karte-text">
           &ldquo;Built an AI link-in-bio, a personal Wikipedia, a tabloid, and a roast
           comic — somehow still fewer features than a Notion doc with delusions of grandeur.&rdquo;
         </p>
@@ -173,10 +173,10 @@ export function HomeProfileDemo({ autoCycle = true }: HomeProfileDemoProps = {})
           <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-cyan-200">
             {DEMO_PROFILE.handle}
           </p>
-          <p className="mt-1 truncate text-xl font-semibold text-white sm:text-2xl">
+          <p className="mt-1 truncate text-xl font-semibold text-karte-text sm:text-2xl">
             {DEMO_PROFILE.name}
           </p>
-          <p className="mt-1 text-sm text-gray-400">{DEMO_PROFILE.tagline}</p>
+          <p className="mt-1 text-sm text-karte-text-3">{DEMO_PROFILE.tagline}</p>
         </div>
       </div>
 
@@ -193,13 +193,13 @@ export function HomeProfileDemo({ autoCycle = true }: HomeProfileDemoProps = {})
             className={`relative rounded-full px-3 py-1.5 text-xs font-medium transition sm:text-sm ${
               mode === tab.id
                 ? 'bg-cyan-300 text-gray-950'
-                : 'border border-white/10 bg-white/[0.03] text-gray-300 hover:bg-white/[0.06] hover:text-white'
+                : 'border border-white/10 bg-white/[0.03] text-karte-text-2 hover:bg-white/[0.06] hover:text-karte-text'
             }`}
           >
             {tab.label}
           </button>
         ))}
-        <span className="ml-auto flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.18em] text-gray-500">
+        <span className="ml-auto flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.18em] text-karte-text-4">
           <span className={`h-1.5 w-1.5 rounded-full ${cycleActive ? 'animate-pulse bg-cyan-300' : 'bg-gray-600'}`} />
           {locked ? 'Locked' : cycleActive ? 'Auto' : 'Paused'}
         </span>
@@ -212,7 +212,7 @@ export function HomeProfileDemo({ autoCycle = true }: HomeProfileDemoProps = {})
               <div className="ml-auto max-w-[88%] rounded-2xl rounded-tr-md bg-cyan-300/15 px-3 py-2 text-sm text-cyan-50">
                 {activePrompt.userMessage}
               </div>
-              <div className="max-w-[92%] rounded-2xl rounded-tl-md border border-white/10 bg-white/[0.04] px-3 py-2 text-sm leading-6 text-gray-200">
+              <div className="max-w-[92%] rounded-2xl rounded-tl-md border border-white/10 bg-white/[0.04] px-3 py-2 text-sm leading-6 text-karte-text">
                 {activePrompt.assistantMessage}
                 <p className="mt-3 text-[10px] uppercase tracking-[0.18em] text-cyan-200/75">
                   Grounded in {activePrompt.source}
@@ -221,7 +221,7 @@ export function HomeProfileDemo({ autoCycle = true }: HomeProfileDemoProps = {})
             </div>
 
             <div className="mt-auto space-y-2 pt-4">
-              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-gray-500">
+              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
                 Try a question
               </p>
               <div className="flex flex-wrap gap-2">
@@ -237,7 +237,7 @@ export function HomeProfileDemo({ autoCycle = true }: HomeProfileDemoProps = {})
                     className={`rounded-xl px-3 py-2 text-left text-xs leading-5 transition sm:text-sm ${
                       activePromptId === prompt.id
                         ? 'border border-cyan-300/50 bg-cyan-300/10 text-cyan-50'
-                        : 'border border-white/10 bg-white/[0.03] text-gray-300 hover:border-white/20 hover:text-white'
+                        : 'border border-white/10 bg-white/[0.03] text-karte-text-2 hover:border-white/20 hover:text-karte-text'
                     }`}
                   >
                     {prompt.label}
@@ -252,7 +252,7 @@ export function HomeProfileDemo({ autoCycle = true }: HomeProfileDemoProps = {})
       </div>
 
       <div className="mt-4 flex flex-col gap-2 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-karte-text-4">
           Same memory powers chat, shareable modes, and the public profile.
         </p>
         <Link

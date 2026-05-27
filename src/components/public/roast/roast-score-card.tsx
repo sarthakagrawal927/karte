@@ -61,7 +61,7 @@ export function RoastScoreCard({ vibeScore, accentColor }: RoastScoreCardProps) 
             </span>
           </div>
         </div>
-        <p className="text-sm font-black uppercase tracking-widest text-white">
+        <p className="text-sm font-black uppercase tracking-widest text-karte-text">
           Vibe Score
         </p>
         <p

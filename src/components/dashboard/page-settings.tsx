@@ -241,7 +241,7 @@ export function PageSettings({
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="mb-6 text-2xl font-bold text-white">
+      <h1 className="mb-6 text-2xl font-bold text-karte-text">
         {isEditing
           ? 'Appearance'
           : shouldClaimOnLogin
@@ -253,8 +253,8 @@ export function PageSettings({
           <div>
           <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-medium text-white">Live Preview</p>
-              <p className="text-xs text-gray-500">
+              <p className="text-sm font-medium text-karte-text">Live Preview</p>
+              <p className="text-xs text-karte-text-4">
                 This updates as you shape the page.
               </p>
             </div>
@@ -300,7 +300,7 @@ export function PageSettings({
                     />
                   ) : (
                     <div
-                      className="flex h-20 w-20 items-center justify-center rounded-full border border-white/20 text-2xl font-semibold text-white shadow-lg shadow-black/20"
+                      className="flex h-20 w-20 items-center justify-center rounded-full border border-white/20 text-2xl font-semibold text-karte-text shadow-lg shadow-black/20"
                       style={{
                         background: `linear-gradient(135deg, ${previewTheme.gradientFrom}, ${previewTheme.gradientTo})`,
                       }}
@@ -316,7 +316,7 @@ export function PageSettings({
                     >
                       karte.cc/{previewSlug}
                     </p>
-                    <h2 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">
+                    <h2 className="mt-2 text-2xl font-semibold text-karte-text sm:text-3xl">
                       {previewDisplayName}
                     </h2>
                     <p className="mt-3 max-w-xl text-sm leading-6 text-white/70">
@@ -363,19 +363,19 @@ export function PageSettings({
         <div>
           <label
             htmlFor="slug"
-            className="mb-2 block text-sm font-medium text-white"
+            className="mb-2 block text-sm font-medium text-karte-text"
           >
             Page URL
           </label>
           <div className="flex items-center rounded-lg border border-white/20 bg-white/5 backdrop-blur-sm transition focus-within:border-white/40 focus-within:ring-1 focus-within:ring-white/20">
-            <span className="pl-4 text-sm text-gray-400">karte.cc/</span>
+            <span className="pl-4 text-sm text-karte-text-3">karte.cc/</span>
             <input
               id="slug"
               type="text"
               value={slug}
               onChange={(e) => setSlug(sanitizeSlug(e.target.value))}
               placeholder="your-name"
-              className="min-w-0 flex-1 bg-transparent px-1 py-3 text-sm text-white placeholder-gray-500 focus:outline-none"
+              className="min-w-0 flex-1 bg-transparent px-1 py-3 text-sm text-karte-text placeholder-gray-500 focus:outline-none"
             />
           </div>
         </div>
@@ -384,7 +384,7 @@ export function PageSettings({
         <div>
           <label
             htmlFor="displayName"
-            className="mb-2 block text-sm font-medium text-white"
+            className="mb-2 block text-sm font-medium text-karte-text"
           >
             Display Name
           </label>
@@ -394,7 +394,7 @@ export function PageSettings({
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="Your Name"
-            className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-sm text-white placeholder-gray-500 backdrop-blur-sm transition focus:border-white/40 focus:outline-none focus:ring-1 focus:ring-white/20"
+            className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-sm text-karte-text placeholder-gray-500 backdrop-blur-sm transition focus:border-white/40 focus:outline-none focus:ring-1 focus:ring-white/20"
           />
         </div>
 
@@ -402,7 +402,7 @@ export function PageSettings({
         <div>
           <label
             htmlFor="bio"
-            className="mb-2 block text-sm font-medium text-white"
+            className="mb-2 block text-sm font-medium text-karte-text"
           >
             Bio
           </label>
@@ -412,7 +412,7 @@ export function PageSettings({
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             placeholder="A short bio about yourself..."
-            className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-sm text-white placeholder-gray-500 backdrop-blur-sm transition focus:border-white/40 focus:outline-none focus:ring-1 focus:ring-white/20"
+            className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-sm text-karte-text placeholder-gray-500 backdrop-blur-sm transition focus:border-white/40 focus:outline-none focus:ring-1 focus:ring-white/20"
           />
         </div>
 
@@ -431,10 +431,10 @@ export function PageSettings({
 
         <div>
           <div className="mb-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-            <label className="block text-sm font-medium text-white">
+            <label className="block text-sm font-medium text-karte-text">
               Theme
             </label>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-karte-text-4">
               Switch the look of your public page
             </span>
           </div>
@@ -468,10 +468,10 @@ export function PageSettings({
                       style={{ backgroundColor: preset.accentColor }}
                     />
                   </div>
-                  <p className="mt-3 text-sm font-semibold text-white">
+                  <p className="mt-3 text-sm font-semibold text-karte-text">
                     {preset.label}
                   </p>
-                  <p className="mt-1 text-xs leading-5 text-gray-400">
+                  <p className="mt-1 text-xs leading-5 text-karte-text-3">
                     {preset.description}
                   </p>
                 </button>
@@ -486,8 +486,8 @@ export function PageSettings({
             <div>
               <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h3 className="text-sm font-medium text-white">Personal DMs</h3>
-                  <p className="text-xs text-gray-400">
+                  <h3 className="text-sm font-medium text-karte-text">Personal DMs</h3>
+                  <p className="text-xs text-karte-text-3">
                     Choose how visitors can message you from the floating DM button.
                   </p>
                 </div>
@@ -508,10 +508,10 @@ export function PageSettings({
                           : 'border-white/15 bg-white/5 hover:border-white/30 hover:bg-white/[0.08]'
                       }`}
                     >
-                      <p className="text-sm font-semibold text-white">
+                      <p className="text-sm font-semibold text-karte-text">
                         {option.label}
                       </p>
-                      <p className="mt-1 text-xs leading-5 text-gray-400">
+                      <p className="mt-1 text-xs leading-5 text-karte-text-3">
                         {option.description}
                       </p>
                     </button>
@@ -522,8 +522,8 @@ export function PageSettings({
 
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-medium text-white">Published</h3>
-                <p className="text-xs text-gray-400">
+                <h3 className="text-sm font-medium text-karte-text">Published</h3>
+                <p className="text-xs text-karte-text-3">
                   Make your page visible to visitors
                 </p>
               </div>
@@ -575,7 +575,7 @@ export function PageSettings({
         </div>
 
         {shouldClaimOnLogin && (
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-karte-text-3">
             You can draft your profile now. We only ask you to sign in when you
             claim the username and save the page.
           </p>

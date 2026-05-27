@@ -139,8 +139,8 @@ export function AiKeySettings({
     <div className="space-y-6">
       {/* Document Index Key (SaaS Maker — for RAG/chat) */}
       <div className="rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl">
-        <h2 className="mb-1 text-lg font-semibold text-white">Document Index Key</h2>
-        <p className="mb-4 text-sm text-gray-400">
+        <h2 className="mb-1 text-lg font-semibold text-karte-text">Document Index Key</h2>
+        <p className="mb-4 text-sm text-karte-text-3">
           {configured
             ? 'Your document index key is configured. Enter a new key to update it.'
             : 'Required for the chat feature — powers document search and retrieval.'}
@@ -152,7 +152,7 @@ export function AiKeySettings({
             value={aiKey}
             onChange={(e) => setAiKey(e.target.value)}
             placeholder={configured ? '••••••••••••••••' : 'Enter your document index key'}
-            className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-white/30"
+            className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
           />
           <button
             onClick={handleSaveSmKey}
@@ -172,8 +172,8 @@ export function AiKeySettings({
 
       {/* Custom AI Endpoint */}
       <div className="rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl">
-        <h2 className="mb-1 text-lg font-semibold text-white">AI Endpoint</h2>
-        <p className="mb-4 text-sm text-gray-400">
+        <h2 className="mb-1 text-lg font-semibold text-karte-text">AI Endpoint</h2>
+        <p className="mb-4 text-sm text-karte-text-3">
           {isUsingDefaultAi
             ? 'Karte AI is configured by default. Add your own endpoint only if you want to override it.'
             : aiConfigured
@@ -184,37 +184,37 @@ export function AiKeySettings({
         <div className="space-y-3">
           {/* Endpoint URL */}
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">Endpoint URL</label>
+            <label className="mb-1 block text-xs font-medium text-karte-text-3">Endpoint URL</label>
             <input
               type="text"
               value={endpointUrl}
               onChange={(e) => setEndpointUrl(e.target.value)}
               placeholder="https://api.example.com/v1"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-white/30"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
             />
           </div>
 
           {/* API Key */}
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">API Key</label>
+            <label className="mb-1 block text-xs font-medium text-karte-text-3">API Key</label>
             <input
               type="password"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder={aiConfigured ? '••••••••••••••••' : 'Enter your API key'}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-white/30"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
             />
           </div>
 
           {/* Model */}
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">Model</label>
+            <label className="mb-1 block text-xs font-medium text-karte-text-3">Model</label>
             <div className="flex gap-2">
               {discoveredModels.length > 0 ? (
                 <select
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
-                  className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-white/30"
+                  className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text outline-none focus:border-white/30"
                 >
                   {discoveredModels.map((m) => (
                     <option key={m.id} value={m.id} className="bg-gray-900">
@@ -228,13 +228,13 @@ export function AiKeySettings({
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
                   placeholder="gpt-4o, claude-3-5-sonnet, etc."
-                  className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-white/30"
+                  className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
                 />
               )}
               <button
                 onClick={handleDiscoverModels}
                 disabled={loadingModels || !endpointUrl.trim() || !apiKey.trim()}
-                className="shrink-0 rounded-lg border border-white/10 px-3 py-2 text-xs font-medium text-gray-300 transition hover:border-white/30 hover:text-white disabled:opacity-50"
+                className="shrink-0 rounded-lg border border-white/10 px-3 py-2 text-xs font-medium text-karte-text-2 transition hover:border-white/30 hover:text-karte-text disabled:opacity-50"
               >
                 {loadingModels ? 'Loading...' : 'Discover'}
               </button>
@@ -242,7 +242,7 @@ export function AiKeySettings({
             {discoveredModels.length > 0 && (
               <button
                 onClick={() => setDiscoveredModels([])}
-                className="mt-1 text-xs text-gray-500 hover:text-gray-300"
+                className="mt-1 text-xs text-karte-text-4 hover:text-karte-text-2"
               >
                 Switch to manual entry
               </button>

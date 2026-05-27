@@ -31,8 +31,8 @@ export default async function DashboardPage() {
   if (!page) {
     return (
       <div className="mx-auto max-w-3xl">
-        <h1 className="mb-2 text-2xl font-bold text-white">Dashboard</h1>
-        <p className="text-sm text-gray-400">
+        <h1 className="mb-2 text-2xl font-bold text-karte-text">Dashboard</h1>
+        <p className="text-sm text-karte-text-3">
           Create a profile before setting up your interactive experience.
         </p>
         <Link
@@ -120,15 +120,15 @@ export default async function DashboardPage() {
     <div className="mx-auto max-w-5xl space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-          <p className="mt-1 text-sm text-gray-400">
+          <h1 className="text-2xl font-bold text-karte-text">Dashboard</h1>
+          <p className="mt-1 text-sm text-karte-text-3">
             Shape the profile visitors can explore, ask, and message.
           </p>
         </div>
         <Link
           href={`/${page.slug}`}
           target="_blank"
-          className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+          className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/10"
         >
           View /{page.slug}
         </Link>
@@ -145,10 +145,10 @@ export default async function DashboardPage() {
             key={metric.label}
             className="rounded-2xl border border-white/20 bg-white/5 p-5 backdrop-blur-xl"
           >
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-gray-500">
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-karte-text-4">
               {metric.label}
             </p>
-            <p className="mt-3 text-3xl font-bold text-white">{metric.value}</p>
+            <p className="mt-3 text-3xl font-bold text-karte-text">{metric.value}</p>
           </div>
         ))}
       </div>
@@ -161,8 +161,8 @@ export default async function DashboardPage() {
       <div className="rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-white">Launch Checklist</h2>
-            <p className="mt-1 text-sm text-gray-400">
+            <h2 className="text-xl font-semibold text-karte-text">Launch Checklist</h2>
+            <p className="mt-1 text-sm text-karte-text-3">
               {completedCount} of {setupItems.length} core setup steps complete.
             </p>
           </div>
@@ -181,7 +181,7 @@ export default async function DashboardPage() {
               href={item.href}
               className="flex items-center justify-between rounded-xl border border-white/10 bg-black/20 px-4 py-3 transition hover:border-white/25 hover:bg-white/[0.04]"
             >
-              <span className="text-sm font-medium text-white">{item.label}</span>
+              <span className="text-sm font-medium text-karte-text">{item.label}</span>
               <span
                 className={`rounded-full px-3 py-1 text-xs font-medium ${
                   item.done

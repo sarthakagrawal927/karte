@@ -60,7 +60,7 @@ export function ChatList({ pageId }: { pageId: string }) {
   if (loading) {
     return (
       <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
-        <p className="text-gray-400">Loading conversations...</p>
+        <p className="text-karte-text-3">Loading conversations...</p>
       </div>
     );
   }
@@ -68,7 +68,7 @@ export function ChatList({ pageId }: { pageId: string }) {
   if (conversations.length === 0) {
     return (
       <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
-        <p className="text-gray-400">No conversations yet. Visitors will appear here once they start chatting.</p>
+        <p className="text-karte-text-3">No conversations yet. Visitors will appear here once they start chatting.</p>
       </div>
     );
   }
@@ -86,10 +86,10 @@ export function ChatList({ pageId }: { pageId: string }) {
             className="flex w-full flex-col gap-3 px-4 py-4 text-left transition-colors hover:bg-white/5 sm:flex-row sm:items-center sm:justify-between sm:px-5"
           >
             <div className="flex-1 min-w-0">
-              <p className="text-sm text-white truncate">
+              <p className="text-sm text-karte-text truncate">
                 {convo.firstMessage || 'No messages'}
               </p>
-              <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-xs text-gray-500">
+              <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-xs text-karte-text-4">
                 <span>
                   {new Date(convo.createdAt).toLocaleDateString(undefined, {
                     month: 'short',
@@ -102,7 +102,7 @@ export function ChatList({ pageId }: { pageId: string }) {
                 {convo.visitorId && <span>{convo.visitorId.slice(0, 8)}...</span>}
               </div>
             </div>
-            <span className="text-sm text-gray-500 sm:ml-3">
+            <span className="text-sm text-karte-text-4 sm:ml-3">
               {expandedId === convo.id ? '\u25B2' : '\u25BC'}
             </span>
           </button>
@@ -111,7 +111,7 @@ export function ChatList({ pageId }: { pageId: string }) {
           {expandedId === convo.id && (
             <div className="max-h-96 space-y-3 overflow-y-auto border-t border-white/10 px-4 py-4 sm:px-5">
               {loadingMessages === convo.id ? (
-                <p className="text-xs text-gray-500">Loading messages...</p>
+                <p className="text-xs text-karte-text-4">Loading messages...</p>
               ) : (
                 (messagesMap[convo.id] || []).map((msg) => (
                   <div
@@ -121,7 +121,7 @@ export function ChatList({ pageId }: { pageId: string }) {
                     <div
                       className={`max-w-[88%] whitespace-pre-wrap rounded-xl px-3 py-2 text-sm sm:max-w-[80%] ${
                         msg.role === 'user'
-                          ? 'bg-blue-600 text-white'
+                          ? 'bg-blue-600 text-karte-text'
                           : 'border border-white/10 bg-white/5 text-white/90'
                       }`}
                     >
@@ -131,7 +131,7 @@ export function ChatList({ pageId }: { pageId: string }) {
                 ))
               )}
               {!loadingMessages && (messagesMap[convo.id] || []).length === 0 && (
-                <p className="text-xs text-gray-500">No messages in this conversation.</p>
+                <p className="text-xs text-karte-text-4">No messages in this conversation.</p>
               )}
             </div>
           )}

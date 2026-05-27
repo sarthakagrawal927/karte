@@ -33,7 +33,7 @@ function tierClasses(tier: QualifiedLead['tier']) {
     return 'border-cyan-300/30 bg-cyan-300/10 text-cyan-100';
   }
 
-  return 'border-white/15 bg-white/5 text-gray-300';
+  return 'border-white/15 bg-white/5 text-karte-text-2';
 }
 
 function metricLabel(lead: QualifiedLead) {
@@ -59,8 +59,8 @@ export default async function LeadsPage() {
   if (!page) {
     return (
       <div>
-        <h1 className="mb-2 text-2xl font-bold text-white">Lead Radar</h1>
-        <p className="text-sm text-gray-400">
+        <h1 className="mb-2 text-2xl font-bold text-karte-text">Lead Radar</h1>
+        <p className="text-sm text-karte-text-3">
           Create a page first to qualify visitor activity.
         </p>
       </div>
@@ -119,21 +119,21 @@ export default async function LeadsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Lead Radar</h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-400">
+          <h1 className="text-2xl font-bold text-karte-text">Lead Radar</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-karte-text-3">
             Qualified visitors from direct messages, chat transcripts, and tracked profile activity.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link
             href="/dashboard/inbox"
-            className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+            className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/10"
           >
             Inbox
           </Link>
           <Link
             href="/dashboard/chats"
-            className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+            className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/10"
           >
             Chats
           </Link>
@@ -151,15 +151,15 @@ export default async function LeadsPage() {
             key={metric.label}
             className="rounded-2xl border border-white/20 bg-white/5 p-5 backdrop-blur-xl"
           >
-            <p className="text-xs uppercase tracking-[0.22em] text-gray-500">{metric.label}</p>
-            <p className="mt-3 text-3xl font-semibold text-white">{metric.value}</p>
+            <p className="text-xs uppercase tracking-[0.22em] text-karte-text-4">{metric.label}</p>
+            <p className="mt-3 text-3xl font-semibold text-karte-text">{metric.value}</p>
           </div>
         ))}
       </div>
 
       {leads.length === 0 ? (
         <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
-          <p className="text-gray-400">
+          <p className="text-karte-text-3">
             No qualified leads yet. Visitors will appear here once they chat, click, or send a message.
           </p>
         </div>
@@ -173,28 +173,28 @@ export default async function LeadsPage() {
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="text-lg font-semibold text-white">{lead.name}</h2>
+                    <h2 className="text-lg font-semibold text-karte-text">{lead.name}</h2>
                     <span className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] ${tierClasses(lead.tier)}`}>
                       {lead.tier}
                     </span>
-                    <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-white">
+                    <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-karte-text">
                       {lead.score}/100
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-gray-400">
+                  <p className="mt-1 text-sm text-karte-text-3">
                     {lead.email ?? lead.visitorId ?? 'Anonymous visitor'} / {metricLabel(lead)}
                   </p>
                 </div>
                 <div className="text-left lg:text-right">
-                  <p className="text-sm font-medium text-white">{lead.nextAction}</p>
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="text-sm font-medium text-karte-text">{lead.nextAction}</p>
+                  <p className="mt-1 text-xs text-karte-text-4">
                     Last seen {formatDate(lead.lastSeenAt)}
                   </p>
                 </div>
               </div>
 
               {lead.preview && (
-                <p className="mt-4 line-clamp-3 whitespace-pre-wrap rounded-xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-gray-300">
+                <p className="mt-4 line-clamp-3 whitespace-pre-wrap rounded-xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-karte-text-2">
                   {lead.preview}
                 </p>
               )}
@@ -203,7 +203,7 @@ export default async function LeadsPage() {
                 {lead.reasons.map((reason) => (
                   <span
                     key={reason}
-                    className="rounded-full bg-white/10 px-2.5 py-1 text-xs text-gray-300"
+                    className="rounded-full bg-white/10 px-2.5 py-1 text-xs text-karte-text-2"
                   >
                     {reason}
                   </span>

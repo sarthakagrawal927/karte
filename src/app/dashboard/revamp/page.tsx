@@ -20,8 +20,8 @@ export default async function RevampPage() {
   if (!page) {
     return (
       <div className="mx-auto max-w-3xl">
-        <h1 className="mb-2 text-2xl font-bold text-white">Profile Revamp</h1>
-        <p className="text-sm text-gray-400">
+        <h1 className="mb-2 text-2xl font-bold text-karte-text">Profile Revamp</h1>
+        <p className="text-sm text-karte-text-3">
           Create a profile first from the Appearance tab.
         </p>
       </div>

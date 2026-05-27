@@ -96,10 +96,10 @@ export function IntentOnboarding({
         <p className="text-xs font-medium uppercase tracking-[0.28em] text-cyan-300/80">
           Setup Focus
         </p>
-        <h2 className="mt-2 text-xl font-semibold text-white">
+        <h2 className="mt-2 text-xl font-semibold text-karte-text">
           What should visitors do here?
         </h2>
-        <p className="mt-2 text-sm leading-6 text-gray-400">
+        <p className="mt-2 text-sm leading-6 text-karte-text-3">
           Pick the primary job for your profile. The checklist below adapts to
           that goal.
         </p>
@@ -120,8 +120,8 @@ export function IntentOnboarding({
                   : 'border-white/15 bg-white/[0.03] hover:border-white/30 hover:bg-white/[0.06]'
               }`}
             >
-              <p className="text-sm font-semibold text-white">{option.label}</p>
-              <p className="mt-1 text-xs leading-5 text-gray-400">
+              <p className="text-sm font-semibold text-karte-text">{option.label}</p>
+              <p className="mt-1 text-xs leading-5 text-karte-text-3">
                 {option.description}
               </p>
             </button>
@@ -130,14 +130,14 @@ export function IntentOnboarding({
       </div>
 
       <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-        <p className="text-sm font-medium text-white">
+        <p className="text-sm font-medium text-karte-text">
           Suggested next steps for {selectedOption.label.toLowerCase()}
         </p>
         <div className="mt-3 grid gap-2 sm:grid-cols-3">
           {selectedOption.checklist.map((item) => (
             <div
               key={item}
-              className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-gray-300"
+              className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-karte-text-2"
             >
               {item}
             </div>

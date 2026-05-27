@@ -84,7 +84,7 @@ function StoryCard({
           {para.length > 150 ? para.slice(0, 150) + '...' : para}
         </p>
       ))}
-      <span className="mt-3 inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-stone-500">
+      <span className="mt-3 inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-karte-text-4">
         Continued on profile
       </span>
     </article>
@@ -223,7 +223,7 @@ export function NewspaperFrontPage({
                       className="h-72 w-full object-cover grayscale"
                     />
                   </div>
-                  <figcaption className="mt-2 text-[10px] uppercase tracking-[0.12em] text-stone-500">
+                  <figcaption className="mt-2 text-[10px] uppercase tracking-[0.12em] text-karte-text-4">
                     {displayName} | Photo: Karte
                   </figcaption>
                 </figure>
@@ -330,7 +330,7 @@ export function NewspaperFrontPage({
                   key={i}
                   className="border border-stone-900 bg-[#f7f1df] px-4 py-3 text-center"
                 >
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-500">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-karte-text-4">
                     Advertisement
                   </p>
                   <p
@@ -346,11 +346,11 @@ export function NewspaperFrontPage({
 
           <div className="border-t border-stone-900 bg-stone-950 px-5 py-3 sm:px-8">
             <div className="flex items-center justify-between">
-              <p className="text-[10px] uppercase tracking-widest text-stone-400">
+              <p className="text-[10px] uppercase tracking-widest text-karte-text-3">
                 Published by Karte
               </p>
               <p
-                className="text-[10px] tracking-wider text-stone-400 italic"
+                className="text-[10px] tracking-wider text-karte-text-3 italic"
                 style={playfair.style}
               >
                 A Personal Newspaper Experience

@@ -65,14 +65,14 @@ export function ChatSettings({
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="mb-6 text-2xl font-bold text-white">Chat Settings</h1>
+      <h1 className="mb-6 text-2xl font-bold text-karte-text">Chat Settings</h1>
 
       <Card className="space-y-6">
         {/* Enable Chat Toggle */}
         <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="text-sm font-medium text-white">Enable Chat</h3>
-            <p className="text-xs text-gray-400">
+            <h3 className="text-sm font-medium text-karte-text">Enable Chat</h3>
+            <p className="text-xs text-karte-text-3">
               Allow visitors to chat with your AI assistant
             </p>
           </div>

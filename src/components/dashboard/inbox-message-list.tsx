@@ -64,7 +64,7 @@ export function InboxMessageList({
   if (messages.length === 0) {
     return (
       <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
-        <p className="text-gray-400">
+        <p className="text-karte-text-3">
           No messages yet. Direct messages and contact submissions will show here.
         </p>
       </div>
@@ -74,7 +74,7 @@ export function InboxMessageList({
   return (
     <div className="space-y-3">
       {archivedCount > 0 && (
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-karte-text-4">
           {archivedCount} archived message{archivedCount === 1 ? '' : 's'} hidden.
         </p>
       )}
@@ -91,13 +91,13 @@ export function InboxMessageList({
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="text-lg font-semibold text-white">
+                  <p className="text-lg font-semibold text-karte-text">
                     {message.name}
                   </p>
                   <span
                     className={`rounded-full px-2.5 py-1 text-[11px] font-medium ${
                       isAnonymous
-                        ? 'bg-white/10 text-gray-300'
+                        ? 'bg-white/10 text-karte-text-2'
                         : 'bg-green-400/10 text-green-300'
                     }`}
                   >
@@ -114,7 +114,7 @@ export function InboxMessageList({
                   </span>
                 </div>
                 {isAnonymous ? (
-                  <p className="mt-1 text-sm text-gray-400">No email attached</p>
+                  <p className="mt-1 text-sm text-karte-text-3">No email attached</p>
                 ) : (
                   <a
                     href={`mailto:${message.email}`}
@@ -124,12 +124,12 @@ export function InboxMessageList({
                   </a>
                 )}
               </div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-karte-text-4">
                 {formatCreatedAt(message.createdAt)}
               </p>
             </div>
 
-            <p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-gray-300">
+            <p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-karte-text-2">
               {message.message}
             </p>
 
@@ -139,7 +139,7 @@ export function InboxMessageList({
                   type="button"
                   disabled={isUpdating}
                   onClick={() => void updateStatus(message.id, 'unread')}
-                  className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-white transition hover:bg-white/10 disabled:opacity-50"
+                  className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-karte-text transition hover:bg-white/10 disabled:opacity-50"
                 >
                   Mark Unread
                 </button>
@@ -158,7 +158,7 @@ export function InboxMessageList({
                 type="button"
                 disabled={isUpdating}
                 onClick={() => void updateStatus(message.id, 'archived')}
-                className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-gray-300 transition hover:bg-white/10 disabled:opacity-50"
+                className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-karte-text-2 transition hover:bg-white/10 disabled:opacity-50"
               >
                 Archive
               </button>

@@ -109,7 +109,7 @@ export function NovelEditor({ initialContent, onUpdate }: NovelEditorProps) {
   if (!hydrated) {
     return (
       <div className="min-h-[300px] rounded-lg border border-white/20 bg-white/5 p-4">
-        <p className="text-sm text-gray-500">Loading editor...</p>
+        <p className="text-sm text-karte-text-4">Loading editor...</p>
       </div>
     );
   }
@@ -147,28 +147,28 @@ export function NovelEditor({ initialContent, onUpdate }: NovelEditorProps) {
           <EditorBubbleItem
             onSelect={(editor) => editor.chain().focus().toggleBold().run()}
           >
-            <span className="rounded px-2 py-1 text-xs font-bold text-white/60 hover:bg-white/10 hover:text-white">
+            <span className="rounded px-2 py-1 text-xs font-bold text-white/60 hover:bg-white/10 hover:text-karte-text">
               B
             </span>
           </EditorBubbleItem>
           <EditorBubbleItem
             onSelect={(editor) => editor.chain().focus().toggleItalic().run()}
           >
-            <span className="rounded px-2 py-1 text-xs italic text-white/60 hover:bg-white/10 hover:text-white">
+            <span className="rounded px-2 py-1 text-xs italic text-white/60 hover:bg-white/10 hover:text-karte-text">
               I
             </span>
           </EditorBubbleItem>
           <EditorBubbleItem
             onSelect={(editor) => editor.chain().focus().toggleStrike().run()}
           >
-            <span className="rounded px-2 py-1 text-xs text-white/60 line-through hover:bg-white/10 hover:text-white">
+            <span className="rounded px-2 py-1 text-xs text-white/60 line-through hover:bg-white/10 hover:text-karte-text">
               S
             </span>
           </EditorBubbleItem>
           <EditorBubbleItem
             onSelect={(editor) => editor.chain().focus().toggleCode().run()}
           >
-            <span className="rounded px-2 py-1 font-mono text-xs text-white/60 hover:bg-white/10 hover:text-white">
+            <span className="rounded px-2 py-1 font-mono text-xs text-white/60 hover:bg-white/10 hover:text-karte-text">
               {'</>'}
             </span>
           </EditorBubbleItem>
@@ -176,7 +176,7 @@ export function NovelEditor({ initialContent, onUpdate }: NovelEditorProps) {
 
         {/* Slash command menu */}
         <EditorCommand className="z-50 rounded-lg border border-white/20 bg-gray-900 p-1 shadow-xl">
-          <EditorCommandEmpty className="px-3 py-2 text-sm text-gray-500">
+          <EditorCommandEmpty className="px-3 py-2 text-sm text-karte-text-4">
             No results
           </EditorCommandEmpty>
           <EditorCommandList>
@@ -191,8 +191,8 @@ export function NovelEditor({ initialContent, onUpdate }: NovelEditorProps) {
                   {item.icon}
                 </span>
                 <div>
-                  <p className="font-medium text-white">{item.title}</p>
-                  <p className="text-xs text-gray-500">{item.description}</p>
+                  <p className="font-medium text-karte-text">{item.title}</p>
+                  <p className="text-xs text-karte-text-4">{item.description}</p>
                 </div>
               </EditorCommandItem>
             ))}

@@ -24,7 +24,7 @@ export default async function LinksPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-white">Manage Links</h1>
+      <h1 className="mb-6 text-2xl font-bold text-karte-text">Manage Links</h1>
       <LinkEditor pageId={page.id} initialLinks={pageLinks} />
     </div>
   );

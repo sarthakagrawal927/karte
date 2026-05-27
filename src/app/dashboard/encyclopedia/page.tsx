@@ -21,8 +21,8 @@ export default async function DashboardEncyclopediaPage() {
   if (!page) {
     return (
       <div className="mx-auto max-w-2xl">
-        <h1 className="mb-4 text-2xl font-bold text-white">Encyclopedia</h1>
-        <p className="text-gray-400">Create a profile first to manage your encyclopedia.</p>
+        <h1 className="mb-4 text-2xl font-bold text-karte-text">Encyclopedia</h1>
+        <p className="text-karte-text-3">Create a profile first to manage your encyclopedia.</p>
       </div>
     );
   }
@@ -43,11 +43,11 @@ export default async function DashboardEncyclopediaPage() {
   if (!content) {
     return (
       <div className="mx-auto max-w-2xl">
-        <h1 className="mb-4 text-2xl font-bold text-white">Encyclopedia</h1>
+        <h1 className="mb-4 text-2xl font-bold text-karte-text">Encyclopedia</h1>
         <div className="rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl">
-          <p className="text-gray-400">
+          <p className="text-karte-text-3">
             Generate your encyclopedia first from the{' '}
-            <Link href="/dashboard/pages" className="text-white underline underline-offset-2 transition hover:text-gray-300">
+            <Link href="/dashboard/pages" className="text-karte-text underline underline-offset-2 transition hover:text-karte-text-2">
               Pages tab
             </Link>
             .

@@ -54,7 +54,7 @@ export function GenerateEncyclopedia({ pageId, slug, accentColor }: GenerateEncy
         <div className="w-full max-w-3xl overflow-hidden rounded-2xl border border-gray-300 bg-white text-gray-950 shadow-[0_24px_80px_-50px_rgba(0,0,0,0.7)]">
           <div className="grid border-b border-gray-200 bg-[#f8f9fa] sm:grid-cols-[1fr_220px]">
             <div className="px-5 py-5 sm:px-7">
-              <p className="text-xs uppercase tracking-[0.24em] text-gray-500">
+              <p className="text-xs uppercase tracking-[0.24em] text-karte-text-4">
                 Karte Encyclopedia
               </p>
               <h1 className="mt-2 font-serif text-3xl text-gray-950 sm:text-4xl">
@@ -68,7 +68,7 @@ export function GenerateEncyclopedia({ pageId, slug, accentColor }: GenerateEncy
                   style={{ backgroundColor: accentColor }}
                 />
               </div>
-              <p className="mt-3 text-xs font-medium uppercase tracking-[0.18em] text-gray-500">
+              <p className="mt-3 text-xs font-medium uppercase tracking-[0.18em] text-karte-text-4">
                 Checking sources
               </p>
             </div>
@@ -85,7 +85,7 @@ export function GenerateEncyclopedia({ pageId, slug, accentColor }: GenerateEncy
               <div className="mt-8 grid gap-3 sm:grid-cols-2">
                 {['Summary', 'Work', 'Projects', 'Context'].map((label) => (
                   <div key={label} className="rounded-lg border border-gray-200 bg-[#f8f9fa] p-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-karte-text-4">
                       {label}
                     </p>
                     <div className="mt-3 h-2 animate-pulse rounded bg-gray-300" />
@@ -113,7 +113,7 @@ export function GenerateEncyclopedia({ pageId, slug, accentColor }: GenerateEncy
     <div className="flex min-h-[64vh] items-center justify-center px-4 py-10">
       <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-gray-300 bg-white shadow-[0_24px_80px_-50px_rgba(0,0,0,0.7)]">
         <div className="border-b border-gray-200 bg-[#f8f9fa] px-5 py-4 sm:px-7">
-          <p className="text-xs uppercase tracking-[0.24em] text-gray-500">
+          <p className="text-xs uppercase tracking-[0.24em] text-karte-text-4">
             Karte Encyclopedia
           </p>
           <h1 className="mt-2 font-serif text-3xl text-gray-950">
@@ -123,7 +123,7 @@ export function GenerateEncyclopedia({ pageId, slug, accentColor }: GenerateEncy
 
         <div className="grid gap-6 p-5 sm:grid-cols-[1fr_220px] sm:p-7">
           <div>
-            <p className="text-sm leading-6 text-gray-600">
+            <p className="text-sm leading-6 text-karte-text-4">
               Generate a reference-style profile page with summary, background,
               projects, and source-backed context.
             </p>
@@ -137,7 +137,7 @@ export function GenerateEncyclopedia({ pageId, slug, accentColor }: GenerateEncy
             <button
               onClick={handleGenerate}
               disabled={loading}
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gray-950 bg-gray-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gray-950 bg-gray-950 px-5 py-3 text-sm font-semibold text-karte-text transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
             >
               {loading ? (
                 <>

@@ -20,8 +20,8 @@ export default async function MemoryPage() {
   if (!page) {
     return (
       <div>
-        <h1 className="mb-2 text-2xl font-bold text-white">Profile Memory</h1>
-        <p className="text-sm text-gray-400">
+        <h1 className="mb-2 text-2xl font-bold text-karte-text">Profile Memory</h1>
+        <p className="text-sm text-karte-text-3">
           Create a page first from the Appearance tab.
         </p>
       </div>
@@ -50,22 +50,22 @@ export default async function MemoryPage() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="mb-1 text-2xl font-bold text-white">Profile Memory</h1>
-        <p className="mb-6 text-sm text-gray-400">
+        <h1 className="mb-1 text-2xl font-bold text-karte-text">Profile Memory</h1>
+        <p className="mb-6 text-sm text-karte-text-3">
           Add source-backed details that power chat, encyclopedia, newspaper, and roast modes.
         </p>
         <div className="mb-6 grid gap-3 sm:grid-cols-3">
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Sources</p>
-            <p className="mt-2 text-2xl font-semibold text-white">{sourceCount}</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-karte-text-4">Sources</p>
+            <p className="mt-2 text-2xl font-semibold text-karte-text">{sourceCount}</p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Memory Blocks</p>
-            <p className="mt-2 text-2xl font-semibold text-white">{blocks.length}</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-karte-text-4">Memory Blocks</p>
+            <p className="mt-2 text-2xl font-semibold text-karte-text">{blocks.length}</p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Coverage</p>
-            <p className="mt-2 text-sm font-medium text-white">
+            <p className="text-xs uppercase tracking-[0.2em] text-karte-text-4">Coverage</p>
+            <p className="mt-2 text-sm font-medium text-karte-text">
               {blocks.length >= 2 && sourceCount >= 4 ? 'Strong' : 'Add more context'}
             </p>
           </div>

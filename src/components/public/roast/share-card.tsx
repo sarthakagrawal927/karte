@@ -41,7 +41,7 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
         <div className="relative z-10">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <p className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-1">
+              <p className="text-xs uppercase tracking-[0.2em] text-karte-text-4 mb-1">
                 The Roast of
               </p>
               <h2
@@ -90,7 +90,7 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
                   </span>
                 </div>
               </div>
-              <span className="text-[10px] uppercase tracking-widest text-gray-500">
+              <span className="text-[10px] uppercase tracking-widest text-karte-text-4">
                 Vibe
               </span>
             </div>
@@ -111,17 +111,17 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
 
         {/* Roast summary */}
         <div className="relative z-10 flex-1 flex items-center py-4">
-          <p className="text-sm text-gray-400 leading-relaxed italic line-clamp-3">
+          <p className="text-sm text-karte-text-3 leading-relaxed italic line-clamp-3">
             &ldquo;{summary}&rdquo;
           </p>
         </div>
 
         {/* Watermark */}
         <div className="relative z-10 flex items-center justify-between">
-          <span className="text-xs text-gray-600">
+          <span className="text-xs text-karte-text-4">
             karte.cc/{slug}
           </span>
-          <span className="text-xs text-gray-600">
+          <span className="text-xs text-karte-text-4">
             Karte Roast
           </span>
         </div>

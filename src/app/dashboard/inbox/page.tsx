@@ -20,8 +20,8 @@ export default async function InboxPage() {
   if (!page) {
     return (
       <div>
-        <h1 className="mb-2 text-2xl font-bold text-white">Inbox</h1>
-        <p className="text-sm text-gray-400">
+        <h1 className="mb-2 text-2xl font-bold text-karte-text">Inbox</h1>
+        <p className="text-sm text-karte-text-3">
           Create a page first to receive direct messages and contact submissions.
         </p>
       </div>
@@ -43,8 +43,8 @@ export default async function InboxPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="mb-1 text-2xl font-bold text-white">Inbox</h1>
-        <p className="text-sm text-gray-400">
+        <h1 className="mb-1 text-2xl font-bold text-karte-text">Inbox</h1>
+        <p className="text-sm text-karte-text-3">
           Direct messages and contact submissions from your public profile.
         </p>
       </div>
@@ -60,7 +60,7 @@ export default async function InboxPage() {
             className="rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl"
           >
             <p className="text-sm text-white/70">{metric.label}</p>
-            <p className="mt-2 text-3xl font-bold text-white">{metric.value}</p>
+            <p className="mt-2 text-3xl font-bold text-karte-text">{metric.value}</p>
           </div>
         ))}
       </div>
@@ -68,8 +68,8 @@ export default async function InboxPage() {
       <div className="rounded-2xl border border-white/20 bg-white/5 p-5 backdrop-blur-xl">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-medium text-white">Trust Settings</p>
-            <p className="mt-1 text-xs leading-5 text-gray-400">
+            <p className="text-sm font-medium text-karte-text">Trust Settings</p>
+            <p className="mt-1 text-xs leading-5 text-karte-text-3">
               DM mode is controlled in Appearance. Email-verified DMs use the
               visitor&apos;s signed-in account email; anonymous DMs store no
               email address.
@@ -77,7 +77,7 @@ export default async function InboxPage() {
           </div>
           <Link
             href="/dashboard/appearance"
-            className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-center text-sm font-medium text-white transition hover:bg-white/10"
+            className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-center text-sm font-medium text-karte-text transition hover:bg-white/10"
           >
             Configure DMs
           </Link>
