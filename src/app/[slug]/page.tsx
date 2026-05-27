@@ -1,9 +1,17 @@
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { ChatWidget } from '@/components/public/chat-widget';
+// ChatWidget is a 722-line client bundle. Use dynamic() to code-split it
+// into its own chunk so the initial JS payload on every profile page is
+// smaller. The widget still renders server-side initially (it's a small
+// fixed-position button until opened) — this is purely about bundle weight.
+const ChatWidget = dynamic(
+  () => import('@/components/public/chat-widget').then((m) => m.ChatWidget),
+);
+
 import { LinkCard } from '@/components/public/link-card';
 import { OpenChatButton } from '@/components/public/open-chat-button';
 import { PageSectionRenderer } from '@/components/public/page-section-renderer';
