@@ -1,7 +1,9 @@
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
 import { PageSettings } from '@/components/dashboard/page-settings';
+import { PendingImportBanner } from '@/components/dashboard/pending-import-banner';
 import { db } from '@/db';
 import { pages } from '@/db/schema';
 import { getSession } from '@/lib/auth-server';
@@ -15,21 +17,26 @@ export default async function AppearancePage() {
   });
 
   return (
-    <PageSettings
-      page={
-        page
-          ? {
-              id: page.id,
-              slug: page.slug,
-              displayName: page.displayName,
-              bio: page.bio,
-              avatarUrl: page.avatarUrl,
-              themeConfig: page.themeConfig,
-              published: page.published,
-              dmMode: page.dmMode,
-            }
-          : null
-      }
-    />
+    <>
+      <Suspense fallback={null}>
+        <PendingImportBanner />
+      </Suspense>
+      <PageSettings
+        page={
+          page
+            ? {
+                id: page.id,
+                slug: page.slug,
+                displayName: page.displayName,
+                bio: page.bio,
+                avatarUrl: page.avatarUrl,
+                themeConfig: page.themeConfig,
+                published: page.published,
+                dmMode: page.dmMode,
+              }
+            : null
+        }
+      />
+    </>
   );
 }
