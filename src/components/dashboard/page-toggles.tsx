@@ -244,13 +244,17 @@ export function PageToggles({
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <h1 className="mb-2 text-2xl font-bold text-karte-text">Profile Modes</h1>
-      <p className="mb-6 text-sm text-karte-text-3">
-        Enable the alternate ways visitors can experience your identity. Each
-        mode is accessible at{' '}
-        <code className="text-white/60">/{slug}/&lt;page&gt;</code>
-      </p>
+    <div>
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold tracking-[-0.01em] text-karte-text">
+          Modes
+        </h2>
+        <p className="mt-1 text-sm text-karte-text-3">
+          Enable the alternate ways visitors can experience your identity. Each
+          mode is accessible at{' '}
+          <code className="text-karte-text-4">/{slug}/&lt;mode&gt;</code>
+        </p>
+      </div>
 
       <div className="space-y-4">
         {PAGE_FEATURES.map((feature) => {

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { PageSettings } from '@/components/dashboard/page-settings';
+import { PageToggles } from '@/components/dashboard/page-toggles';
 import { PendingImportBanner } from '@/components/dashboard/pending-import-banner';
 import { PendingOnboardingBanner } from '@/components/dashboard/pending-onboarding-banner';
 import { getCurrentPage, getSession } from '@/lib/auth-server';
@@ -41,6 +42,19 @@ export default async function AppearancePage() {
             : null
         }
       />
+
+      {page && (
+        <div className="mt-10 border-t border-karte-border pt-10">
+          <PageToggles
+            pageId={page.id}
+            slug={page.slug}
+            initialEncyclopedia={page.encyclopediaEnabled ?? false}
+            initialRoast={page.roastEnabled ?? false}
+            initialNewspaper={page.newspaperEnabled ?? false}
+            initialPageSettings={page.pageSettings ?? {}}
+          />
+        </div>
+      )}
     </>
   );
 }
