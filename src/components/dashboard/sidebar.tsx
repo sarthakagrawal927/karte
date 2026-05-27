@@ -4,7 +4,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-type NavItem = { label: string; href: string };
+type NavItem = {
+  label: string;
+  href: string;
+  /** Featured items get a subtle accent treatment so the AI surfaces feel
+   * like product capabilities, not buried buttons. */
+  featured?: boolean;
+};
 type NavGroup = { label: string | null; items: NavItem[] };
 
 const navGroups: NavGroup[] = [
@@ -19,8 +25,7 @@ const navGroups: NavGroup[] = [
       { label: 'Projects', href: '/dashboard/projects' },
       { label: 'Sections', href: '/dashboard/sections' },
       { label: 'Modes', href: '/dashboard/pages' },
-      { label: 'Encyclopedia', href: '/dashboard/encyclopedia' },
-      { label: 'AI Revamp', href: '/dashboard/revamp' },
+      { label: 'AI Revamp', href: '/dashboard/revamp', featured: true },
     ],
   },
   {
@@ -28,7 +33,6 @@ const navGroups: NavGroup[] = [
     items: [
       { label: 'Chat', href: '/dashboard/memory' },
       { label: 'Inbox', href: '/dashboard/inbox' },
-      { label: 'Chats', href: '/dashboard/chats' },
       { label: 'Leads', href: '/dashboard/leads' },
     ],
   },
@@ -36,7 +40,6 @@ const navGroups: NavGroup[] = [
     label: 'Analyze',
     items: [
       { label: 'Analytics', href: '/dashboard/analytics' },
-      { label: 'Experiments', href: '/dashboard/experiments' },
     ],
   },
   {
@@ -86,24 +89,37 @@ export function Sidebar({ slug }: { slug?: string }) {
               {group.items.map((item) => {
                 const isActive =
                   pathname === item.href || pathname.startsWith(`${item.href}/`);
+                const baseClass =
+                  'flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-[14px] font-medium transition-colors duration-200 ease-[var(--karte-ease)]';
+                const stateClass = item.featured
+                  ? isActive
+                    ? 'bg-karte-accent/[0.12] text-karte-text'
+                    : 'text-karte-text-2 hover:bg-karte-accent/[0.08] hover:text-karte-text'
+                  : isActive
+                    ? 'bg-white/[0.06] text-karte-text'
+                    : 'text-karte-text-3 hover:bg-white/[0.03] hover:text-karte-text';
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={onNavigate}
-                    // Disable viewport-based prefetching. Dashboard routes are
-                    // dynamic per-user — letting Next.js prefetch all 14 sidebar
-                    // links eagerly triggered 14 background RSC requests that
-                    // hit the server's DB on every dashboard load. Now each
-                    // click is one request, when you actually click it.
+                    // Disable viewport-based prefetching. Dashboard routes
+                    // are dynamic per-user — letting Next.js prefetch all
+                    // sidebar links eagerly triggered background RSC
+                    // requests that hit the server's DB on every dashboard
+                    // load. Now each click is one request.
                     prefetch={false}
-                    className={`block rounded-lg px-3 py-2 text-[14px] font-medium transition-colors duration-200 ease-[var(--karte-ease)] ${
-                      isActive
-                        ? 'bg-white/[0.06] text-karte-text'
-                        : 'text-karte-text-3 hover:bg-white/[0.03] hover:text-karte-text'
-                    }`}
+                    className={`${baseClass} ${stateClass}`}
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    {item.featured && (
+                      <span
+                        aria-hidden="true"
+                        className="text-[10px] text-karte-accent/80"
+                      >
+                        ✨
+                      </span>
+                    )}
                   </Link>
                 );
               })}
@@ -111,22 +127,52 @@ export function Sidebar({ slug }: { slug?: string }) {
           ))}
         </nav>
 
-        {slug && (
-          <div className={`border-t border-karte-border ${mobile ? 'px-4 py-4' : 'px-3 py-4'}`}>
-            <a
-              href={`/${slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center justify-between gap-2 rounded-lg border border-karte-border bg-white/[0.02] px-3 py-2 text-[13px] font-medium text-karte-text-2 transition-all duration-200 ease-[var(--karte-ease)] hover:border-karte-border-emphasis hover:bg-white/[0.05] hover:text-karte-text"
-            >
-              View page
-              <span className="text-karte-text-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-karte-accent">
-                ↗
-              </span>
-            </a>
-          </div>
-        )}
       </>
+    );
+  }
+
+  // Bottom-pinned "Your live page" CTA. Rendered as a sibling of the
+  // scrollable nav rather than inside it, so it stays anchored to the
+  // sidebar's bottom edge regardless of nav length.
+  function renderViewPageCta({
+    mobile = false,
+    onNavigate,
+  }: {
+    mobile?: boolean;
+    onNavigate?: () => void;
+  }) {
+    if (!slug) return null;
+    return (
+      <div
+        className={`border-t border-karte-border ${mobile ? 'px-4 py-4' : 'px-3 py-4'}`}
+      >
+        <a
+          href={`/${slug}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onNavigate}
+          className="group block rounded-2xl border border-karte-accent/25 bg-gradient-to-br from-karte-accent/[0.10] via-karte-accent/[0.04] to-transparent p-4 transition-all duration-200 ease-[var(--karte-ease)] hover:-translate-y-0.5 hover:border-karte-accent/45 hover:from-karte-accent/[0.16]"
+        >
+          <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-karte-accent/80">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-karte-accent opacity-70" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-karte-accent" />
+              </span>
+              Your live page
+            </span>
+          </p>
+          <p className="mt-2 truncate font-mono text-[13px] font-medium text-karte-text">
+            karte.cc/{slug}
+          </p>
+          <p className="mt-2 inline-flex items-center gap-1 text-[11px] font-medium text-karte-text-3 transition-colors duration-200 group-hover:text-karte-accent">
+            Open in new tab
+            <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+              ↗
+            </span>
+          </p>
+        </a>
+      </div>
     );
   }
 
@@ -216,6 +262,10 @@ export function Sidebar({ slug }: { slug?: string }) {
                 onNavigate: () => setMobileOpen(false),
               })}
             </div>
+            {renderViewPageCta({
+              mobile: true,
+              onNavigate: () => setMobileOpen(false),
+            })}
           </aside>
         </div>
       )}
@@ -234,6 +284,7 @@ export function Sidebar({ slug }: { slug?: string }) {
         </div>
 
         <div className="flex-1 overflow-y-auto pb-4">{renderNav({})}</div>
+        {renderViewPageCta({})}
       </aside>
     </>
   );
