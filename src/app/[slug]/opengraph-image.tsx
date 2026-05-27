@@ -101,7 +101,7 @@ export default async function OgImage({ params }: Props) {
           display: 'flex',
           flexDirection: 'column',
           padding: 80,
-          background: `radial-gradient(circle at 0% 0%, ${accent}33 0%, transparent 50%), radial-gradient(circle at 100% 100%, ${grad2}22 0%, transparent 55%), linear-gradient(180deg, #0a0a0a 0%, #111111 100%)`,
+          background: `linear-gradient(135deg, ${accent}22 0%, #0a0a0a 45%, #0a0a0a 70%, ${grad2}1a 100%)`,
           color: '#ededed',
           fontFamily: 'sans-serif',
         }}
