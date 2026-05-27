@@ -44,7 +44,7 @@ export default async function AppearancePage() {
       />
 
       {page && (
-        <div className="mt-10 border-t border-karte-border pt-10">
+        <div className="mx-auto mt-10 max-w-2xl border-t border-karte-border pt-10">
           <PageToggles
             pageId={page.id}
             slug={page.slug}

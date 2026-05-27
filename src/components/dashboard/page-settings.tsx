@@ -296,6 +296,46 @@ export function PageSettings({
             : 'Create Your Page'}
       </h1>
 
+      {isEditing && (
+        <div className="mb-6 rounded-2xl border border-karte-accent/25 bg-gradient-to-br from-karte-accent/[0.10] via-karte-accent/[0.04] to-transparent p-5">
+          <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-karte-accent-soft">
+            <span className="text-karte-accent/80">·</span> Prompt the design
+          </p>
+          <h2 className="mt-2 text-lg font-semibold tracking-[-0.01em] text-karte-text">
+            Describe the vibe — we&apos;ll style your page
+          </h2>
+          <p className="mt-1.5 text-[12px] leading-[1.55] text-karte-text-3">
+            Picks a theme preset and tweaks colors to match. Variant / layout
+            generation (which widgets the AI picks for each link or project)
+            is on the roadmap.
+          </p>
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+            <input
+              type="text"
+              value={aiPrompt}
+              onChange={(e) => setAiPrompt(e.target.value)}
+              placeholder="e.g. dark editorial with warm gold accents"
+              className="min-w-0 flex-1 rounded-xl bg-white/[0.045] px-4 py-2.5 text-[14px] text-karte-text placeholder:text-karte-text-4 outline-none ring-1 ring-inset ring-transparent transition-all duration-200 ease-[var(--karte-ease)] hover:bg-white/[0.06] focus:bg-white/[0.06] focus:ring-karte-accent/35"
+            />
+            <button
+              type="button"
+              onClick={applyAiTheme}
+              disabled={aiRunning || !aiPrompt.trim()}
+              className="shrink-0 rounded-xl bg-karte-accent px-5 py-2.5 text-[14px] font-semibold text-zinc-950 transition hover:bg-karte-accent-soft disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {aiRunning ? 'Generating…' : 'Generate'}
+            </button>
+          </div>
+          {aiMessage && (
+            <p
+              className={`mt-2 text-[12px] ${aiMessage.toLowerCase().includes('failed') ? 'text-rose-300/90' : 'text-karte-text-3'}`}
+            >
+              {aiMessage}
+            </p>
+          )}
+        </div>
+      )}
+
       <div className="space-y-6 rounded-2xl bg-white/[0.02] p-6">
           <div>
           <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -526,40 +566,6 @@ export function PageSettings({
             })}
           </div>
 
-          {isEditing && (
-            <div className="mt-4 rounded-2xl bg-white/[0.025] p-4">
-              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-karte-accent-soft">
-                <span className="text-karte-accent/80">·</span> Or describe a vibe
-              </p>
-              <p className="mt-2 text-[12px] leading-[1.5] text-karte-text-3">
-                We&apos;ll pick a preset (and tweak colors) that matches.
-              </p>
-              <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-                <input
-                  type="text"
-                  value={aiPrompt}
-                  onChange={(e) => setAiPrompt(e.target.value)}
-                  placeholder="e.g. dark editorial with warm gold accents"
-                  className="min-w-0 flex-1 rounded-xl bg-white/[0.045] px-3.5 py-2.5 text-[13px] text-karte-text placeholder:text-karte-text-4 outline-none ring-1 ring-inset ring-transparent transition-all duration-200 ease-[var(--karte-ease)] hover:bg-white/[0.06] focus:bg-white/[0.06] focus:ring-karte-accent/35"
-                />
-                <button
-                  type="button"
-                  onClick={applyAiTheme}
-                  disabled={aiRunning || !aiPrompt.trim()}
-                  className="shrink-0 rounded-xl bg-karte-accent px-4 py-2.5 text-[13px] font-semibold text-zinc-950 transition hover:bg-karte-accent-soft disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {aiRunning ? 'Generating…' : 'Suggest a theme'}
-                </button>
-              </div>
-              {aiMessage && (
-                <p
-                  className={`mt-2 text-[12px] ${aiMessage.toLowerCase().includes('failed') ? 'text-rose-300/90' : 'text-karte-text-3'}`}
-                >
-                  {aiMessage}
-                </p>
-              )}
-            </div>
-          )}
         </div>
 
         {/* Publish Toggle (edit mode only) */}
