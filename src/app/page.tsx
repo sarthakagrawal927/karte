@@ -3,6 +3,12 @@ import Link from 'next/link';
 
 import { PublicTopBar } from '@/components/public/public-top-bar';
 
+// Landing content changes only on deploy. Long TTL keeps it cached at every
+// CF PoP for an hour, with another day of stale-while-revalidate. Deploys
+// naturally bust the cache via OpenNext's revalidation flow.
+export const dynamic = 'force-static';
+export const revalidate = 3600;
+
 const geist = Geist({ subsets: ['latin'], weight: ['400', '500', '600'] });
 const serif = Instrument_Serif({ subsets: ['latin'], weight: '400', style: 'italic' });
 
