@@ -26,7 +26,7 @@ Link-in-bio SaaS (karte.cc) with AI profile modes (chat, encyclopedia, roast, ne
 ## Risks & Tech Debt
 - Zero `<Suspense>` usage in the entire tree (grep confirmed); every route (especially `/[slug]` and `/dashboard/analytics`) blocks fully on data fetches despite recent parallelization wins.
 - AI generate routes (`/api/pages/[pageId]/generate/{encyclopedia,roast,newspaper}`) perform no session or page ownership check — only pageId lookup + IP rate limit. Callable by anyone who knows an ID.
-- In-memory rate limiter (`src/lib/rate-limit.ts`) only; CF `RATE_LIMITER` binding and better-auth rateLimit are both disabled/unused. Resets on every Worker cold start/deploy.
+- In-memory rate limiter (`src/lib/rate-limit.ts`) only; keep broader rate limiting conservative unless a specific endpoint shows abuse.
 - Dashboard data duplication: repeated `getSession()` + page lookups across layout and child pages (perf-audit #3/5); no hoisted React cache or context.
 - Custom domains: tenant hostnames verify and appear in UI but return 522 (documented platform limitation in custom-domains.md); feature partially ships.
 - Migration fragility: multiple lazy `ensure*` + PRAGMA/ALTER TABLE at request time in `db/index.ts`; history of swallowed errors and libsql WebSocket quirks; no proper Drizzle migrations for prod.
@@ -37,7 +37,7 @@ Link-in-bio SaaS (karte.cc) with AI profile modes (chat, encyclopedia, roast, ne
 1. **Highest leverage**: Add `<Suspense>` + skeletons to public profile (`/[slug]`) and analytics page immediately (perf-audit #1/2); pair with lazy chat-widget load.
 2. **Security**: Add explicit owner auth (`session.user.id === page.userId`) to all `generate/*` and other page-mutating APIs under `/api/pages/[pageId]`.
 3. **Perf**: Hoist repeated session/page queries from dashboard layout (React `cache()` or headers) and parallelize remaining dashboard page awaits (perf-audit #3/5).
-4. **Reliability**: Adopt the existing RATE_LIMITER binding (or a durable alternative) for AI/contact paths; surface clear "not yet serving" state for custom domain tenants in UI.
+4. **Reliability**: Add narrow abuse controls only where there is endpoint evidence; surface clear "not yet serving" state for custom domain tenants in UI.
 5. **Maintainability**: Prioritize UI audit public surfaces (encyclopedia/newspaper/roast pages + chat-widget + login/create) for token migration before broader dashboard work; formalize a migration strategy before next schema change.
 
 (References: AGENTS.md, AUDIT.md, perf-audit.md, ui-audit.md — 4 total.)

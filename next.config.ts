@@ -17,15 +17,25 @@ const nextConfig: NextConfig = {
     // revalidate, Next.js doesn't always set the public Cache-Control
     // header — particularly under OpenNext for Cloudflare. Force it via
     // this config so CF caches /<slug> root pages at every PoP.
-    //
-    // Tenant custom domains rewrite to /<slug>, so a path-based match
-    // covers both karte.cc/<slug> and tenant.com/ (where middleware
-    // rewrites tenant.com/ → /<slug>).
     return [
       {
-        // Match exactly /<single-segment> — profile root pages. The
-        // negative lookahead excludes known route names so they don't
-        // get hijacked.
+        // Landing page — long TTL since it only changes on deploy.
+        // 1 hr fresh + 1 day SWR keeps it instant for nearly all visits.
+        source: '/',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=3600, stale-while-revalidate=86400',
+          },
+          {
+            key: 'CDN-Cache-Control',
+            value: 'public, s-maxage=3600, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        // Profile root pages — 60s TTL so owner edits propagate within
+        // a minute. The negative lookahead excludes known route names.
         source:
           '/:slug((?!api|_next|dashboard|login|create|about|privacy|terms|favicon\\.ico|icon\\.svg|robots\\.txt|sitemap\\.xml|opengraph-image|manifest\\.webmanifest|\\.well-known).*[^/])',
         headers: [
