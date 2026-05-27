@@ -244,7 +244,7 @@ export function PageToggles({
   }
 
   return (
-    <div>
+    <>
       <div className="mb-6">
         <h2 className="text-lg font-semibold tracking-[-0.01em] text-karte-text">
           Modes
@@ -338,6 +338,6 @@ export function PageToggles({
           </p>
         )}
       </div>
-    </div>
+    </>
   );
 }
