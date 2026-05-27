@@ -107,7 +107,7 @@ export default async function DashboardPage() {
     {
       label: 'Generate profile modes',
       done: readyModeCount >= 1,
-      href: '/dashboard/pages',
+      href: '/dashboard/appearance',
     },
   ];
 

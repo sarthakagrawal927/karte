@@ -29,6 +29,8 @@ interface Link {
   title: string;
   url: string;
   icon: string | null;
+  imageUrl: string | null;
+  body: string | null;
   sortOrder: number | null;
   enabled: boolean | null;
 }
@@ -61,11 +63,13 @@ function LinkCard({
   link,
   index,
   onRemove,
+  onSave,
   isOverlay,
 }: {
   link: Link;
   index: number;
   onRemove: (id: string) => void;
+  onSave: (id: string, patch: Partial<Link>) => Promise<void>;
   isOverlay?: boolean;
 }) {
   const {
@@ -81,6 +85,37 @@ function LinkCard({
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  const [editing, setEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(link.title);
+  const [editUrl, setEditUrl] = useState(link.url);
+  const [editImage, setEditImage] = useState(link.imageUrl ?? '');
+  const [editBody, setEditBody] = useState(link.body ?? '');
+  const [saving, setSaving] = useState(false);
+
+  function startEdit() {
+    setEditTitle(link.title);
+    setEditUrl(link.url);
+    setEditImage(link.imageUrl ?? '');
+    setEditBody(link.body ?? '');
+    setEditing(true);
+  }
+
+  async function saveEdit() {
+    if (!editTitle.trim() || !editUrl.trim()) return;
+    setSaving(true);
+    try {
+      await onSave(link.id, {
+        title: editTitle.trim(),
+        url: editUrl.trim(),
+        imageUrl: editImage.trim() || null,
+        body: editBody.trim() || null,
+      });
+      setEditing(false);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   if (isOverlay) {
     return (
@@ -111,11 +146,78 @@ function LinkCard({
     );
   }
 
+  if (editing) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="rounded-2xl bg-white/[0.04] p-4 ring-1 ring-karte-accent/30"
+      >
+        <div className="mb-3 flex items-center gap-2">
+          <span className="rounded-full bg-white/[0.04] px-2 py-0.5 font-mono text-[10px] font-medium text-karte-text-3">
+            #{index + 1}
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-karte-accent-soft">
+            editing
+          </span>
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2">
+          <input
+            type="text"
+            value={editTitle}
+            onChange={(e) => setEditTitle(e.target.value)}
+            placeholder="Title"
+            className="rounded-xl bg-white/[0.045] px-3.5 py-2 text-sm text-karte-text placeholder:text-karte-text-4 outline-none ring-1 ring-inset ring-transparent transition-all duration-200 hover:bg-white/[0.06] focus:bg-white/[0.06] focus:ring-karte-accent/35"
+          />
+          <input
+            type="url"
+            value={editUrl}
+            onChange={(e) => setEditUrl(e.target.value)}
+            placeholder="https://example.com"
+            className="rounded-xl bg-white/[0.045] px-3.5 py-2 text-sm text-karte-text placeholder:text-karte-text-4 outline-none ring-1 ring-inset ring-transparent transition-all duration-200 hover:bg-white/[0.06] focus:bg-white/[0.06] focus:ring-karte-accent/35"
+          />
+          <input
+            type="url"
+            value={editImage}
+            onChange={(e) => setEditImage(e.target.value)}
+            placeholder="Image URL (optional)"
+            className="rounded-xl bg-white/[0.045] px-3.5 py-2 text-sm text-karte-text placeholder:text-karte-text-4 outline-none ring-1 ring-inset ring-transparent transition-all duration-200 hover:bg-white/[0.06] focus:bg-white/[0.06] focus:ring-karte-accent/35"
+          />
+          <input
+            type="text"
+            value={editBody}
+            onChange={(e) => setEditBody(e.target.value)}
+            placeholder="One-line description (optional)"
+            className="rounded-xl bg-white/[0.045] px-3.5 py-2 text-sm text-karte-text placeholder:text-karte-text-4 outline-none ring-1 ring-inset ring-transparent transition-all duration-200 hover:bg-white/[0.06] focus:bg-white/[0.06] focus:ring-karte-accent/35"
+          />
+        </div>
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={saveEdit}
+            disabled={saving || !editTitle.trim() || !editUrl.trim()}
+            className="rounded-full bg-karte-accent px-4 py-1.5 text-[12px] font-semibold text-zinc-950 transition hover:bg-karte-accent-soft disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {saving ? 'Saving…' : 'Save'}
+          </button>
+          <button
+            type="button"
+            onClick={() => setEditing(false)}
+            disabled={saving}
+            className="rounded-full px-4 py-1.5 text-[12px] font-medium text-karte-text-3 transition-colors duration-150 hover:bg-white/[0.05] hover:text-karte-text disabled:opacity-50"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex flex-col gap-4 rounded-2xl bg-white/[0.025] p-4 transition hover:bg-white/[0.04] sm:flex-row sm:items-center sm:justify-between ${
+      className={`flex flex-col gap-4 rounded-2xl bg-white/[0.025] p-4 transition-colors duration-200 hover:bg-white/[0.04] sm:flex-row sm:items-center sm:justify-between ${
         isDragging ? 'opacity-50' : ''
       }`}
     >
@@ -131,7 +233,7 @@ function LinkCard({
         </button>
         <div className="min-w-0 flex-1">
           <div className="mb-1 flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-karte-border-strong bg-white/5 px-2 py-0.5 text-[11px] font-medium text-karte-text-2">
+            <span className="rounded-full bg-white/[0.04] px-2 py-0.5 font-mono text-[10px] font-medium text-karte-text-3">
               #{index + 1}
             </span>
             <p className="truncate font-medium text-karte-text">{link.title}</p>
@@ -142,8 +244,15 @@ function LinkCard({
       <div className="flex w-full shrink-0 flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
         <button
           type="button"
+          onClick={startEdit}
+          className="rounded-full px-3 py-1.5 text-[12px] font-medium text-karte-text-2 transition-colors duration-150 hover:bg-white/[0.05] hover:text-karte-text"
+        >
+          Edit
+        </button>
+        <button
+          type="button"
           onClick={() => onRemove(link.id)}
-          className="flex-1 rounded-lg border border-karte-border-emphasis px-3 py-1.5 text-sm text-red-400 transition hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-40 sm:flex-none"
+          className="rounded-full px-3 py-1.5 text-[12px] font-medium text-karte-text-3 transition-colors duration-150 hover:bg-red-500/10 hover:text-red-300"
         >
           Remove
         </button>
@@ -288,6 +397,22 @@ export function LinkEditor({
     } catch {
       alert('Failed to remove link');
     }
+  }
+
+  async function saveLink(linkId: string, patch: Partial<Link>) {
+    const res = await fetch(`/api/pages/${pageId}/links/${linkId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || 'Failed to save link');
+    }
+    const updated = await res.json();
+    setLinks((prev) =>
+      prev.map((l) => (l.id === linkId ? { ...l, ...updated } : l)),
+    );
   }
 
   async function previewImport(e: React.FormEvent) {
@@ -539,6 +664,7 @@ export function LinkEditor({
                   link={link}
                   index={index}
                   onRemove={removeLink}
+                  onSave={saveLink}
                 />
               ))}
             </div>
@@ -549,6 +675,7 @@ export function LinkEditor({
                 link={activeLink}
                 index={activeIndex}
                 onRemove={() => {}}
+                onSave={async () => {}}
                 isOverlay
               />
             ) : null}

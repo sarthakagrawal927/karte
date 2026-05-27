@@ -25,7 +25,6 @@ const navGroups: NavGroup[] = [
       { label: 'Projects', href: '/dashboard/projects' },
       { label: 'Sections', href: '/dashboard/sections' },
       { label: 'Memory', href: '/dashboard/memory' },
-      { label: 'Modes', href: '/dashboard/pages' },
     ],
   },
   {

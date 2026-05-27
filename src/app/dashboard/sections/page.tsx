@@ -17,7 +17,7 @@ export default async function SectionsPage() {
   if (!page) {
     return (
       <div>
-        <h1 className="mb-2 text-2xl font-bold text-karte-text">Blocks & Blogs</h1>
+        <h1 className="mb-2 text-2xl font-bold text-karte-text">Sections</h1>
         <p className="text-sm text-karte-text-3">
           Create a page first from the Appearance tab.
         </p>
@@ -33,7 +33,7 @@ export default async function SectionsPage() {
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold text-karte-text">Blocks & Blogs</h1>
+      <h1 className="mb-1 text-2xl font-bold text-karte-text">Sections</h1>
       <p className="mb-6 text-sm text-karte-text-3">
         Build and reorder structured content blocks, including blog posts, for the public page.
       </p>
