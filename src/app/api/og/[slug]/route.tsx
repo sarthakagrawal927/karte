@@ -1,15 +1,5 @@
 import { ImageResponse } from 'next/og';
 
-// Per-slug OG image. Reads all the data it needs from URL query params
-// (h, name, loc, accent, grad2, live) — the page's generateMetadata
-// computes those and bakes them into the og:image URL. We skip a D1
-// call here because the OpenNext + CF Workers OG route context can't
-// reliably reach the binding (the call hangs and the runtime kills
-// the request after the time budget).
-//
-// Cache aggressively at the edge — same payload only re-renders when
-// the headline / theme changes.
-
 const SIZE = { width: 1200, height: 630 };
 
 function getInitials(displayName: string): string {
@@ -32,16 +22,10 @@ export async function GET(
   const q = url.searchParams;
 
   const displayName = q.get('name') || slug;
-  const headline = q.get('h') || `Visit ${displayName} on Karte`;
+  const headline = q.get('h') || `${displayName} on Karte`;
   const location = q.get('loc') || '';
   const isLive = q.get('live') === '1';
-  // accent + grad2 come in as hex without the leading # to keep the
-  // URL clean; reattach here.
-  const accentRaw = q.get('accent') || '67e8f9';
-  const grad2Raw = q.get('grad2') || accentRaw;
-  const accent = `#${accentRaw}`;
-  const grad2 = `#${grad2Raw}`;
-
+  const accent = `#${q.get('accent') || '67e8f9'}`;
   const initials = getInitials(displayName);
 
   return new ImageResponse(
@@ -53,26 +37,24 @@ export async function GET(
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          padding: 80,
-          background: `linear-gradient(135deg, ${accent}22 0%, #0a0a0a 45%, #0a0a0a 70%, ${grad2}1a 100%)`,
+          padding: '80px',
+          background: '#0a0a0a',
           color: '#ededed',
           fontFamily: 'sans-serif',
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {/* Top row: initials tile + identity */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
           <div
             style={{
-              width: 104,
-              height: 104,
-              borderRadius: 28,
-              background: `linear-gradient(135deg, ${accent}, ${grad2})`,
+              width: '104px',
+              height: '104px',
+              borderRadius: '28px',
+              background: accent,
               color: '#0a0a0a',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 44,
+              fontSize: '44px',
               fontWeight: 700,
             }}
           >
@@ -81,10 +63,9 @@ export async function GET(
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div
               style={{
-                fontSize: 22,
+                fontSize: '22px',
                 fontWeight: 500,
                 color: accent,
-                letterSpacing: 4,
                 textTransform: 'uppercase',
               }}
             >
@@ -92,56 +73,44 @@ export async function GET(
             </div>
             <div
               style={{
-                fontSize: 56,
+                fontSize: '56px',
                 fontWeight: 700,
-                lineHeight: 1.05,
-                marginTop: 8,
-                letterSpacing: -1.5,
+                marginTop: '8px',
               }}
             >
               {displayName}
-              {location ? (
-                <span style={{ color: '#a1a1aa', fontWeight: 500, fontSize: 30 }}>
-                  {`  ·  ${location}`}
-                </span>
-              ) : (
-                ''
-              )}
+              {location ? ` · ${location}` : ''}
             </div>
           </div>
         </div>
 
-        {/* Headline block */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            marginTop: 56,
-            paddingLeft: 24,
+            paddingLeft: '24px',
             borderLeft: `4px solid ${accent}`,
-            maxWidth: 980,
+            maxWidth: '980px',
           }}
         >
-          {isLive && (
+          {isLive ? (
             <div
               style={{
-                fontSize: 18,
+                fontSize: '18px',
                 fontWeight: 500,
                 color: accent,
-                letterSpacing: 4,
                 textTransform: 'uppercase',
-                marginBottom: 18,
+                marginBottom: '18px',
               }}
             >
               · Today&apos;s headline · auto-written by AI
             </div>
-          )}
+          ) : null}
           <div
             style={{
-              fontSize: isLive ? 56 : 44,
-              fontWeight: isLive ? 700 : 500,
+              fontSize: isLive ? '52px' : '40px',
+              fontWeight: 700,
               lineHeight: 1.15,
-              letterSpacing: -1.2,
               color: '#ffffff',
               textTransform: isLive ? 'uppercase' : 'none',
             }}
@@ -150,47 +119,25 @@ export async function GET(
           </div>
         </div>
 
-        </div>
-
-        {/* Footer bar */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            paddingTop: 32,
-            borderTop: '1px solid #ffffff14',
+            color: '#a1a1aa',
+            fontSize: '20px',
+            textTransform: 'uppercase',
           }}
         >
-          <div
-            style={{
-              fontSize: 20,
-              fontWeight: 500,
-              color: '#a1a1aa',
-              letterSpacing: 3,
-              textTransform: 'uppercase',
-            }}
-          >
-            Built on Karte · the profile that talks back
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              fontSize: 18,
-              color: accent,
-              letterSpacing: 2,
-              textTransform: 'uppercase',
-              fontWeight: 600,
-            }}
-          >
+          <div>Built on Karte · the profile that talks back</div>
+          <div style={{ display: 'flex', alignItems: 'center', color: accent, fontWeight: 600 }}>
             <div
               style={{
-                width: 10,
-                height: 10,
-                borderRadius: 999,
+                width: '10px',
+                height: '10px',
+                borderRadius: '999px',
                 background: accent,
+                marginRight: '10px',
               }}
             />
             Live
