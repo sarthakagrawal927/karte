@@ -1,40 +1,19 @@
-// Per-slug OG image generator. Lives on a *static* path (`/api/og`)
-// and reads the slug + render data from query params — Next.js
-// dynamic-param routes (`/api/og/[slug]`) hang on this OpenNext+CF
-// Workers stack while the static path works.
-//
-// Page metadata's openGraph.images is built in src/app/[slug]/page.tsx
-// generateMetadata, baking the live headline + theme colors into the
-// query string. The render here is therefore a pure function of the
-// URL — no DB calls — and the edge cache serves the same PNG until
-// the params change.
-
 import { ImageResponse } from 'next/og';
 
 const SIZE = { width: 1200, height: 630 };
 
-function getInitials(displayName: string): string {
-  return (
-    displayName
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((part) => part[0]?.toUpperCase() ?? '')
-      .join('') || 'K'
-  );
-}
-
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const q = url.searchParams;
-
-  const slug = q.get('slug') || 'karte';
-  const displayName = q.get('name') || slug;
-  const headline = q.get('h') || `${displayName} on Karte`;
-  const location = q.get('loc') || '';
-  const isLive = q.get('live') === '1';
-  const accent = `#${q.get('accent') || '67e8f9'}`;
-  const initials = getInitials(displayName);
+  const slug = url.searchParams.get('slug') || 'karte';
+  const name = url.searchParams.get('name') || slug;
+  const headline = url.searchParams.get('h') || `${name} on Karte`;
+  const accent = `#${url.searchParams.get('accent') || '67e8f9'}`;
+  const initials = name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase() ?? '')
+    .join('') || 'K';
 
   return new ImageResponse(
     (
@@ -44,14 +23,13 @@ export async function GET(req: Request) {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
           padding: '80px',
           background: '#0a0a0a',
           color: '#ededed',
           fontFamily: 'sans-serif',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <div
             style={{
               width: '104px',
@@ -64,92 +42,22 @@ export async function GET(req: Request) {
               justifyContent: 'center',
               fontSize: '44px',
               fontWeight: 700,
+              marginRight: '28px',
             }}
           >
             {initials}
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div
-              style={{
-                fontSize: '22px',
-                fontWeight: 500,
-                color: accent,
-                textTransform: 'uppercase',
-              }}
-            >
+            <div style={{ fontSize: '22px', color: accent, fontWeight: 500 }}>
               karte.cc/{slug}
             </div>
-            <div
-              style={{
-                fontSize: '56px',
-                fontWeight: 700,
-                marginTop: '8px',
-              }}
-            >
-              {displayName}
-              {location ? ` · ${location}` : ''}
+            <div style={{ fontSize: '56px', fontWeight: 700, marginTop: '8px' }}>
+              {name}
             </div>
           </div>
         </div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            paddingLeft: '24px',
-            borderLeft: `4px solid ${accent}`,
-            maxWidth: '980px',
-          }}
-        >
-          {isLive ? (
-            <div
-              style={{
-                fontSize: '18px',
-                fontWeight: 500,
-                color: accent,
-                textTransform: 'uppercase',
-                marginBottom: '18px',
-              }}
-            >
-              · Today&apos;s headline · auto-written by AI
-            </div>
-          ) : null}
-          <div
-            style={{
-              fontSize: isLive ? '52px' : '40px',
-              fontWeight: 700,
-              lineHeight: 1.15,
-              color: '#ffffff',
-              textTransform: isLive ? 'uppercase' : 'none',
-            }}
-          >
-            {headline}
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            color: '#a1a1aa',
-            fontSize: '20px',
-            textTransform: 'uppercase',
-          }}
-        >
-          <div>Built on Karte · the profile that talks back</div>
-          <div style={{ display: 'flex', alignItems: 'center', color: accent, fontWeight: 600 }}>
-            <div
-              style={{
-                width: '10px',
-                height: '10px',
-                borderRadius: '999px',
-                background: accent,
-                marginRight: '10px',
-              }}
-            />
-            Live
-          </div>
+        <div style={{ fontSize: '42px', fontWeight: 700, marginTop: '70px', color: '#ffffff' }}>
+          {headline}
         </div>
       </div>
     ),
