@@ -292,6 +292,9 @@ export const conversations = sqliteTable('conversations', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   pageId: text('pageId').notNull().references(() => pages.id, { onDelete: 'cascade' }),
   visitorId: text('visitorId'), // anonymous session ID from client
+  // Email captured from the visitor before they could send a chat message.
+  // Nullable for backwards compat — pre-existing conversations have no email.
+  visitorEmail: text('visitorEmail'),
   createdAt: integer('createdAt', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 

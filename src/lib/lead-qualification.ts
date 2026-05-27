@@ -14,6 +14,7 @@ export type ContactLeadSignal = {
 export type ConversationLeadSignal = {
   id: string;
   visitorId: string | null;
+  visitorEmail?: string | null;
   createdAt: DateLike;
 };
 
@@ -52,6 +53,7 @@ export type QualifiedLead = {
 type LeadBucket = {
   id: string;
   visitorId: string | null;
+  conversationEmail: string | null;
   contacts: ContactLeadSignal[];
   conversations: ConversationLeadSignal[];
   messages: MessageLeadSignal[];
@@ -125,6 +127,10 @@ function getNextAction(lead: QualifiedLead) {
     return 'Review the anonymous DM';
   }
 
+  if (lead.userMessageCount > 0 && lead.email) {
+    return 'Follow up — they left an email in chat';
+  }
+
   if (lead.userMessageCount > 0) {
     return 'Open the chat transcript';
   }
@@ -159,6 +165,7 @@ export function qualifyVisitorLeads({
     const bucket: LeadBucket = {
       id,
       visitorId,
+      conversationEmail: null,
       contacts: [],
       conversations: [],
       messages: [],
@@ -180,6 +187,9 @@ export function qualifyVisitorLeads({
     const bucketId = getBucketId('conversation', conversation.visitorId, conversation.id);
     const bucket = ensureBucket(bucketId, conversation.visitorId);
     bucket.conversations.push(conversation);
+    if (conversation.visitorEmail && !bucket.conversationEmail) {
+      bucket.conversationEmail = conversation.visitorEmail;
+    }
     conversationToBucket.set(conversation.id, bucketId);
   }
 
@@ -218,6 +228,10 @@ export function qualifyVisitorLeads({
       if (bucket.contacts.length > 0) {
         score += contact?.senderType === 'email' ? 35 : 24;
         reasons.push(contact?.senderType === 'email' ? 'verified contact' : 'anonymous DM');
+      } else if (bucket.conversationEmail) {
+        // Chat-derived email: lead capture via the chat gate.
+        score += 28;
+        reasons.push('chat email captured');
       }
 
       if (bucket.contacts.some((item) => item.status === 'unread')) {
@@ -283,11 +297,19 @@ export function qualifyVisitorLeads({
           .filter((label) => label.length > 0)
           .slice(0, 4),
       );
+      const resolvedEmail =
+        (contact?.senderType === 'email' ? contact.email : null)
+        ?? bucket.conversationEmail
+        ?? null;
+      const resolvedName = contact?.name
+        || (resolvedEmail ? resolvedEmail.split('@')[0] : null)
+        || (bucket.visitorId ? `Visitor ${bucket.visitorId.slice(0, 8)}` : 'Anonymous visitor');
+
       const lead: QualifiedLead = {
         id: bucket.id,
         visitorId: bucket.visitorId,
-        name: contact?.name || (bucket.visitorId ? `Visitor ${bucket.visitorId.slice(0, 8)}` : 'Anonymous visitor'),
-        email: contact?.senderType === 'email' ? contact.email : null,
+        name: resolvedName,
+        email: resolvedEmail,
         score: clampedScore,
         tier: getTier(clampedScore),
         nextAction: '',
