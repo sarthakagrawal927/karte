@@ -1,7 +1,7 @@
 export const THEME_PRESETS = [
   {
     id: 'karte',
-    label: 'Karte Default',
+    label: 'Talix Default',
     description:
       'Editorial dark — off-black, hairline borders, single cyan accent. Matches the marketing site.',
     gradientFrom: '#67e8f9',

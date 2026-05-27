@@ -174,7 +174,7 @@ export function Sidebar({ slug }: { slug?: string }) {
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
-              <span className="text-karte-accent/80">·</span> Karte
+              <span className="text-karte-accent/80">·</span> Talix
             </p>
             <p className="mt-0.5 truncate text-[15px] font-semibold tracking-[-0.005em] text-karte-text">
               {pageTitle}
@@ -234,8 +234,11 @@ export function Sidebar({ slug }: { slug?: string }) {
                 onClick={() => setMobileOpen(false)}
               >
                 <BrandMark />
-                <span className="text-[15px] font-semibold tracking-[-0.01em] text-karte-text">
-                  Karte
+                <span
+                  className="text-[17px] font-normal italic tracking-[-0.01em] text-karte-text"
+                  style={{ fontFamily: 'var(--font-instrument-serif), serif' }}
+                >
+                  Talix
                 </span>
               </Link>
               <button
@@ -269,8 +272,11 @@ export function Sidebar({ slug }: { slug?: string }) {
             className="flex items-center gap-2.5 transition-opacity duration-200 hover:opacity-90"
           >
             <BrandMark />
-            <span className="text-[16px] font-semibold tracking-[-0.01em] text-karte-text">
-              Karte
+            <span
+              className="text-[19px] font-normal italic tracking-[-0.01em] text-karte-text"
+              style={{ fontFamily: 'var(--font-instrument-serif), serif' }}
+            >
+              Talix
             </span>
           </Link>
         </div>

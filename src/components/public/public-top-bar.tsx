@@ -67,8 +67,11 @@ export async function PublicTopBar({
               <circle cx="16.5" cy="15.5" r="1.25" fill="#0a0a0a" />
               <circle cx="20" cy="15.5" r="1.25" fill="#0a0a0a" />
             </svg>
-            <span className="text-[15px] font-semibold tracking-[-0.01em] text-karte-text">
-              Karte
+            <span
+              className="text-[17px] font-normal italic tracking-[-0.01em] text-karte-text"
+              style={{ fontFamily: 'var(--font-instrument-serif), serif' }}
+            >
+              Talix
             </span>
           </Link>
 
@@ -133,10 +136,15 @@ export async function PublicTopBar({
                 backgroundColor: `${accentColor}14`,
               }}
             >
-              K
+              T
             </span>
             <span className="min-w-0">
-              <span className="block text-sm font-semibold text-karte-text sm:text-base">Karte</span>
+              <span
+                className="block text-base font-normal italic tracking-[-0.005em] text-karte-text sm:text-lg"
+                style={{ fontFamily: 'var(--font-instrument-serif), serif' }}
+              >
+                Talix
+              </span>
               <span className="hidden text-xs text-karte-text/45 md:block">
                 Your digital card on the open web
               </span>
