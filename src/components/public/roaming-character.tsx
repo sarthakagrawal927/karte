@@ -9,12 +9,12 @@ interface RoamingCharacterProps {
   accentColor: string;
 }
 
-const STEP_MS = 60;
-const STEP_PX = 1.2;
-const TALK_INTERVAL_MIN_MS = 6000;
-const TALK_INTERVAL_MAX_MS = 14000;
-const TALK_DURATION_MS = 5200;
-const TYPE_MS = 28;
+const STEP_MS = 90;
+const STEP_PX = 0.55;
+const TALK_INTERVAL_MIN_MS = 2400;
+const TALK_INTERVAL_MAX_MS = 5800;
+const TALK_DURATION_MS = 5800;
+const TYPE_MS = 32;
 
 /**
  * Codex-pets style mascot. The user's avatar bobs along the bottom
@@ -149,32 +149,26 @@ export function RoamingCharacter({
         }}
         title={`Chat with ${displayName}`}
         aria-label={`Chat with ${displayName}`}
-        className="pointer-events-auto relative block h-16 w-16 transition-transform duration-150 hover:scale-110 active:scale-95"
+        className="pointer-events-auto relative block h-20 w-20 transition-transform duration-150 hover:scale-110 active:scale-95"
         style={{
           transform: `translateY(${bobUp ? -3 : 0}px) ${facingFlip}`,
-          transition: 'transform 200ms cubic-bezier(0.16, 1, 0.3, 1)',
+          transition: 'transform 220ms cubic-bezier(0.16, 1, 0.3, 1)',
+          filter: `drop-shadow(0 6px 14px ${accentColor}88) drop-shadow(0 2px 4px rgba(0,0,0,0.45))`,
         }}
       >
-        {/* Soft floor shadow */}
-        <span
-          aria-hidden="true"
-          className="absolute -bottom-1 left-1/2 h-2 w-12 -translate-x-1/2 rounded-full opacity-50 blur-md"
-          style={{ backgroundColor: accentColor }}
-        />
         {avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={avatarUrl}
             alt=""
-            className="relative h-16 w-16 rounded-full object-cover ring-2 ring-white/[0.10]"
-            style={{ boxShadow: `0 8px 24px -10px ${accentColor}cc` }}
+            className="relative h-20 w-20 object-contain"
+            style={{ background: 'transparent' }}
           />
         ) : (
           <span
-            className="relative flex h-16 w-16 items-center justify-center rounded-full text-xl font-semibold text-zinc-950 ring-2 ring-white/[0.10]"
+            className="relative flex h-20 w-20 items-center justify-center rounded-full text-2xl font-semibold text-zinc-950"
             style={{
               background: `linear-gradient(135deg, ${accentColor}, ${accentColor}aa)`,
-              boxShadow: `0 8px 24px -10px ${accentColor}cc`,
             }}
           >
             {displayName[0]?.toUpperCase() ?? '·'}
