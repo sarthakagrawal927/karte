@@ -11,6 +11,7 @@ import {
   EditorContent,
   EditorRoot,
   handleCommandNavigation,
+  StarterKit,
 } from 'novel';
 import { useEffect,useState } from 'react';
 
@@ -123,7 +124,7 @@ export function NovelEditor({ initialContent, onUpdate }: NovelEditorProps) {
             ? undefined
             : { type: 'doc', content: [{ type: 'paragraph' }] }
         }
-        extensions={[]}
+        extensions={[StarterKit]}
         immediatelyRender={false}
         onCreate={({ editor }) => {
           if (initialContent) {
