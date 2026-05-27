@@ -55,15 +55,15 @@ export default async function MemoryPage() {
           Add source-backed details that power chat, encyclopedia, newspaper, and roast modes.
         </p>
         <div className="mb-6 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="rounded-xl border border-karte-border-strong bg-white/5 p-4">
             <p className="text-xs uppercase tracking-[0.2em] text-karte-text-4">Sources</p>
             <p className="mt-2 text-2xl font-semibold text-karte-text">{sourceCount}</p>
           </div>
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="rounded-xl border border-karte-border-strong bg-white/5 p-4">
             <p className="text-xs uppercase tracking-[0.2em] text-karte-text-4">Memory Blocks</p>
             <p className="mt-2 text-2xl font-semibold text-karte-text">{blocks.length}</p>
           </div>
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="rounded-xl border border-karte-border-strong bg-white/5 p-4">
             <p className="text-xs uppercase tracking-[0.2em] text-karte-text-4">Coverage</p>
             <p className="mt-2 text-sm font-medium text-karte-text">
               {blocks.length >= 2 && sourceCount >= 4 ? 'Strong' : 'Add more context'}
@@ -73,7 +73,7 @@ export default async function MemoryPage() {
         <InfoEditor pageId={page.id} initialBlocks={blocks} />
       </div>
 
-      <hr className="border-white/10" />
+      <hr className="border-karte-border-strong" />
 
       <AiKeySettings
         hasKey={!!user?.smApiKey}
@@ -83,7 +83,7 @@ export default async function MemoryPage() {
         isUsingDefaultAi={!(user?.aiEndpointUrl && user?.aiApiKey && user?.aiModel) && !!defaultAiConfig}
       />
 
-      <hr className="border-white/10" />
+      <hr className="border-karte-border-strong" />
 
       <ChatSettings
         pageId={page.id}

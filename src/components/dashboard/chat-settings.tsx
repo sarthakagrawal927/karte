@@ -94,7 +94,7 @@ export function ChatSettings({
               <option
                 key={position.value}
                 value={position.value}
-                className="bg-gray-900"
+                className="bg-karte-bg"
               >
                 {position.label}
               </option>

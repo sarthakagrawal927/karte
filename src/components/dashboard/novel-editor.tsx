@@ -108,7 +108,7 @@ export function NovelEditor({ initialContent, onUpdate }: NovelEditorProps) {
 
   if (!hydrated) {
     return (
-      <div className="min-h-[300px] rounded-lg border border-white/20 bg-white/5 p-4">
+      <div className="min-h-[300px] rounded-lg border border-karte-border-emphasis bg-white/5 p-4">
         <p className="text-sm text-karte-text-4">Loading editor...</p>
       </div>
     );
@@ -117,7 +117,7 @@ export function NovelEditor({ initialContent, onUpdate }: NovelEditorProps) {
   return (
     <EditorRoot>
       <EditorContent
-        className="novel-editor min-h-[300px] rounded-lg border border-white/20 bg-white/5 p-4"
+        className="novel-editor min-h-[300px] rounded-lg border border-karte-border-emphasis bg-white/5 p-4"
         initialContent={
           initialContent
             ? undefined
@@ -143,7 +143,7 @@ export function NovelEditor({ initialContent, onUpdate }: NovelEditorProps) {
         }}
       >
         {/* Bubble menu for inline formatting */}
-        <EditorBubble className="flex items-center gap-0.5 rounded-lg border border-white/20 bg-gray-900 p-1 shadow-xl">
+        <EditorBubble className="flex items-center gap-0.5 rounded-lg border border-karte-border-emphasis bg-karte-bg p-1 ">
           <EditorBubbleItem
             onSelect={(editor) => editor.chain().focus().toggleBold().run()}
           >
@@ -175,7 +175,7 @@ export function NovelEditor({ initialContent, onUpdate }: NovelEditorProps) {
         </EditorBubble>
 
         {/* Slash command menu */}
-        <EditorCommand className="z-50 rounded-lg border border-white/20 bg-gray-900 p-1 shadow-xl">
+        <EditorCommand className="z-50 rounded-lg border border-karte-border-emphasis bg-karte-bg p-1 ">
           <EditorCommandEmpty className="px-3 py-2 text-sm text-karte-text-4">
             No results
           </EditorCommandEmpty>
@@ -187,7 +187,7 @@ export function NovelEditor({ initialContent, onUpdate }: NovelEditorProps) {
                 onCommand={(val) => item.command?.(val)}
                 className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm text-white/80 transition hover:bg-white/10 aria-selected:bg-white/10"
               >
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded border border-white/20 bg-white/5">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded border border-karte-border-emphasis bg-white/5">
                   {item.icon}
                 </span>
                 <div>

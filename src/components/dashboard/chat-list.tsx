@@ -59,7 +59,7 @@ export function ChatList({ pageId }: { pageId: string }) {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
+      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-8 text-center backdrop-blur-xl">
         <p className="text-karte-text-3">Loading conversations...</p>
       </div>
     );
@@ -67,7 +67,7 @@ export function ChatList({ pageId }: { pageId: string }) {
 
   if (conversations.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
+      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-8 text-center backdrop-blur-xl">
         <p className="text-karte-text-3">No conversations yet. Visitors will appear here once they start chatting.</p>
       </div>
     );
@@ -78,7 +78,7 @@ export function ChatList({ pageId }: { pageId: string }) {
       {conversations.map((convo) => (
         <div
           key={convo.id}
-          className="rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl overflow-hidden"
+          className="rounded-2xl border border-karte-border-emphasis bg-white/5 backdrop-blur-xl overflow-hidden"
         >
           {/* Conversation header */}
           <button
@@ -109,7 +109,7 @@ export function ChatList({ pageId }: { pageId: string }) {
 
           {/* Expanded messages */}
           {expandedId === convo.id && (
-            <div className="max-h-96 space-y-3 overflow-y-auto border-t border-white/10 px-4 py-4 sm:px-5">
+            <div className="max-h-96 space-y-3 overflow-y-auto border-t border-karte-border-strong px-4 py-4 sm:px-5">
               {loadingMessages === convo.id ? (
                 <p className="text-xs text-karte-text-4">Loading messages...</p>
               ) : (
@@ -122,7 +122,7 @@ export function ChatList({ pageId }: { pageId: string }) {
                       className={`max-w-[88%] whitespace-pre-wrap rounded-xl px-3 py-2 text-sm sm:max-w-[80%] ${
                         msg.role === 'user'
                           ? 'bg-blue-600 text-karte-text'
-                          : 'border border-white/10 bg-white/5 text-white/90'
+                          : 'border border-karte-border-strong bg-white/5 text-white/90'
                       }`}
                     >
                       {msg.content}

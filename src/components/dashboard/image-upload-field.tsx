@@ -129,7 +129,7 @@ export function ImageUploadField({
 
       {preview && (
         <div
-          className={`mb-3 overflow-hidden border border-white/15 bg-white/5 ${
+          className={`mb-3 overflow-hidden border border-karte-border-emphasis bg-white/5 ${
             kind === 'avatar'
               ? 'h-20 w-20 rounded-full bg-cover bg-center'
               : 'h-40 w-full rounded-2xl bg-cover bg-center'
@@ -143,7 +143,7 @@ export function ImageUploadField({
           type="button"
           disabled={!canUpload || uploading}
           onClick={() => fileInputRef.current?.click()}
-          className="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-lg border border-karte-border-emphasis bg-white/10 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {uploading ? 'Uploading...' : `Upload ${kind === 'avatar' ? 'Avatar' : 'Image'}`}
         </button>
@@ -154,7 +154,7 @@ export function ImageUploadField({
             onChange('');
             setMessage('');
           }}
-          className="rounded-lg border border-white/15 px-4 py-2 text-sm text-white/70 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-lg border border-karte-border-emphasis px-4 py-2 text-sm text-white/70 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Clear
         </button>
@@ -182,7 +182,7 @@ export function ImageUploadField({
           }
         }}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-blue-400"
+        className="w-full rounded-lg border border-karte-border-emphasis bg-white/10 px-4 py-2.5 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-blue-400"
       />
 
       <p className="mt-2 text-xs text-karte-text-4">

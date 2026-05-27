@@ -117,7 +117,7 @@ export function Sidebar({ slug }: { slug?: string }) {
               href={`/${slug}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center justify-between gap-2 rounded-lg border border-karte-border bg-white/[0.02] px-3 py-2 text-[13px] font-medium text-karte-text-2 transition-all duration-200 ease-[var(--karte-ease)] hover:border-white/15 hover:bg-white/[0.05] hover:text-karte-text"
+              className="group flex items-center justify-between gap-2 rounded-lg border border-karte-border bg-white/[0.02] px-3 py-2 text-[13px] font-medium text-karte-text-2 transition-all duration-200 ease-[var(--karte-ease)] hover:border-karte-border-emphasis hover:bg-white/[0.05] hover:text-karte-text"
             >
               View page
               <span className="text-karte-text-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-karte-accent">
@@ -149,7 +149,7 @@ export function Sidebar({ slug }: { slug?: string }) {
                 href={`/${slug}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-white/[0.08] bg-transparent px-3 py-1.5 text-[12px] font-medium text-karte-text-2 transition-all duration-200 ease-[var(--karte-ease)] hover:border-white/20 hover:bg-white/[0.04]"
+                className="rounded-full border border-white/[0.08] bg-transparent px-3 py-1.5 text-[12px] font-medium text-karte-text-2 transition-all duration-200 ease-[var(--karte-ease)] hover:border-karte-border-emphasis hover:bg-white/[0.04]"
               >
                 View
               </a>
@@ -157,7 +157,7 @@ export function Sidebar({ slug }: { slug?: string }) {
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-transparent px-3 py-1.5 text-[12px] font-medium text-karte-text-2 transition-all duration-200 ease-[var(--karte-ease)] hover:border-white/20 hover:bg-white/[0.04]"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-transparent px-3 py-1.5 text-[12px] font-medium text-karte-text-2 transition-all duration-200 ease-[var(--karte-ease)] hover:border-karte-border-emphasis hover:bg-white/[0.04]"
               aria-label="Open dashboard menu"
             >
               <svg
@@ -203,7 +203,7 @@ export function Sidebar({ slug }: { slug?: string }) {
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
-                className="rounded-full border border-white/[0.08] px-3 py-1.5 text-[12px] font-medium text-karte-text-2 transition-all duration-200 hover:border-white/20 hover:bg-white/[0.04]"
+                className="rounded-full border border-white/[0.08] px-3 py-1.5 text-[12px] font-medium text-karte-text-2 transition-all duration-200 hover:border-karte-border-emphasis hover:bg-white/[0.04]"
                 aria-label="Close dashboard menu"
               >
                 Close

@@ -117,7 +117,7 @@ export function IntentOnboarding({
               className={`rounded-xl border p-4 text-left transition ${
                 isSelected
                   ? 'border-cyan-300/60 bg-cyan-300/10'
-                  : 'border-white/15 bg-white/[0.03] hover:border-white/30 hover:bg-white/[0.06]'
+                  : 'border-karte-border-emphasis bg-white/[0.03] hover:border-white/30 hover:bg-white/[0.06]'
               }`}
             >
               <p className="text-sm font-semibold text-karte-text">{option.label}</p>
@@ -129,7 +129,7 @@ export function IntentOnboarding({
         })}
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+      <div className="rounded-xl border border-karte-border-strong bg-black/20 p-4">
         <p className="text-sm font-medium text-karte-text">
           Suggested next steps for {selectedOption.label.toLowerCase()}
         </p>
@@ -137,7 +137,7 @@ export function IntentOnboarding({
           {selectedOption.checklist.map((item) => (
             <div
               key={item}
-              className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-karte-text-2"
+              className="rounded-lg border border-karte-border-strong bg-white/[0.03] px-3 py-2 text-xs text-karte-text-2"
             >
               {item}
             </div>

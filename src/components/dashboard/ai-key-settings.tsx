@@ -138,7 +138,7 @@ export function AiKeySettings({
   return (
     <div className="space-y-6">
       {/* Document Index Key (SaaS Maker — for RAG/chat) */}
-      <div className="rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl">
+      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-6 backdrop-blur-xl">
         <h2 className="mb-1 text-lg font-semibold text-karte-text">Document Index Key</h2>
         <p className="mb-4 text-sm text-karte-text-3">
           {configured
@@ -152,7 +152,7 @@ export function AiKeySettings({
             value={aiKey}
             onChange={(e) => setAiKey(e.target.value)}
             placeholder={configured ? '••••••••••••••••' : 'Enter your document index key'}
-            className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
+            className="flex-1 rounded-lg border border-karte-border-strong bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
           />
           <button
             onClick={handleSaveSmKey}
@@ -171,7 +171,7 @@ export function AiKeySettings({
       </div>
 
       {/* Custom AI Endpoint */}
-      <div className="rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl">
+      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-6 backdrop-blur-xl">
         <h2 className="mb-1 text-lg font-semibold text-karte-text">AI Endpoint</h2>
         <p className="mb-4 text-sm text-karte-text-3">
           {isUsingDefaultAi
@@ -190,7 +190,7 @@ export function AiKeySettings({
               value={endpointUrl}
               onChange={(e) => setEndpointUrl(e.target.value)}
               placeholder="https://api.example.com/v1"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
+              className="w-full rounded-lg border border-karte-border-strong bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
             />
           </div>
 
@@ -202,7 +202,7 @@ export function AiKeySettings({
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder={aiConfigured ? '••••••••••••••••' : 'Enter your API key'}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
+              className="w-full rounded-lg border border-karte-border-strong bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
             />
           </div>
 
@@ -214,10 +214,10 @@ export function AiKeySettings({
                 <select
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
-                  className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text outline-none focus:border-white/30"
+                  className="flex-1 rounded-lg border border-karte-border-strong bg-white/5 px-3 py-2 text-sm text-karte-text outline-none focus:border-white/30"
                 >
                   {discoveredModels.map((m) => (
-                    <option key={m.id} value={m.id} className="bg-gray-900">
+                    <option key={m.id} value={m.id} className="bg-karte-bg">
                       {m.name || m.id}
                     </option>
                   ))}
@@ -228,13 +228,13 @@ export function AiKeySettings({
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
                   placeholder="gpt-4o, claude-3-5-sonnet, etc."
-                  className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
+                  className="flex-1 rounded-lg border border-karte-border-strong bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
                 />
               )}
               <button
                 onClick={handleDiscoverModels}
                 disabled={loadingModels || !endpointUrl.trim() || !apiKey.trim()}
-                className="shrink-0 rounded-lg border border-white/10 px-3 py-2 text-xs font-medium text-karte-text-2 transition hover:border-white/30 hover:text-karte-text disabled:opacity-50"
+                className="shrink-0 rounded-lg border border-karte-border-strong px-3 py-2 text-xs font-medium text-karte-text-2 transition hover:border-white/30 hover:text-karte-text disabled:opacity-50"
               >
                 {loadingModels ? 'Loading...' : 'Discover'}
               </button>

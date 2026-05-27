@@ -249,7 +249,7 @@ export function PageSettings({
             : 'Create Your Page'}
       </h1>
 
-      <div className="space-y-6 rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl">
+      <div className="space-y-6 rounded-2xl border border-karte-border-emphasis bg-white/5 p-6 backdrop-blur-xl">
           <div>
           <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -277,7 +277,7 @@ export function PageSettings({
             }}
           >
             <div
-              className="relative overflow-hidden rounded-[27px] border border-white/10 bg-gray-950 p-5 sm:p-8"
+              className="relative overflow-hidden rounded-[27px] border border-karte-border-strong bg-karte-bg p-5 sm:p-8"
               style={{
                 background: `linear-gradient(180deg, ${previewTheme.gradientFrom}1a 0%, ${previewTheme.gradientTo}1a 40%, #020617 100%)`,
               }}
@@ -295,12 +295,12 @@ export function PageSettings({
                 <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
                   {avatarUrl.trim() ? (
                     <div
-                      className="h-20 w-20 rounded-full border border-white/20 bg-cover bg-center shadow-lg shadow-black/20"
+                      className="h-20 w-20 rounded-full border border-karte-border-emphasis bg-cover bg-center  shadow-black/20"
                       style={{ backgroundImage: `url(${avatarUrl.trim()})` }}
                     />
                   ) : (
                     <div
-                      className="flex h-20 w-20 items-center justify-center rounded-full border border-white/20 text-2xl font-semibold text-karte-text shadow-lg shadow-black/20"
+                      className="flex h-20 w-20 items-center justify-center rounded-full border border-karte-border-emphasis text-2xl font-semibold text-karte-text  shadow-black/20"
                       style={{
                         background: `linear-gradient(135deg, ${previewTheme.gradientFrom}, ${previewTheme.gradientTo})`,
                       }}
@@ -329,7 +329,7 @@ export function PageSettings({
                   {['Primary Link', 'Newsletter', 'Portfolio'].map((item) => (
                     <div
                       key={item}
-                      className="rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-center text-sm font-medium text-white/90 backdrop-blur-lg"
+                      className="rounded-xl border border-karte-border-emphasis bg-white/10 px-4 py-3 text-center text-sm font-medium text-white/90 backdrop-blur-lg"
                       style={{
                         borderColor: `${previewTheme.accentColor}2a`,
                       }}
@@ -367,7 +367,7 @@ export function PageSettings({
           >
             Page URL
           </label>
-          <div className="flex items-center rounded-lg border border-white/20 bg-white/5 backdrop-blur-sm transition focus-within:border-white/40 focus-within:ring-1 focus-within:ring-white/20">
+          <div className="flex items-center rounded-lg border border-karte-border-emphasis bg-white/5 backdrop-blur-sm transition focus-within:border-white/40 focus-within:ring-1 focus-within:ring-white/20">
             <span className="pl-4 text-sm text-karte-text-3">karte.cc/</span>
             <input
               id="slug"
@@ -394,7 +394,7 @@ export function PageSettings({
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="Your Name"
-            className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-sm text-karte-text placeholder-gray-500 backdrop-blur-sm transition focus:border-white/40 focus:outline-none focus:ring-1 focus:ring-white/20"
+            className="w-full rounded-lg border border-karte-border-emphasis bg-white/5 px-4 py-3 text-sm text-karte-text placeholder-gray-500 backdrop-blur-sm transition focus:border-white/40 focus:outline-none focus:ring-1 focus:ring-white/20"
           />
         </div>
 
@@ -412,7 +412,7 @@ export function PageSettings({
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             placeholder="A short bio about yourself..."
-            className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-sm text-karte-text placeholder-gray-500 backdrop-blur-sm transition focus:border-white/40 focus:outline-none focus:ring-1 focus:ring-white/20"
+            className="w-full rounded-lg border border-karte-border-emphasis bg-white/5 px-4 py-3 text-sm text-karte-text placeholder-gray-500 backdrop-blur-sm transition focus:border-white/40 focus:outline-none focus:ring-1 focus:ring-white/20"
           />
         </div>
 
@@ -451,7 +451,7 @@ export function PageSettings({
                   className={`rounded-xl border p-4 text-left transition ${
                     isSelected
                       ? 'border-white/50 bg-white/10'
-                      : 'border-white/15 bg-white/5 hover:border-white/30 hover:bg-white/[0.08]'
+                      : 'border-karte-border-emphasis bg-white/5 hover:border-white/30 hover:bg-white/[0.08]'
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -505,7 +505,7 @@ export function PageSettings({
                       className={`rounded-xl border p-4 text-left transition ${
                         isSelected
                           ? 'border-white/50 bg-white/10'
-                          : 'border-white/15 bg-white/5 hover:border-white/30 hover:bg-white/[0.08]'
+                          : 'border-karte-border-emphasis bg-white/5 hover:border-white/30 hover:bg-white/[0.08]'
                       }`}
                     >
                       <p className="text-sm font-semibold text-karte-text">
@@ -537,7 +537,7 @@ export function PageSettings({
                 }`}
               >
                 <span
-                  className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-white shadow-lg transition-transform duration-200 ${
+                  className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-white  transition-transform duration-200 ${
                     published ? 'translate-x-5' : 'translate-x-0'
                   }`}
                 />

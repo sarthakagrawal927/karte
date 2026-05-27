@@ -78,7 +78,7 @@ function ProjectCard({
 
   if (isOverlay) {
     return (
-      <div className="rounded-2xl border border-white/30 bg-gray-900/90 p-5 shadow-2xl backdrop-blur-xl">
+      <div className="rounded-2xl border border-white/30 bg-karte-bg/90 p-5  backdrop-blur-xl">
         {project.imageUrl && (
           <div
             className="mb-4 h-40 w-full rounded-xl bg-cover bg-center"
@@ -101,7 +101,7 @@ function ProjectCard({
           </div>
           <button
             type="button"
-            className="shrink-0 rounded-lg border border-white/20 px-3 py-1.5 text-sm text-red-400 transition sm:flex-none"
+            className="shrink-0 rounded-lg border border-karte-border-emphasis px-3 py-1.5 text-sm text-red-400 transition sm:flex-none"
           >
             Remove
           </button>
@@ -118,7 +118,7 @@ function ProjectCard({
       ref={setNodeRef}
       style={style}
       className={`rounded-2xl border bg-white/5 p-5 backdrop-blur-xl transition ${
-        isDragging ? 'border-white/40 opacity-50' : 'border-white/20'
+        isDragging ? 'border-white/40 opacity-50' : 'border-karte-border-emphasis'
       }`}
     >
       {project.imageUrl && (
@@ -151,7 +151,7 @@ function ProjectCard({
         <button
           type="button"
           onClick={() => onRemove(project.id)}
-          className="shrink-0 rounded-lg border border-white/20 px-3 py-1.5 text-sm text-red-400 transition hover:bg-red-500/10"
+          className="shrink-0 rounded-lg border border-karte-border-emphasis px-3 py-1.5 text-sm text-red-400 transition hover:bg-red-500/10"
         >
           Remove
         </button>
@@ -306,7 +306,7 @@ export function ProjectEditor({
             placeholder="Project title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-white/40"
+            className="rounded-lg border border-karte-border-emphasis bg-white/10 px-4 py-2.5 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-white/40"
             required
           />
           <input
@@ -314,7 +314,7 @@ export function ProjectEditor({
             placeholder="https://example.com/project"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-white/40"
+            className="rounded-lg border border-karte-border-emphasis bg-white/10 px-4 py-2.5 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-white/40"
             required
           />
         </div>
@@ -335,7 +335,7 @@ export function ProjectEditor({
           placeholder="What is this project? What should visitors know?"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-white/40"
+          className="w-full rounded-lg border border-karte-border-emphasis bg-white/10 px-4 py-3 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-white/40"
           required
         />
 
@@ -348,10 +348,10 @@ export function ProjectEditor({
         </button>
       </form>
 
-      <hr className="border-white/10" />
+      <hr className="border-karte-border-strong" />
 
       {projects.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-white/20 bg-white/[0.03] p-8 text-center">
+        <div className="rounded-2xl border border-dashed border-karte-border-emphasis bg-white/[0.03] p-8 text-center">
           <p className="text-karte-text-3">
             No projects yet. Add your first one above.
           </p>

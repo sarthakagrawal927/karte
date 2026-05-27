@@ -23,7 +23,7 @@ function VariantMetric({
   value: string | number;
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+    <div className="rounded-xl border border-karte-border-strong bg-white/5 p-4">
       <p className="text-[11px] uppercase tracking-[0.24em] text-karte-text-4">{label}</p>
       <p className="mt-2 text-2xl font-semibold text-karte-text">{value}</p>
     </div>
@@ -44,7 +44,7 @@ export default async function ExperimentsPage() {
     return (
       <div className="space-y-6 sm:space-y-8">
         <h1 className="text-2xl font-bold text-karte-text">Experiments</h1>
-        <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
+        <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-8 text-center backdrop-blur-xl">
           <p className="text-karte-text-3">Create and publish a page before testing variants.</p>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default async function ExperimentsPage() {
           return (
             <div
               key={variant.id}
-              className="rounded-2xl border border-white/15 bg-white/5 p-5 backdrop-blur-xl"
+              className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-5 backdrop-blur-xl"
             >
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
@@ -124,7 +124,7 @@ export default async function ExperimentsPage() {
                 <VariantMetric label="Rate" value={formatPercent(row.conversionRate)} />
               </div>
 
-              <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+              <div className="mt-5 rounded-xl border border-karte-border-strong bg-black/20 p-4">
                 <p className="text-xs uppercase tracking-[0.22em] text-karte-text-4">Share URL</p>
                 <p className="mt-2 break-all text-sm text-karte-text-2">{previewUrl}</p>
               </div>

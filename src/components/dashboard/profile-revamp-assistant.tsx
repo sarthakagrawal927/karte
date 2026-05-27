@@ -138,7 +138,7 @@ export function ProfileRevampAssistant({
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-        <section className="rounded-2xl border border-white/15 bg-white/[0.05] p-5 backdrop-blur-xl">
+        <section className="rounded-2xl border border-karte-border-emphasis bg-white/[0.05] p-5 backdrop-blur-xl">
           <div>
             <h2 className="text-lg font-semibold text-karte-text">Design prompt</h2>
             <p className="mt-1 text-xs text-karte-text-4">
@@ -150,7 +150,7 @@ export function ProfileRevampAssistant({
             value={prompt}
             onChange={(event) => setPrompt(event.target.value)}
             rows={6}
-            className="mt-5 w-full rounded-xl border border-white/15 bg-black/25 px-4 py-3 text-sm leading-6 text-karte-text outline-none transition placeholder:text-karte-text-4 focus:border-white/35"
+            className="mt-5 w-full rounded-xl border border-karte-border-emphasis bg-black/25 px-4 py-3 text-sm leading-6 text-karte-text outline-none transition placeholder:text-karte-text-4 focus:border-white/35"
             placeholder="E.g. dark purple luxury brand with gold accents, minimal and editorial…"
           />
 
@@ -164,7 +164,7 @@ export function ProfileRevampAssistant({
                   key={item}
                   type="button"
                   onClick={() => setPrompt(item)}
-                  className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-karte-text-2 transition hover:border-white/25 hover:text-karte-text"
+                  className="rounded-full border border-karte-border-strong bg-white/[0.04] px-3 py-1.5 text-xs text-karte-text-2 transition hover:border-white/25 hover:text-karte-text"
                 >
                   {item}
                 </button>
@@ -198,9 +198,9 @@ export function ProfileRevampAssistant({
           )}
         </section>
 
-        <section className="rounded-2xl border border-white/15 bg-white/[0.05] p-5 backdrop-blur-xl">
+        <section className="rounded-2xl border border-karte-border-emphasis bg-white/[0.05] p-5 backdrop-blur-xl">
           {!plan ? (
-            <div className="flex min-h-80 flex-col justify-center rounded-xl border border-dashed border-white/15 bg-black/20 p-6 text-center">
+            <div className="flex min-h-80 flex-col justify-center rounded-xl border border-dashed border-karte-border-emphasis bg-black/20 p-6 text-center">
               <div className="mx-auto mb-4 flex gap-2">
                 {THEME_PRESETS.slice(0, 5).map((preset) => (
                   <div
@@ -219,7 +219,7 @@ export function ProfileRevampAssistant({
             </div>
           ) : (
             <div>
-              <div className="border-b border-white/10 pb-5">
+              <div className="border-b border-karte-border-strong pb-5">
                 <ThemeSwatch plan={plan} />
                 <h2 className="mt-4 text-2xl font-semibold text-karte-text">
                   {plan.headline}
@@ -238,7 +238,7 @@ export function ProfileRevampAssistant({
                   {plan.emphasis.map((item, index) => (
                     <span
                       key={`${item}-${index}`}
-                      className="rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-xs text-karte-text-2"
+                      className="rounded-full border border-karte-border-strong bg-black/20 px-3 py-1.5 text-xs text-karte-text-2"
                     >
                       {index + 1}. {item}
                     </span>
@@ -250,7 +250,7 @@ export function ProfileRevampAssistant({
                 {plan.blocks.map((block, index) => (
                   <article
                     key={`${block.title}-${index}`}
-                    className="rounded-xl border border-white/10 bg-black/20 p-4"
+                    className="rounded-xl border border-karte-border-strong bg-black/20 p-4"
                   >
                     <span className="rounded-full bg-white/10 px-2 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-karte-text-2">
                       {block.type}

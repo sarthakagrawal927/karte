@@ -33,7 +33,7 @@ function tierClasses(tier: QualifiedLead['tier']) {
     return 'border-cyan-300/30 bg-cyan-300/10 text-cyan-100';
   }
 
-  return 'border-white/15 bg-white/5 text-karte-text-2';
+  return 'border-karte-border-emphasis bg-white/5 text-karte-text-2';
 }
 
 function metricLabel(lead: QualifiedLead) {
@@ -127,13 +127,13 @@ export default async function LeadsPage() {
         <div className="flex flex-wrap gap-2">
           <Link
             href="/dashboard/inbox"
-            className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/10"
+            className="rounded-lg border border-karte-border-emphasis bg-white/5 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/10"
           >
             Inbox
           </Link>
           <Link
             href="/dashboard/chats"
-            className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/10"
+            className="rounded-lg border border-karte-border-emphasis bg-white/5 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/10"
           >
             Chats
           </Link>
@@ -149,7 +149,7 @@ export default async function LeadsPage() {
         ].map((metric) => (
           <div
             key={metric.label}
-            className="rounded-2xl border border-white/20 bg-white/5 p-5 backdrop-blur-xl"
+            className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-5 backdrop-blur-xl"
           >
             <p className="text-xs uppercase tracking-[0.22em] text-karte-text-4">{metric.label}</p>
             <p className="mt-3 text-3xl font-semibold text-karte-text">{metric.value}</p>
@@ -158,7 +158,7 @@ export default async function LeadsPage() {
       </div>
 
       {leads.length === 0 ? (
-        <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
+        <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-8 text-center backdrop-blur-xl">
           <p className="text-karte-text-3">
             No qualified leads yet. Visitors will appear here once they chat, click, or send a message.
           </p>
@@ -168,7 +168,7 @@ export default async function LeadsPage() {
           {leads.map((lead) => (
             <div
               key={lead.id}
-              className="rounded-2xl border border-white/20 bg-white/5 p-5 backdrop-blur-xl"
+              className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-5 backdrop-blur-xl"
             >
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div className="min-w-0">
@@ -194,7 +194,7 @@ export default async function LeadsPage() {
               </div>
 
               {lead.preview && (
-                <p className="mt-4 line-clamp-3 whitespace-pre-wrap rounded-xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-karte-text-2">
+                <p className="mt-4 line-clamp-3 whitespace-pre-wrap rounded-xl border border-karte-border-strong bg-black/20 p-4 text-sm leading-6 text-karte-text-2">
                   {lead.preview}
                 </p>
               )}

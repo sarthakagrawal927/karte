@@ -128,7 +128,7 @@ export default async function DashboardPage() {
         <Link
           href={`/${page.slug}`}
           target="_blank"
-          className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/10"
+          className="rounded-lg border border-karte-border-emphasis bg-white/5 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/10"
         >
           View /{page.slug}
         </Link>
@@ -143,7 +143,7 @@ export default async function DashboardPage() {
         ].map((metric) => (
           <div
             key={metric.label}
-            className="rounded-2xl border border-white/20 bg-white/5 p-5 backdrop-blur-xl"
+            className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-5 backdrop-blur-xl"
           >
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-karte-text-4">
               {metric.label}
@@ -158,7 +158,7 @@ export default async function DashboardPage() {
         initialPageSettings={page.pageSettings ?? {}}
       />
 
-      <div className="rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl">
+      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-6 backdrop-blur-xl">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-xl font-semibold text-karte-text">Launch Checklist</h2>
@@ -179,7 +179,7 @@ export default async function DashboardPage() {
             <Link
               key={item.label}
               href={item.href}
-              className="flex items-center justify-between rounded-xl border border-white/10 bg-black/20 px-4 py-3 transition hover:border-white/25 hover:bg-white/[0.04]"
+              className="flex items-center justify-between rounded-xl border border-karte-border-strong bg-black/20 px-4 py-3 transition hover:border-white/25 hover:bg-white/[0.04]"
             >
               <span className="text-sm font-medium text-karte-text">{item.label}</span>
               <span

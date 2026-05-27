@@ -110,10 +110,10 @@ function SectionCard({
           )}
           <div className="min-w-0">
             <div className="mb-2 flex items-center gap-2">
-              <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-karte-text-2">
+              <span className="rounded-full border border-karte-border-strong bg-white/5 px-2 py-0.5 text-[11px] font-medium text-karte-text-2">
                 #{index + 1}
               </span>
-              <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-cyan-200">
+              <span className="rounded-full border border-karte-border-strong bg-white/5 px-2 py-0.5 text-[11px] font-medium text-cyan-200">
                 {getPageSectionLabel(section.type)}
               </span>
               <span
@@ -142,14 +142,14 @@ function SectionCard({
           <button
             type="button"
             onClick={() => onEdit(section)}
-            className="rounded-lg border border-white/20 px-3 py-1.5 text-sm text-karte-text transition hover:bg-white/10"
+            className="rounded-lg border border-karte-border-emphasis px-3 py-1.5 text-sm text-karte-text transition hover:bg-white/10"
           >
             Edit
           </button>
           <button
             type="button"
             onClick={() => onRemove(section.id)}
-            className="rounded-lg border border-white/20 px-3 py-1.5 text-sm text-red-400 transition hover:bg-red-500/10"
+            className="rounded-lg border border-karte-border-emphasis px-3 py-1.5 text-sm text-red-400 transition hover:bg-red-500/10"
           >
             Delete
           </button>
@@ -160,7 +160,7 @@ function SectionCard({
 
   if (isOverlay) {
     return (
-      <div className="rounded-2xl border border-white/30 bg-gray-900/90 p-5 shadow-2xl backdrop-blur-xl">
+      <div className="rounded-2xl border border-white/30 bg-karte-bg/90 p-5  backdrop-blur-xl">
         {content}
       </div>
     );
@@ -175,7 +175,7 @@ function SectionCard({
           ? 'border-white/40 opacity-50'
           : section.id === editingId
             ? 'border-white/40'
-            : 'border-white/20'
+            : 'border-karte-border-emphasis'
       }`}
     >
       {content}
@@ -382,7 +382,7 @@ export function SectionEditor({
             <button
               type="button"
               onClick={resetForm}
-              className="rounded-lg border border-white/20 px-3 py-1.5 text-sm text-karte-text transition hover:bg-white/10"
+              className="rounded-lg border border-karte-border-emphasis px-3 py-1.5 text-sm text-karte-text transition hover:bg-white/10"
             >
               Cancel
             </button>
@@ -398,10 +398,10 @@ export function SectionEditor({
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value as PageSectionType)}
-                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-karte-text outline-none focus:border-white/40"
+                className="w-full rounded-lg border border-karte-border-emphasis bg-white/10 px-3 py-2 text-sm text-karte-text outline-none focus:border-white/40"
               >
                 {PAGE_SECTION_TYPES.map((item) => (
-                  <option key={item.value} value={item.value} className="bg-gray-900">
+                  <option key={item.value} value={item.value} className="bg-karte-bg">
                     {item.label}
                   </option>
                 ))}
@@ -422,7 +422,7 @@ export function SectionEditor({
                 }`}
               >
                 <span
-                  className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-white shadow-lg transition-transform duration-200 ${
+                  className={`pointer-events-none inline-block h-6 w-6 rounded-full bg-white  transition-transform duration-200 ${
                     enabled ? 'translate-x-5' : 'translate-x-0'
                   }`}
                 />
@@ -438,7 +438,7 @@ export function SectionEditor({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Section heading"
-              className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40"
+              className="w-full rounded-lg border border-karte-border-emphasis bg-white/10 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40"
             />
           </div>
 
@@ -471,7 +471,7 @@ export function SectionEditor({
                     ? 'Tell visitors what to send you...'
                     : 'Section body copy...'
               }
-              className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40"
+              className="w-full rounded-lg border border-karte-border-emphasis bg-white/10 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40"
             />
           </div>
 
@@ -485,7 +485,7 @@ export function SectionEditor({
                 onChange={(e) => setButtonLabel(e.target.value)}
                 disabled={!isCta}
                 placeholder="e.g. View Case Study"
-                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40 disabled:opacity-50"
+                className="w-full rounded-lg border border-karte-border-emphasis bg-white/10 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40 disabled:opacity-50"
               />
             </div>
 
@@ -498,7 +498,7 @@ export function SectionEditor({
                 onChange={(e) => setButtonUrl(e.target.value)}
                 disabled={!isCta}
                 placeholder="https://example.com"
-                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40 disabled:opacity-50"
+                className="w-full rounded-lg border border-karte-border-emphasis bg-white/10 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40 disabled:opacity-50"
               />
             </div>
           </div>
@@ -516,7 +516,7 @@ export function SectionEditor({
       </div>
 
       {sections.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-white/20 bg-white/[0.03] p-8 text-center">
+        <div className="rounded-2xl border border-dashed border-karte-border-emphasis bg-white/[0.03] p-8 text-center">
           <p className="text-karte-text-3">No sections yet. Add the first one above.</p>
         </div>
       ) : (

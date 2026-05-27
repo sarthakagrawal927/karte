@@ -84,14 +84,14 @@ function LinkCard({
 
   if (isOverlay) {
     return (
-      <div className="flex flex-col gap-4 rounded-2xl border border-white/30 bg-gray-900/90 p-4 shadow-2xl backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-2xl border border-white/30 bg-karte-bg/90 p-4  backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <div className="text-white/60 cursor-grabbing">
             <DragHandle />
           </div>
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex flex-wrap items-center gap-2">
-              <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-karte-text-2">
+              <span className="rounded-full border border-karte-border-strong bg-white/5 px-2 py-0.5 text-[11px] font-medium text-karte-text-2">
                 #{index + 1}
               </span>
               <p className="truncate font-medium text-karte-text">{link.title}</p>
@@ -102,7 +102,7 @@ function LinkCard({
         <div className="flex w-full shrink-0 flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
           <button
             type="button"
-            className="flex-1 rounded-lg border border-white/20 px-3 py-1.5 text-sm text-red-400 transition sm:flex-none"
+            className="flex-1 rounded-lg border border-karte-border-emphasis px-3 py-1.5 text-sm text-red-400 transition sm:flex-none"
           >
             Remove
           </button>
@@ -116,7 +116,7 @@ function LinkCard({
       ref={setNodeRef}
       style={style}
       className={`flex flex-col gap-4 rounded-2xl border bg-white/5 p-4 backdrop-blur-xl transition sm:flex-row sm:items-center sm:justify-between ${
-        isDragging ? 'border-white/40 opacity-50' : 'border-white/20'
+        isDragging ? 'border-white/40 opacity-50' : 'border-karte-border-emphasis'
       }`}
     >
       <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -131,7 +131,7 @@ function LinkCard({
         </button>
         <div className="min-w-0 flex-1">
           <div className="mb-1 flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-karte-text-2">
+            <span className="rounded-full border border-karte-border-strong bg-white/5 px-2 py-0.5 text-[11px] font-medium text-karte-text-2">
               #{index + 1}
             </span>
             <p className="truncate font-medium text-karte-text">{link.title}</p>
@@ -143,7 +143,7 @@ function LinkCard({
         <button
           type="button"
           onClick={() => onRemove(link.id)}
-          className="flex-1 rounded-lg border border-white/20 px-3 py-1.5 text-sm text-red-400 transition hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-40 sm:flex-none"
+          className="flex-1 rounded-lg border border-karte-border-emphasis px-3 py-1.5 text-sm text-red-400 transition hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-40 sm:flex-none"
         >
           Remove
         </button>
@@ -371,7 +371,7 @@ export function LinkEditor({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-white/15 bg-white/[0.045] p-5 backdrop-blur-xl">
+      <section className="rounded-2xl border border-karte-border-emphasis bg-white/[0.045] p-5 backdrop-blur-xl">
         <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-cyan-200">
@@ -392,7 +392,7 @@ export function LinkEditor({
             placeholder="https://linktr.ee/yourname"
             value={importUrl}
             onChange={(e) => setImportUrl(e.target.value)}
-            className="min-w-0 flex-1 rounded-lg border border-white/20 bg-black/20 px-4 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40"
+            className="min-w-0 flex-1 rounded-lg border border-karte-border-emphasis bg-black/20 px-4 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40"
           />
           <button
             type="submit"
@@ -413,7 +413,7 @@ export function LinkEditor({
               {importedLinks.map((item) => (
                 <label
                   key={item.url}
-                  className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-black/20 p-3 transition hover:bg-white/[0.04]"
+                  className="flex cursor-pointer items-start gap-3 rounded-xl border border-karte-border-strong bg-black/20 p-3 transition hover:bg-white/[0.04]"
                 >
                   <input
                     type="checkbox"
@@ -451,7 +451,7 @@ export function LinkEditor({
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-white/40"
+          className="flex-1 rounded-lg border border-karte-border-emphasis bg-white/10 px-4 py-2 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-white/40"
           required
         />
         <input
@@ -459,7 +459,7 @@ export function LinkEditor({
           placeholder="https://example.com"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-white/40"
+          className="flex-1 rounded-lg border border-karte-border-emphasis bg-white/10 px-4 py-2 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-white/40"
           required
         />
         <button
@@ -471,11 +471,11 @@ export function LinkEditor({
         </button>
       </form>
 
-      <hr className="border-white/10" />
+      <hr className="border-karte-border-strong" />
 
       {/* Links list */}
       {links.length === 0 ? (
-        <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
+        <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-8 text-center backdrop-blur-xl">
           <p className="text-karte-text-3">
             No links yet. Add your first link above.
           </p>

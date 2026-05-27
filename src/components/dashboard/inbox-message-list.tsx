@@ -63,7 +63,7 @@ export function InboxMessageList({
 
   if (messages.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
+      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-8 text-center backdrop-blur-xl">
         <p className="text-karte-text-3">
           No messages yet. Direct messages and contact submissions will show here.
         </p>
@@ -86,7 +86,7 @@ export function InboxMessageList({
         return (
           <div
             key={message.id}
-            className="rounded-2xl border border-white/20 bg-white/5 p-5 backdrop-blur-xl"
+            className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-5 backdrop-blur-xl"
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
@@ -133,13 +133,13 @@ export function InboxMessageList({
               {message.message}
             </p>
 
-            <div className="mt-4 flex flex-wrap gap-2 border-t border-white/10 pt-4">
+            <div className="mt-4 flex flex-wrap gap-2 border-t border-karte-border-strong pt-4">
               {message.status !== 'unread' && (
                 <button
                   type="button"
                   disabled={isUpdating}
                   onClick={() => void updateStatus(message.id, 'unread')}
-                  className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-karte-text transition hover:bg-white/10 disabled:opacity-50"
+                  className="rounded-lg border border-karte-border-emphasis bg-white/5 px-3 py-2 text-xs font-medium text-karte-text transition hover:bg-white/10 disabled:opacity-50"
                 >
                   Mark Unread
                 </button>
@@ -158,7 +158,7 @@ export function InboxMessageList({
                 type="button"
                 disabled={isUpdating}
                 onClick={() => void updateStatus(message.id, 'archived')}
-                className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-karte-text-2 transition hover:bg-white/10 disabled:opacity-50"
+                className="rounded-lg border border-karte-border-emphasis bg-white/5 px-3 py-2 text-xs font-medium text-karte-text-2 transition hover:bg-white/10 disabled:opacity-50"
               >
                 Archive
               </button>

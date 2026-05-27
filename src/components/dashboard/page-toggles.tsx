@@ -158,7 +158,7 @@ export function PageToggles({
               onChange={(e) => updatePageSetting('roast', 'tone', e.target.value)}
             >
               {ROAST_TONES.map((tone) => (
-                <option key={tone} value={tone} className="bg-gray-900">
+                <option key={tone} value={tone} className="bg-karte-bg">
                   {tone}
                 </option>
               ))}
@@ -194,7 +194,7 @@ export function PageToggles({
               onChange={(e) => updatePageSetting('newspaper', 'tone', e.target.value)}
             >
               {NEWSPAPER_TONES.map((tone) => (
-                <option key={tone} value={tone} className="bg-gray-900">
+                <option key={tone} value={tone} className="bg-karte-bg">
                   {tone}
                 </option>
               ))}
@@ -222,7 +222,7 @@ export function PageToggles({
               onChange={(e) => updatePageSetting('encyclopedia', 'style', e.target.value)}
             >
               {ENCYCLOPEDIA_STYLES.map((style) => (
-                <option key={style} value={style} className="bg-gray-900">
+                <option key={style} value={style} className="bg-karte-bg">
                   {style}
                 </option>
               ))}
@@ -274,7 +274,7 @@ export function PageToggles({
 
               {enabled && (
                 <>
-                  <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-white/10 pt-4">
+                  <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-karte-border-strong pt-4">
                     <Button
                       variant="secondary"
                       onClick={() => handleGenerate(feature.path)}
@@ -289,7 +289,7 @@ export function PageToggles({
                       href={`/${slug}/${feature.path}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-karte-text transition hover:bg-white/10"
+                      className="rounded-lg border border-karte-border-emphasis bg-white/5 px-4 py-2 text-xs font-medium text-karte-text transition hover:bg-white/10"
                     >
                       Preview
                     </a>
@@ -303,7 +303,7 @@ export function PageToggles({
                   </div>
 
                   {isExpanded && (
-                    <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                    <div className="mt-4 rounded-xl border border-karte-border-strong bg-white/[0.03] p-4">
                       {renderSettings(feature.settingsKey)}
                     </div>
                   )}
