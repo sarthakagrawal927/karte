@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { ImportPasteCard } from '@/components/create/import-paste-card';
+import { OnboardingChat } from '@/components/create/onboarding-chat';
 import { PageSettings } from '@/components/dashboard/page-settings';
 import { PublicTopBar } from '@/components/public/public-top-bar';
 import { getSession } from '@/lib/auth-server';
@@ -45,6 +46,18 @@ export default async function CreatePage() {
 
         <div className="mb-10 sm:mb-12">
           <ImportPasteCard />
+        </div>
+
+        <div className="relative mb-10 flex items-center gap-4 sm:mb-12">
+          <div className="h-px flex-1 bg-white/[0.08]" />
+          <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
+            or chat your way through it
+          </span>
+          <div className="h-px flex-1 bg-white/[0.08]" />
+        </div>
+
+        <div className="mb-10 sm:mb-12">
+          <OnboardingChat />
         </div>
 
         <div className="relative mb-10 flex items-center gap-4 sm:mb-12">

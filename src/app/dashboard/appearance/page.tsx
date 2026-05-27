@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 
 import { PageSettings } from '@/components/dashboard/page-settings';
 import { PendingImportBanner } from '@/components/dashboard/pending-import-banner';
+import { PendingOnboardingBanner } from '@/components/dashboard/pending-onboarding-banner';
 import { getCurrentPage, getSession } from '@/lib/auth-server';
 
 export default async function AppearancePage() {
@@ -13,6 +14,9 @@ export default async function AppearancePage() {
 
   return (
     <>
+      <Suspense fallback={null}>
+        <PendingOnboardingBanner />
+      </Suspense>
       <Suspense fallback={null}>
         <PendingImportBanner />
       </Suspense>
