@@ -5,6 +5,7 @@ import posthog from 'posthog-js';
 import { useEffect, useRef, useState } from 'react';
 
 import { ImageUploadField } from '@/components/dashboard/image-upload-field';
+import { ProfilePreview } from '@/components/dashboard/profile-preview';
 import { FormField, Input, Toggle } from '@/components/ui';
 import type { DmMode } from '@/db/schema';
 import { trackActivated, trackCoreAction } from '@/lib/analytics-events';
@@ -105,6 +106,10 @@ export function PageSettings({
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiRunning, setAiRunning] = useState(false);
   const [aiMessage, setAiMessage] = useState('');
+  // Bumped on every successful save to force the live-preview iframe to
+  // reload with fresh content. Cheap way to keep the preview honest
+  // without manually wiring a postMessage channel.
+  const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
 
   async function applyAiTheme() {
     if (!page || !aiPrompt.trim()) {
@@ -125,7 +130,8 @@ export function PageSettings({
       if (typeof nextPresetId === 'string') {
         setThemePresetId(nextPresetId as ThemePresetId);
       }
-      setAiMessage('Theme updated — refresh to see it live.');
+      setAiMessage('Theme updated.');
+      setPreviewRefreshKey((n) => n + 1);
       router.refresh();
     } catch (error) {
       setAiMessage(error instanceof Error ? error.message : 'Failed to generate theme');
@@ -278,6 +284,7 @@ export function PageSettings({
           trackActivated();
         }
         setMessage('Saved successfully');
+        setPreviewRefreshKey((n) => n + 1);
       }
     } catch {
       setMessage('Failed to save');
@@ -336,13 +343,16 @@ export function PageSettings({
         </div>
       )}
 
-      <div className="space-y-6 rounded-2xl bg-white/[0.02] p-6">
-          <div>
+      {isEditing && page ? (
+        <ProfilePreview slug={page.slug} refreshKey={previewRefreshKey} />
+      ) : (
+        <div className="rounded-2xl bg-white/[0.02] p-6">
           <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-medium text-karte-text">Live Preview</p>
+              <p className="text-sm font-medium text-karte-text">Live preview</p>
               <p className="text-xs text-karte-text-4">
-                This updates as you shape the page.
+                Sketch of how your page will look. The real page appears here
+                once you claim it.
               </p>
             </div>
             <span
@@ -360,7 +370,6 @@ export function PageSettings({
             className="rounded-[28px] p-[1px]"
             style={{
               background: `linear-gradient(135deg, ${previewTheme.accentColor}66, ${previewTheme.gradientFrom}26)`,
-              boxShadow: `0 24px 80px -48px ${previewTheme.accentColor}`,
             }}
           >
             <div
@@ -369,82 +378,43 @@ export function PageSettings({
                 background: `linear-gradient(180deg, ${previewTheme.gradientFrom}1a 0%, ${previewTheme.gradientTo}1a 40%, #020617 100%)`,
               }}
             >
-              <div
-                className="pointer-events-none absolute -top-16 -left-16 h-36 w-36 rounded-full blur-3xl"
-                style={{ backgroundColor: `${previewTheme.gradientFrom}52` }}
-              />
-              <div
-                className="pointer-events-none absolute -right-12 bottom-0 h-32 w-32 rounded-full blur-3xl"
-                style={{ backgroundColor: `${previewTheme.gradientTo}42` }}
-              />
-
-              <div className="relative">
-                <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-                  {avatarUrl.trim() ? (
-                    <div
-                      className="h-20 w-20 rounded-full border border-karte-border-emphasis bg-cover bg-center  shadow-black/20"
-                      style={{ backgroundImage: `url(${avatarUrl.trim()})` }}
-                    />
-                  ) : (
-                    <div
-                      className="flex h-20 w-20 items-center justify-center rounded-full border border-karte-border-emphasis text-2xl font-semibold text-karte-text  shadow-black/20"
-                      style={{
-                        background: `linear-gradient(135deg, ${previewTheme.gradientFrom}, ${previewTheme.gradientTo})`,
-                      }}
-                    >
-                      {previewInitials}
-                    </div>
-                  )}
-
-                  <div className="min-w-0">
-                    <p
-                      className="text-[11px] font-medium uppercase tracking-[0.32em]"
-                      style={{ color: previewTheme.accentColor }}
-                    >
-                      karte.cc/{previewSlug}
-                    </p>
-                    <h2 className="mt-2 text-2xl font-semibold text-karte-text sm:text-3xl">
-                      {previewDisplayName}
-                    </h2>
-                    <p className="mt-3 max-w-xl text-sm leading-6 text-white/70">
-                      {previewBio}
-                    </p>
+              <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center">
+                {avatarUrl.trim() ? (
+                  <div
+                    className="h-20 w-20 rounded-full bg-cover bg-center"
+                    style={{ backgroundImage: `url(${avatarUrl.trim()})` }}
+                  />
+                ) : (
+                  <div
+                    className="flex h-20 w-20 items-center justify-center rounded-full text-2xl font-semibold text-karte-text"
+                    style={{
+                      background: `linear-gradient(135deg, ${previewTheme.gradientFrom}, ${previewTheme.gradientTo})`,
+                    }}
+                  >
+                    {previewInitials}
                   </div>
-                </div>
-
-                <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                  {['Primary Link', 'Newsletter', 'Portfolio'].map((item) => (
-                    <div
-                      key={item}
-                      className="rounded-xl bg-white/[0.045] px-4 py-3 text-center text-sm font-medium text-karte-text backdrop-blur-lg"
-                      style={{
-                        boxShadow: `inset 0 0 0 1px ${previewTheme.accentColor}1a`,
-                      }}
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
-
-                <div
-                  className="mt-6 rounded-2xl border border-white/12 bg-white/[0.04] p-4"
-                  style={{ borderColor: `${previewTheme.accentColor}1f` }}
-                >
+                )}
+                <div className="min-w-0">
                   <p
-                    className="text-[11px] font-medium uppercase tracking-[0.28em]"
+                    className="text-[11px] font-medium uppercase tracking-[0.32em]"
                     style={{ color: previewTheme.accentColor }}
                   >
-                    Next Up
+                    karte.cc/{previewSlug}
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-white/70">
-                    After you claim the username, you can add projects, blogs,
-                    custom sections, links, and chat settings.
+                  <h2 className="mt-2 text-2xl font-semibold text-karte-text sm:text-3xl">
+                    {previewDisplayName}
+                  </h2>
+                  <p className="mt-3 max-w-xl text-sm leading-6 text-white/70">
+                    {previewBio}
                   </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      )}
+
+      <div className="space-y-6 rounded-2xl bg-white/[0.02] p-6">
 
         {/* Slug */}
         <div>
