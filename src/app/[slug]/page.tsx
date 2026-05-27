@@ -41,6 +41,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!data) return {};
 
   const { page } = data;
+  // og:image is supplied by ./opengraph-image.tsx (auto-discovered by
+  // Next.js) — leave images out of openGraph here so the dynamic
+  // render with the live newspaper headline wins, not the static
+  // avatar URL.
   return {
     title: page.displayName,
     description:
@@ -48,7 +52,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: page.displayName,
       description: page.bio ?? undefined,
-      ...(page.avatarUrl && { images: [page.avatarUrl] }),
     },
   };
 }
