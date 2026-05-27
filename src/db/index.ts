@@ -248,6 +248,16 @@ export async function ensureProjectsTable() {
         ON pageDomains (pageId)
       `);
 
+      // Ensure conversations table has visitorEmail column (lead-capture gate).
+      // Existing conversations get NULL, which the API treats as "no email yet".
+      const conversationColumns = await client.execute('PRAGMA table_info(conversations)');
+      const conversationColNames = new Set(
+        conversationColumns.rows.map((r) => (r as { name?: string }).name),
+      );
+      if (conversationColumns.rows.length > 0 && !conversationColNames.has('visitorEmail')) {
+        await client.execute('ALTER TABLE conversations ADD COLUMN visitorEmail TEXT');
+      }
+
       // Add Karte-specific columns to the Better Auth user table if missing.
       const userColumns = await client.execute('PRAGMA table_info("user")');
       const userColNames = new Set(userColumns.rows.map((r) => (r as { name?: string }).name));

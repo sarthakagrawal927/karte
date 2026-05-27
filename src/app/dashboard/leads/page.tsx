@@ -36,6 +36,19 @@ function tierClasses(tier: QualifiedLead['tier']) {
   return 'border-karte-border-emphasis bg-white/5 text-karte-text-2';
 }
 
+function sourceBadge(lead: QualifiedLead) {
+  if (lead.contactCount > 0 && lead.conversationCount > 0) {
+    return { label: 'Chat + contact', tone: 'border-violet-300/30 bg-violet-300/10 text-violet-100' };
+  }
+  if (lead.contactCount > 0) {
+    return { label: 'From contact form', tone: 'border-emerald-300/30 bg-emerald-300/10 text-emerald-100' };
+  }
+  if (lead.conversationCount > 0) {
+    return { label: 'From chat', tone: 'border-sky-300/30 bg-sky-300/10 text-sky-100' };
+  }
+  return null;
+}
+
 function metricLabel(lead: QualifiedLead) {
   const parts = [
     lead.contactCount > 0 ? `${lead.contactCount} DM${lead.contactCount === 1 ? '' : 's'}` : '',
@@ -74,7 +87,12 @@ export default async function LeadsPage() {
       .where(eq(contactSubmissions.pageId, page.id))
       .orderBy(desc(contactSubmissions.createdAt)),
     db
-      .select()
+      .select({
+        id: conversations.id,
+        visitorId: conversations.visitorId,
+        visitorEmail: conversations.visitorEmail,
+        createdAt: conversations.createdAt,
+      })
       .from(conversations)
       .where(eq(conversations.pageId, page.id))
       .orderBy(desc(conversations.createdAt)),
@@ -180,6 +198,18 @@ export default async function LeadsPage() {
                     <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-karte-text">
                       {lead.score}/100
                     </span>
+                    {(() => {
+                      const badge = sourceBadge(lead);
+                      return badge
+                        ? (
+                          <span
+                            className={`rounded-full border px-2.5 py-1 text-[11px] font-medium ${badge.tone}`}
+                          >
+                            {badge.label}
+                          </span>
+                        )
+                        : null;
+                    })()}
                   </div>
                   <p className="mt-1 text-sm text-karte-text-3">
                     {lead.email ?? lead.visitorId ?? 'Anonymous visitor'} / {metricLabel(lead)}
