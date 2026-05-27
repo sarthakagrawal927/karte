@@ -7,7 +7,7 @@ export default function AnalyticsLoading() {
         {[1, 2, 3, 4, 5].map((i) => (
           <div
             key={i}
-            className="h-28 animate-pulse rounded-2xl border border-karte-border bg-white/[0.025]"
+            className="h-28 animate-pulse rounded-2xl bg-white/[0.025]"
           />
         ))}
       </div>
@@ -15,7 +15,7 @@ export default function AnalyticsLoading() {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="h-64 animate-pulse rounded-2xl border border-karte-border bg-white/[0.025]"
+            className="h-64 animate-pulse rounded-2xl bg-white/[0.025]"
           />
         ))}
       </div>

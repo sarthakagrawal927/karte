@@ -129,7 +129,7 @@ export function IntentOnboarding({
         })}
       </div>
 
-      <div className="rounded-xl border border-karte-border-strong bg-black/20 p-4">
+      <div className="rounded-xl bg-black/25 p-4">
         <p className="text-sm font-medium text-karte-text">
           Suggested next steps for {selectedOption.label.toLowerCase()}
         </p>

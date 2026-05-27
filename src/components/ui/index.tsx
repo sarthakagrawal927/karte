@@ -186,13 +186,15 @@ export function Label({ className, children, ...props }: LabelProps) {
 interface CardProps {
   children: ReactNode;
   className?: string;
+  bordered?: boolean;
 }
 
-export function Card({ children, className }: CardProps) {
+export function Card({ children, className, bordered = false }: CardProps) {
   return (
     <div
       className={cn(
-        'rounded-2xl border border-white/20 bg-white/5 p-6 backdrop-blur-xl',
+        'rounded-2xl bg-white/[0.025] p-6',
+        bordered && 'border border-white/15',
         className,
       )}
     >

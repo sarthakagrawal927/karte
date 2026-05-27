@@ -138,7 +138,7 @@ export function ProfileRevampAssistant({
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-        <section className="rounded-2xl border border-karte-border-emphasis bg-white/[0.05] p-5 backdrop-blur-xl">
+        <section className="rounded-2xl bg-white/[0.025] p-5">
           <div>
             <h2 className="text-lg font-semibold text-karte-text">Design prompt</h2>
             <p className="mt-1 text-xs text-karte-text-4">
@@ -198,9 +198,9 @@ export function ProfileRevampAssistant({
           )}
         </section>
 
-        <section className="rounded-2xl border border-karte-border-emphasis bg-white/[0.05] p-5 backdrop-blur-xl">
+        <section className="rounded-2xl bg-white/[0.025] p-5">
           {!plan ? (
-            <div className="flex min-h-80 flex-col justify-center rounded-xl border border-dashed border-karte-border-emphasis bg-black/20 p-6 text-center">
+            <div className="flex min-h-80 flex-col justify-center rounded-xl bg-black/20 p-6 text-center">
               <div className="mx-auto mb-4 flex gap-2">
                 {THEME_PRESETS.slice(0, 5).map((preset) => (
                   <div
@@ -250,7 +250,7 @@ export function ProfileRevampAssistant({
                 {plan.blocks.map((block, index) => (
                   <article
                     key={`${block.title}-${index}`}
-                    className="rounded-xl border border-karte-border-strong bg-black/20 p-4"
+                    className="rounded-xl bg-black/20 p-4"
                   >
                     <span className="rounded-full bg-white/10 px-2 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-karte-text-2">
                       {block.type}

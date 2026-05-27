@@ -63,7 +63,7 @@ export function InboxMessageList({
 
   if (messages.length === 0) {
     return (
-      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-8 text-center backdrop-blur-xl">
+      <div className="rounded-2xl bg-white/[0.02] p-8 text-center">
         <p className="text-karte-text-3">
           No messages yet. Direct messages and contact submissions will show here.
         </p>
@@ -86,7 +86,7 @@ export function InboxMessageList({
         return (
           <div
             key={message.id}
-            className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-5 backdrop-blur-xl"
+            className="rounded-2xl bg-white/[0.025] p-5 transition hover:bg-white/[0.04]"
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>

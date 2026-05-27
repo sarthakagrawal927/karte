@@ -44,7 +44,7 @@ export default async function DashboardEncyclopediaPage() {
     return (
       <div className="mx-auto max-w-2xl">
         <h1 className="mb-4 text-2xl font-bold text-karte-text">Encyclopedia</h1>
-        <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-6 backdrop-blur-xl">
+        <div className="rounded-2xl bg-white/[0.02] p-6">
           <p className="text-karte-text-3">
             Generate your encyclopedia first from the{' '}
             <Link href="/dashboard/pages" className="text-karte-text underline underline-offset-2 transition hover:text-karte-text-2">

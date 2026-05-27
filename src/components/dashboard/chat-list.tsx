@@ -59,7 +59,7 @@ export function ChatList({ pageId }: { pageId: string }) {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-8 text-center backdrop-blur-xl">
+      <div className="rounded-2xl bg-white/[0.02] p-8 text-center">
         <p className="text-karte-text-3">Loading conversations...</p>
       </div>
     );
@@ -67,7 +67,7 @@ export function ChatList({ pageId }: { pageId: string }) {
 
   if (conversations.length === 0) {
     return (
-      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-8 text-center backdrop-blur-xl">
+      <div className="rounded-2xl bg-white/[0.02] p-8 text-center">
         <p className="text-karte-text-3">No conversations yet. Visitors will appear here once they start chatting.</p>
       </div>
     );
@@ -78,7 +78,7 @@ export function ChatList({ pageId }: { pageId: string }) {
       {conversations.map((convo) => (
         <div
           key={convo.id}
-          className="rounded-2xl border border-karte-border-emphasis bg-white/5 backdrop-blur-xl overflow-hidden"
+          className="rounded-2xl bg-white/[0.025] overflow-hidden transition hover:bg-white/[0.04]"
         >
           {/* Conversation header */}
           <button

@@ -32,7 +32,7 @@ function MetricCard({
   helper?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-karte-border bg-white/[0.025] p-5">
+    <div className="rounded-2xl bg-white/[0.025] p-5">
       <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
         {label}
       </p>
@@ -61,7 +61,7 @@ export default async function AnalyticsPage() {
     return (
       <div className="space-y-6 sm:space-y-8">
         <h1 className="text-2xl font-bold tracking-[-0.015em] text-karte-text">Analytics</h1>
-        <div className="rounded-2xl border border-karte-border bg-white/[0.025] p-8 text-center">
+        <div className="rounded-2xl bg-white/[0.02] p-8 text-center">
           <p className="text-karte-text-3">Create a page first to start collecting analytics.</p>
         </div>
       </div>
@@ -203,7 +203,7 @@ export default async function AnalyticsPage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-3">
-        <div className="rounded-2xl border border-karte-border bg-white/[0.025] p-5">
+        <div className="rounded-2xl bg-white/[0.025] p-5">
           <h2 className="text-[15px] font-semibold tracking-[-0.005em] text-karte-text">
             Recent activity
           </h2>
@@ -212,7 +212,7 @@ export default async function AnalyticsPage() {
               <p className="text-[13px] text-karte-text-4">No events yet.</p>
             ) : (
               recentEvents.map((event) => (
-                <div key={event.id} className="rounded-xl border border-karte-border bg-karte-bg/40 p-3.5">
+                <div key={event.id} className="rounded-xl bg-karte-bg/40 p-3.5">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
                       <p className="text-[13px] font-medium text-karte-text">
@@ -242,7 +242,7 @@ export default async function AnalyticsPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-karte-border bg-white/[0.025] p-5">
+        <div className="rounded-2xl bg-white/[0.025] p-5">
           <h2 className="text-[15px] font-semibold tracking-[-0.005em] text-karte-text">
             Top destinations
           </h2>
@@ -251,7 +251,7 @@ export default async function AnalyticsPage() {
               <p className="text-[13px] text-karte-text-4">No outbound clicks yet.</p>
             ) : (
               topDestinations.map((item, idx) => (
-                <div key={idx} className="rounded-xl border border-karte-border bg-karte-bg/40 p-3.5">
+                <div key={idx} className="rounded-xl bg-karte-bg/40 p-3.5">
                   <div className="flex items-center justify-between gap-4">
                     <div className="min-w-0">
                       <p className="truncate text-[13px] font-medium text-karte-text">
@@ -271,7 +271,7 @@ export default async function AnalyticsPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-karte-border bg-white/[0.025] p-5">
+        <div className="rounded-2xl bg-white/[0.025] p-5">
           <h2 className="text-[15px] font-semibold tracking-[-0.005em] text-karte-text">
             Top sections
           </h2>
@@ -280,7 +280,7 @@ export default async function AnalyticsPage() {
               <p className="text-[13px] text-karte-text-4">No section views yet.</p>
             ) : (
               topSections.map((item, idx) => (
-                <div key={idx} className="rounded-xl border border-karte-border bg-karte-bg/40 p-3.5">
+                <div key={idx} className="rounded-xl bg-karte-bg/40 p-3.5">
                   <div className="flex items-center justify-between gap-4">
                     <div className="min-w-0">
                       <p className="truncate text-[13px] font-medium text-karte-text">
@@ -301,7 +301,7 @@ export default async function AnalyticsPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-karte-border bg-white/[0.025] p-5">
+      <div className="rounded-2xl bg-white/[0.025] p-5">
         <h2 className="text-[15px] font-semibold tracking-[-0.005em] text-karte-text">
           Last 7 days
         </h2>
@@ -312,7 +312,7 @@ export default async function AnalyticsPage() {
             dailyRows.map(([day, metrics]) => (
               <div
                 key={day}
-                className="rounded-xl border border-karte-border bg-karte-bg/40 p-3.5 sm:grid sm:grid-cols-[120px_1fr_90px_90px_80px] sm:items-center sm:gap-3 sm:border-0 sm:bg-transparent sm:p-0"
+                className="rounded-xl bg-karte-bg/40 p-3.5 sm:grid sm:grid-cols-[120px_1fr_90px_90px_80px] sm:items-center sm:gap-3 sm:bg-transparent sm:p-0"
               >
                 <p className="text-[13px] tabular-nums text-karte-text-3">{day}</p>
                 <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/[0.06] sm:mt-0">

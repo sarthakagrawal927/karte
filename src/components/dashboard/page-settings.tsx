@@ -249,7 +249,7 @@ export function PageSettings({
             : 'Create Your Page'}
       </h1>
 
-      <div className="space-y-6 rounded-2xl border border-karte-border-emphasis bg-white/5 p-6 backdrop-blur-xl">
+      <div className="space-y-6 rounded-2xl bg-white/[0.02] p-6">
           <div>
           <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>

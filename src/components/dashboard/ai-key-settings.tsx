@@ -138,7 +138,7 @@ export function AiKeySettings({
   return (
     <div className="space-y-6">
       {/* Document Index Key (SaaS Maker — for RAG/chat) */}
-      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-6 backdrop-blur-xl">
+      <div className="rounded-2xl bg-white/[0.02] p-6">
         <h2 className="mb-1 text-lg font-semibold text-karte-text">Document Index Key</h2>
         <p className="mb-4 text-sm text-karte-text-3">
           {configured
@@ -171,7 +171,7 @@ export function AiKeySettings({
       </div>
 
       {/* Custom AI Endpoint */}
-      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-6 backdrop-blur-xl">
+      <div className="rounded-2xl bg-white/[0.02] p-6">
         <h2 className="mb-1 text-lg font-semibold text-karte-text">AI Endpoint</h2>
         <p className="mb-4 text-sm text-karte-text-3">
           {isUsingDefaultAi

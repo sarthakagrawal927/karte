@@ -117,8 +117,8 @@ function ProjectCard({
     <div
       ref={setNodeRef}
       style={style}
-      className={`rounded-2xl border bg-white/5 p-5 backdrop-blur-xl transition ${
-        isDragging ? 'border-white/40 opacity-50' : 'border-karte-border-emphasis'
+      className={`rounded-2xl bg-white/[0.025] p-5 transition hover:bg-white/[0.04] ${
+        isDragging ? 'opacity-50' : ''
       }`}
     >
       {project.imageUrl && (
@@ -348,10 +348,10 @@ export function ProjectEditor({
         </button>
       </form>
 
-      <hr className="border-karte-border-strong" />
+      <hr className="border-karte-border" />
 
       {projects.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-karte-border-emphasis bg-white/[0.03] p-8 text-center">
+        <div className="rounded-2xl bg-white/[0.02] p-8 text-center">
           <p className="text-karte-text-3">
             No projects yet. Add your first one above.
           </p>

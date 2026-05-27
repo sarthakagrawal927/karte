@@ -170,12 +170,12 @@ function SectionCard({
     <div
       ref={setNodeRef}
       style={style}
-      className={`rounded-2xl border bg-white/5 p-5 backdrop-blur-xl transition ${
+      className={`rounded-2xl bg-white/[0.025] p-5 transition hover:bg-white/[0.04] ${
         isDragging
-          ? 'border-white/40 opacity-50'
+          ? 'opacity-50 ring-1 ring-white/30'
           : section.id === editingId
-            ? 'border-white/40'
-            : 'border-karte-border-emphasis'
+            ? 'ring-1 ring-white/30'
+            : ''
       }`}
     >
       {content}
@@ -516,7 +516,7 @@ export function SectionEditor({
       </div>
 
       {sections.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-karte-border-emphasis bg-white/[0.03] p-8 text-center">
+        <div className="rounded-2xl bg-white/[0.02] p-8 text-center">
           <p className="text-karte-text-3">No sections yet. Add the first one above.</p>
         </div>
       ) : (

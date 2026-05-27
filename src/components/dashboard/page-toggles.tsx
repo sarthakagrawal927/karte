@@ -303,7 +303,7 @@ export function PageToggles({
                   </div>
 
                   {isExpanded && (
-                    <div className="mt-4 rounded-xl border border-karte-border-strong bg-white/[0.03] p-4">
+                    <div className="mt-4 rounded-xl bg-white/[0.02] p-4">
                       {renderSettings(feature.settingsKey)}
                     </div>
                   )}

@@ -57,7 +57,7 @@ export default async function InboxPage() {
         ].map((metric) => (
           <div
             key={metric.label}
-            className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-6 backdrop-blur-xl"
+            className="rounded-2xl bg-white/[0.025] p-6"
           >
             <p className="text-sm text-white/70">{metric.label}</p>
             <p className="mt-2 text-3xl font-bold text-karte-text">{metric.value}</p>
@@ -65,7 +65,7 @@ export default async function InboxPage() {
         ))}
       </div>
 
-      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-5 backdrop-blur-xl">
+      <div className="rounded-2xl bg-white/[0.02] p-5">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-medium text-karte-text">Trust Settings</p>

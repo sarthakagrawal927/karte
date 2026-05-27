@@ -103,7 +103,7 @@ export function InfoEditor({
           {blocks.map((block) => (
             <div
               key={block.id}
-              className="rounded-xl border border-karte-border-strong bg-white/5 p-4 backdrop-blur-xl"
+              className="rounded-xl bg-white/[0.025] p-4 transition hover:bg-white/[0.04]"
             >
               <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-wrap items-center gap-2">
@@ -136,7 +136,7 @@ export function InfoEditor({
       {/* Add form */}
       <form
         onSubmit={addBlock}
-        className="space-y-4 rounded-xl border border-karte-border-strong bg-white/5 p-5 backdrop-blur-xl"
+        className="space-y-4 rounded-xl bg-white/[0.02] p-5"
       >
         <h3 className="text-sm font-semibold text-karte-text">
           Add Profile Memory

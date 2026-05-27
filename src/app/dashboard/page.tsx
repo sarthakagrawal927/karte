@@ -143,7 +143,7 @@ export default async function DashboardPage() {
         ].map((metric) => (
           <div
             key={metric.label}
-            className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-5 backdrop-blur-xl"
+            className="rounded-2xl bg-white/[0.025] p-5"
           >
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-karte-text-4">
               {metric.label}
@@ -158,7 +158,7 @@ export default async function DashboardPage() {
         initialPageSettings={page.pageSettings ?? {}}
       />
 
-      <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-6 backdrop-blur-xl">
+      <div className="rounded-2xl bg-white/[0.02] p-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-xl font-semibold text-karte-text">Launch Checklist</h2>

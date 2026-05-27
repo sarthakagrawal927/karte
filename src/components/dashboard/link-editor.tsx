@@ -115,8 +115,8 @@ function LinkCard({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex flex-col gap-4 rounded-2xl border bg-white/5 p-4 backdrop-blur-xl transition sm:flex-row sm:items-center sm:justify-between ${
-        isDragging ? 'border-white/40 opacity-50' : 'border-karte-border-emphasis'
+      className={`flex flex-col gap-4 rounded-2xl bg-white/[0.025] p-4 transition hover:bg-white/[0.04] sm:flex-row sm:items-center sm:justify-between ${
+        isDragging ? 'opacity-50' : ''
       }`}
     >
       <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -371,7 +371,7 @@ export function LinkEditor({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-karte-border-emphasis bg-white/[0.045] p-5 backdrop-blur-xl">
+      <section className="rounded-2xl bg-white/[0.02] p-5">
         <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-cyan-200">
@@ -471,11 +471,11 @@ export function LinkEditor({
         </button>
       </form>
 
-      <hr className="border-karte-border-strong" />
+      <hr className="border-karte-border" />
 
       {/* Links list */}
       {links.length === 0 ? (
-        <div className="rounded-2xl border border-karte-border-emphasis bg-white/5 p-8 text-center backdrop-blur-xl">
+        <div className="rounded-2xl bg-white/[0.02] p-8 text-center">
           <p className="text-karte-text-3">
             No links yet. Add your first link above.
           </p>
