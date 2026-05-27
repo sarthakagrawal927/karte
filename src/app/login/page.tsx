@@ -11,7 +11,7 @@ export default async function LoginPage() {
   if (session?.user) redirect('/dashboard');
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#0a0a0a] text-zinc-200 antialiased">
+    <main className="min-h-screen overflow-hidden bg-karte-bg text-karte-text-2 antialiased">
       <PublicTopBar current="login" variant="minimal" />
 
       <section className="relative min-h-[calc(100vh-4rem)]">
@@ -22,20 +22,20 @@ export default async function LoginPage() {
 
         <div className="relative mx-auto grid min-h-[calc(100vh-4rem)] max-w-6xl items-center gap-12 px-6 py-16 lg:grid-cols-[1fr_420px] lg:gap-16">
           <div className="max-w-2xl">
-            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-zinc-500">
-              <span className="text-cyan-300/80">·</span> Welcome back
+            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
+              <span className="text-karte-accent/80">·</span> Welcome back
             </p>
-            <h1 className="mt-6 text-4xl font-semibold leading-[1.05] tracking-[-0.025em] text-white sm:text-5xl lg:text-6xl">
+            <h1 className="mt-6 text-4xl font-semibold leading-[1.05] tracking-[-0.025em] text-karte-text sm:text-5xl lg:text-6xl">
               Manage the profile people{' '}
               <span
-                className="font-serif italic font-normal text-cyan-200"
+                className="font-serif italic font-normal text-karte-accent-soft"
                 style={{ fontFamily: 'var(--font-instrument-serif), serif' }}
               >
                 actually
               </span>{' '}
               talk to.
             </h1>
-            <p className="mt-6 max-w-xl text-[15px] leading-[1.65] tracking-[-0.005em] text-zinc-400 sm:text-base">
+            <p className="mt-6 max-w-xl text-[15px] leading-[1.65] tracking-[-0.005em] text-karte-text-3 sm:text-base">
               Sign in to update your links, train your AI chat, review Inbox
               messages, and publish generated profile modes.
             </p>
@@ -44,7 +44,7 @@ export default async function LoginPage() {
               {modeLabels.map((label) => (
                 <div
                   key={label}
-                  className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-[13px] font-medium text-zinc-300"
+                  className="rounded-xl border border-karte-border bg-white/[0.02] px-4 py-3 text-[13px] font-medium text-karte-text-2"
                 >
                   {label}
                 </div>
@@ -52,9 +52,9 @@ export default async function LoginPage() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-white/[0.08] bg-[#0c0c0b] p-6">
+          <div className="rounded-3xl border border-karte-border bg-karte-surface p-6">
             <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-300">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-karte-accent">
                 <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" className="h-6 w-6">
                   <path
                     d="M8 7 h16 a4 4 0 0 1 4 4 v9 a4 4 0 0 1 -4 4 h-9 l-4 4 v-4 h-3 a4 4 0 0 1 -4 -4 v-9 a4 4 0 0 1 4 -4 Z"
@@ -66,15 +66,15 @@ export default async function LoginPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-[15px] font-semibold tracking-[-0.005em] text-white">Karte</p>
-                <p className="text-[12px] text-zinc-500">Creator dashboard</p>
+                <p className="text-[15px] font-semibold tracking-[-0.005em] text-karte-text">Karte</p>
+                <p className="text-[12px] text-karte-text-4">Creator dashboard</p>
               </div>
             </div>
 
-            <h2 className="text-xl font-semibold tracking-[-0.01em] text-white">
+            <h2 className="text-xl font-semibold tracking-[-0.01em] text-karte-text">
               Sign in to continue
             </h2>
-            <p className="mt-2 text-[14px] leading-[1.6] text-zinc-400">
+            <p className="mt-2 text-[14px] leading-[1.6] text-karte-text-3">
               Your Google account verifies ownership and powers email-verified
               messaging.
             </p>
@@ -83,21 +83,21 @@ export default async function LoginPage() {
               <GoogleSignInButton />
             </div>
 
-            <div className="mt-6 border-t border-white/[0.06] pt-5">
-              <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-zinc-500">
-                <span className="text-cyan-300/80">·</span> After sign in
+            <div className="mt-6 border-t border-karte-border pt-5">
+              <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
+                <span className="text-karte-accent/80">·</span> After sign in
               </p>
-              <ul className="mt-3 space-y-2 text-[13px] leading-[1.55] text-zinc-300">
+              <ul className="mt-3 space-y-2 text-[13px] leading-[1.55] text-karte-text-2">
                 <li className="flex items-center gap-2">
-                  <span className="h-1 w-1 shrink-0 rounded-full bg-cyan-300/60" />
+                  <span className="h-1 w-1 shrink-0 rounded-full bg-karte-accent/60" />
                   Set your visitor intent.
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="h-1 w-1 shrink-0 rounded-full bg-cyan-300/60" />
+                  <span className="h-1 w-1 shrink-0 rounded-full bg-karte-accent/60" />
                   Enable anonymous or email-verified DMs.
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="h-1 w-1 shrink-0 rounded-full bg-cyan-300/60" />
+                  <span className="h-1 w-1 shrink-0 rounded-full bg-karte-accent/60" />
                   Generate profile modes that make your page memorable.
                 </li>
               </ul>

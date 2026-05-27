@@ -12,24 +12,30 @@ export default async function CreatePage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gray-950">
-      <div className="absolute -left-1/4 -top-1/4 h-[520px] w-[520px] rounded-full bg-cyan-500/10 blur-[128px]" />
-      <div className="absolute -bottom-1/4 -right-1/4 h-[520px] w-[520px] rounded-full bg-blue-600/10 blur-[128px]" />
+    <div className="relative min-h-screen overflow-hidden bg-karte-bg text-karte-text-2 antialiased">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(ellipse_at_top,#000_25%,transparent_72%)]" />
+        <div className="absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full bg-karte-accent/10 blur-[160px]" />
+      </div>
 
-      <PublicTopBar current="create" accentColor="#67e8f9" />
+      <PublicTopBar current="create" variant="minimal" accentColor="#67e8f9" />
 
-      <div className="relative mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
+      <div className="relative mx-auto max-w-5xl px-6 py-12 sm:py-16">
         <div className="mx-auto mb-10 max-w-2xl text-center sm:mb-12">
-          <p className="text-sm font-medium uppercase tracking-[0.32em] text-cyan-300/80">
-            Start Before Login
+          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
+            <span className="text-karte-accent/80">·</span> Start before login
           </p>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-5xl">
-            Draft your profile first.
-            <span className="block bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">
-              Claim it when you&apos;re ready.
-            </span>
+          <h1 className="mt-6 text-4xl font-semibold leading-[1.05] tracking-[-0.025em] text-karte-text sm:text-5xl lg:text-6xl">
+            Draft your profile first.{' '}
+            <span
+              className="font-normal italic text-karte-accent-soft"
+              style={{ fontFamily: 'var(--font-instrument-serif), serif' }}
+            >
+              Claim it
+            </span>{' '}
+            when you&apos;re ready.
           </h1>
-          <p className="mt-5 text-base leading-7 text-gray-400 sm:text-lg">
+          <p className="mt-6 max-w-xl text-[15px] leading-[1.65] tracking-[-0.005em] text-karte-text-3 sm:text-base">
             Pick a username, write your bio, choose your theme, and shape the
             page before you create an account. We only ask you to sign in when
             you save and claim it.

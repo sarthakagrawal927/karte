@@ -8,35 +8,35 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12 text-sm leading-7 text-stone-300">
-      <Link href="/" className="text-xs text-stone-500 hover:underline">
+    <main className="mx-auto max-w-3xl px-4 py-12 text-sm leading-7 text-karte-text-2">
+      <Link href="/" className="text-xs text-karte-text-4 hover:underline">
         ← Karte
       </Link>
-      <h1 className="mt-3 text-3xl font-bold tracking-tight text-white">Privacy</h1>
-      <p className="mt-4 text-xs text-stone-500">Last updated: 2026-05-15.</p>
+      <h1 className="mt-3 text-3xl font-bold tracking-tight text-karte-text">Privacy</h1>
+      <p className="mt-4 text-xs text-karte-text-4">Last updated: 2026-05-15.</p>
 
-      <h2 className="mt-8 text-base font-semibold text-white">What we store</h2>
-      <ul className="mt-2 list-disc space-y-1 pl-5 marker:text-stone-600">
+      <h2 className="mt-8 text-base font-semibold text-karte-text">What we store</h2>
+      <ul className="mt-2 list-disc space-y-1 pl-5 marker:text-karte-text-4">
         <li>Your Google OAuth identity for sign-in.</li>
         <li>Profile content you enter — links, bio, avatar, and any infoBlocks for AI modes.</li>
         <li>Avatar images you upload — stored in Cloudflare R2.</li>
       </ul>
 
-      <h2 className="mt-8 text-base font-semibold text-white">What we don&apos;t do</h2>
-      <ul className="mt-2 list-disc space-y-1 pl-5 marker:text-stone-600">
+      <h2 className="mt-8 text-base font-semibold text-karte-text">What we don&apos;t do</h2>
+      <ul className="mt-2 list-disc space-y-1 pl-5 marker:text-karte-text-4">
         <li>No third-party analytics by default.</li>
         <li>No selling of profile data.</li>
         <li>Chat queries from visitors are validated server-side and not retained beyond the response.</li>
       </ul>
 
-      <h2 className="mt-8 text-base font-semibold text-white">Public vs private</h2>
+      <h2 className="mt-8 text-base font-semibold text-karte-text">Public vs private</h2>
       <p className="mt-2">
         Profiles are public by default but can be set private via the
         dashboard visibility toggle. Toggling private prevents the
         profile from being served or indexed.
       </p>
 
-      <h2 className="mt-8 text-base font-semibold text-white">Deletion</h2>
+      <h2 className="mt-8 text-base font-semibold text-karte-text">Deletion</h2>
       <p className="mt-2">
         Delete your profile from the dashboard to remove all stored
         content, including R2-hosted avatars and any infoBlocks.
