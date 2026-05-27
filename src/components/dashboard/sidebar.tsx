@@ -91,6 +91,12 @@ export function Sidebar({ slug }: { slug?: string }) {
                     key={item.href}
                     href={item.href}
                     onClick={onNavigate}
+                    // Disable viewport-based prefetching. Dashboard routes are
+                    // dynamic per-user — letting Next.js prefetch all 14 sidebar
+                    // links eagerly triggered 14 background RSC requests that
+                    // hit the server's DB on every dashboard load. Now each
+                    // click is one request, when you actually click it.
+                    prefetch={false}
                     className={`block rounded-lg px-3 py-2 text-[14px] font-medium transition-colors duration-200 ease-[var(--karte-ease)] ${
                       isActive
                         ? 'bg-white/[0.06] text-karte-text'
