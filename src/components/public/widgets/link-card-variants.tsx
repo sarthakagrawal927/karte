@@ -1,4 +1,3 @@
-'use client';
 
 import type { WidgetVariant } from '@/lib/widget-types';
 

@@ -1,5 +1,3 @@
-'use client';
-
 import type { WidgetVariant } from '@/lib/widget-types';
 
 // Data shape consumed by every ProjectCard variant. Mirrors the columns
