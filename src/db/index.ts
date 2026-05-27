@@ -174,6 +174,9 @@ const REQUIRED_COLUMNS: ColumnAddition[] = [
   { table: '"user"', column: 'aiEndpointUrl', type: 'TEXT' },
   { table: '"user"', column: 'aiApiKey', type: 'TEXT' },
   { table: '"user"', column: 'aiModel', type: 'TEXT' },
+  // Chat lead-capture gate: pre-existing conversations stay NULL ("no email
+  // yet") and lazy-fill on the next message via the chat route.
+  { table: 'conversations', column: 'visitorEmail', type: 'TEXT' },
 ];
 
 export async function ensureProjectsTable() {
@@ -216,6 +219,7 @@ export async function ensureProjectsTable() {
       }
       if (missingAlters.length > 0) {
         await client.migrate(missingAlters);
+      }
       }
     })().catch((error) => {
       featureTablesReady = null;
