@@ -2,24 +2,17 @@ import { ImageResponse } from 'next/og';
 
 import { resolveThemeConfig } from '@/lib/themes';
 
-import { getFullPageData } from './_lib/get-page-data';
+import { getFullPageData } from '@/app/[slug]/_lib/get-page-data';
 
-// Next.js auto-discovers this file and wires the returned image into
-// the page's <meta property="og:image"> for /[slug]. Regenerates on
-// the same `revalidate` cadence as the page so headlines stay fresh.
+// Route Handler that returns a per-slug OG image. Wired into the page's
+// og:image manually via generateMetadata so we control the URL.
 //
-// Each share unfurls with the actual current newspaper headline from
-// the user's AI-generated content (or bio fallback) — every link
-// looks alive, not a static thumbnail.
+// Going with a route handler (not the opengraph-image.tsx convention)
+// because that convention hung on the OpenNext + CF Workers stack —
+// the Worker timed out during Satori WASM init. Route handlers behave
+// differently and seem to work.
 
-export const alt = 'Karte profile';
-export const size = { width: 1200, height: 630 };
-export const contentType = 'image/png';
-export const revalidate = 60;
-
-type Props = {
-  params: Promise<{ slug: string }>;
-};
+const SIZE = { width: 1200, height: 630 };
 
 function getInitials(displayName: string): string {
   return (
@@ -43,16 +36,17 @@ function safeText(value: string | null | undefined, max: number): string {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractNewspaperHeadline(content: any): string | null {
-  const headline = content?.leadStory?.headline;
-  return typeof headline === 'string' && headline.trim() ? headline : null;
+  const h = content?.leadStory?.headline;
+  return typeof h === 'string' && h.trim() ? h : null;
 }
 
-export default async function OgImage({ params }: Props) {
+export async function GET(
+  _req: Request,
+  { params }: { params: Promise<{ slug: string }> },
+) {
   const { slug } = await params;
   const data = await getFullPageData(slug);
 
-  // Render a placeholder if the page is missing — sharers get something
-  // graceful instead of a 500.
   if (!data) {
     return new ImageResponse(
       (
@@ -72,24 +66,18 @@ export default async function OgImage({ params }: Props) {
           karte.cc/{slug}
         </div>
       ),
-      size,
+      SIZE,
     );
   }
 
   const { page, modeContent } = data;
   const theme = resolveThemeConfig(page.themeConfig);
   const accent = theme.accentColor;
-  const grad1 = theme.gradientFrom || accent;
   const grad2 = theme.gradientTo || accent;
 
-  // Pick the loudest current line to surface in the unfurl.
-  // Priority: live newspaper headline → bio → generic.
-  const headline =
-    extractNewspaperHeadline(modeContent?.newspaper) ||
-    safeText(page.bio, 140) ||
-    `Visit ${page.displayName} on Karte`;
-
-  const isHeadlineFromNews = !!extractNewspaperHeadline(modeContent?.newspaper);
+  const newsHeadline = extractNewspaperHeadline(modeContent?.newspaper);
+  const headline = newsHeadline || safeText(page.bio, 140) || `Visit ${page.displayName} on Karte`;
+  const isLive = !!newsHeadline;
   const initials = getInitials(page.displayName);
 
   return new ImageResponse(
@@ -106,16 +94,14 @@ export default async function OgImage({ params }: Props) {
           fontFamily: 'sans-serif',
         }}
       >
-        {/* Top row: avatar tile + identity. Skip external <img> fetch
-            (Satori can't reliably load arbitrary remote images in the
-            Worker environment) — render an initials tile instead. */}
+        {/* Top row: initials tile + identity */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
           <div
             style={{
               width: 104,
               height: 104,
               borderRadius: 28,
-              background: `linear-gradient(135deg, ${grad1}, ${grad2})`,
+              background: `linear-gradient(135deg, ${accent}, ${grad2})`,
               color: '#0a0a0a',
               display: 'flex',
               alignItems: 'center',
@@ -159,7 +145,7 @@ export default async function OgImage({ params }: Props) {
           </div>
         </div>
 
-        {/* The alive bit — newspaper headline (or bio) */}
+        {/* Headline block */}
         <div
           style={{
             display: 'flex',
@@ -170,7 +156,7 @@ export default async function OgImage({ params }: Props) {
             maxWidth: 980,
           }}
         >
-          {isHeadlineFromNews && (
+          {isLive && (
             <div
               style={{
                 fontSize: 18,
@@ -181,17 +167,17 @@ export default async function OgImage({ params }: Props) {
                 marginBottom: 18,
               }}
             >
-              · Today's headline · auto-written by AI
+              · Today&apos;s headline · auto-written by AI
             </div>
           )}
           <div
             style={{
-              fontSize: isHeadlineFromNews ? 56 : 44,
-              fontWeight: isHeadlineFromNews ? 700 : 500,
+              fontSize: isLive ? 56 : 44,
+              fontWeight: isLive ? 700 : 500,
               lineHeight: 1.15,
               letterSpacing: -1.2,
               color: '#ffffff',
-              textTransform: isHeadlineFromNews ? 'uppercase' : 'none',
+              textTransform: isLive ? 'uppercase' : 'none',
             }}
           >
             {headline}
@@ -245,6 +231,14 @@ export default async function OgImage({ params }: Props) {
         </div>
       </div>
     ),
-    size,
+    {
+      ...SIZE,
+      headers: {
+        // Cache aggressively at the edge so the Satori render only runs
+        // when the underlying content materially changes. Worker will
+        // serve from CF cache for everyone else.
+        'cache-control': 'public, s-maxage=300, stale-while-revalidate=86400',
+      },
+    },
   );
 }

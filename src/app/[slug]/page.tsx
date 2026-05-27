@@ -41,10 +41,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!data) return {};
 
   const { page } = data;
-  // og:image is supplied by ./opengraph-image.tsx (auto-discovered by
-  // Next.js) — leave images out of openGraph here so the dynamic
-  // render with the live newspaper headline wins, not the static
-  // avatar URL.
+  // og:image is generated dynamically by /api/og/[slug] — pulls the
+  // live newspaper headline + theme colors, regenerated every time
+  // the page content materially changes. Every share unfurls with
+  // the current state, not a static thumb.
   return {
     title: page.displayName,
     description:
@@ -52,6 +52,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: page.displayName,
       description: page.bio ?? undefined,
+      images: [
+        {
+          url: `/api/og/${slug}`,
+          width: 1200,
+          height: 630,
+          alt: page.displayName,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: page.displayName,
+      description: page.bio ?? undefined,
+      images: [`/api/og/${slug}`],
     },
   };
 }
