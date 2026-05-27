@@ -1,11 +1,13 @@
 import { and,eq } from 'drizzle-orm';
 
-import { db } from '@/db';
-import { pages, users } from '@/db/schema';
+import { db, ensureProjectsTable } from '@/db';
+import { conversations, pages, users } from '@/db/schema';
 import { resolveAiConfig, streamResponse } from '@/lib/ai-client';
 import { buildProfileMemory } from '@/lib/profile-memory';
 import { rateLimit } from '@/lib/rate-limit';
 import { search } from '@/lib/saasmaker';
+
+const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
 export async function POST(req: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -19,7 +21,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ slug: s
     });
   }
 
-  let body: { query?: unknown };
+  let body: { query?: unknown; visitorEmail?: unknown; conversationId?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -28,7 +30,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ slug: s
       headers: { 'Content-Type': 'application/json' },
     });
   }
-  const { query } = body;
+  const { query, visitorEmail, conversationId } = body;
 
   if (typeof query !== 'string' || !query.trim()) {
     return new Response(JSON.stringify({ error: 'query required' }), {
@@ -49,6 +51,49 @@ export async function POST(req: Request, { params }: { params: Promise<{ slug: s
   if (!page || !page.chatEnabled) {
     return new Response(JSON.stringify({ error: 'Chat not available' }), {
       status: 404,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  // Email gate: chat is a lead-capture surface, so we require a visitor email
+  // before letting the AI respond. Accept it either from the request (header
+  // or body) or from the conversation row (set on first message). For new
+  // conversations with no row yet, the client must include `visitorEmail`.
+  await ensureProjectsTable();
+
+  const headerEmail = req.headers.get('x-visitor-email')?.trim().toLowerCase() ?? '';
+  const bodyEmail =
+    typeof visitorEmail === 'string' ? visitorEmail.trim().toLowerCase() : '';
+  const providedEmail = bodyEmail || headerEmail;
+
+  let storedEmail: string | null = null;
+  if (typeof conversationId === 'string' && conversationId) {
+    const [existing] = await db
+      .select({ visitorEmail: conversations.visitorEmail, pageId: conversations.pageId })
+      .from(conversations)
+      .where(eq(conversations.id, conversationId));
+
+    if (existing && existing.pageId === page.id) {
+      storedEmail = existing.visitorEmail ?? null;
+
+      // Lazy-persist email onto an existing conversation that doesn't have one yet
+      // (covers conversations created before this feature shipped).
+      if (!storedEmail && providedEmail && EMAIL_RE.test(providedEmail) && providedEmail.length <= 254) {
+        await db
+          .update(conversations)
+          .set({ visitorEmail: providedEmail })
+          .where(eq(conversations.id, conversationId));
+        storedEmail = providedEmail;
+      }
+    }
+  }
+
+  const effectiveEmail =
+    storedEmail || (providedEmail && EMAIL_RE.test(providedEmail) && providedEmail.length <= 254 ? providedEmail : '');
+
+  if (!effectiveEmail) {
+    return new Response(JSON.stringify({ error: 'Email required to chat' }), {
+      status: 400,
       headers: { 'Content-Type': 'application/json' },
     });
   }

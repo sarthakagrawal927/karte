@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useCallback,useEffect, useRef, useState } from 'react';
 
+import { ChatEmailGate } from '@/components/public/chat-email-gate';
 import { ContactFormSection } from '@/components/public/contact-form-section';
 import type { DmMode } from '@/db/schema';
 import { trackEvent } from '@/lib/analytics';
@@ -79,6 +80,11 @@ export function ChatWidget({
   >('idle');
   const [shareCopied, setShareCopied] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
+  // Email gate: required once per browser before a visitor can chat.
+  // Mirrored to localStorage (`karte_visitor_email`) for stickiness and
+  // persisted server-side on the conversation row (see `/api/chat/[slug]/conversations`).
+  const [visitorEmail, setVisitorEmail] = useState<string | null>(null);
+  const [emailHydrated, setEmailHydrated] = useState(false);
   const historyAttemptedRef = useRef(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -145,6 +151,31 @@ export function ChatWidget({
   useEffect(() => {
     visitorIdRef.current = getOrCreateVisitorId();
   }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const stored = window.localStorage.getItem('karte_visitor_email');
+      if (stored && /^\S+@\S+\.\S+$/.test(stored)) {
+        setVisitorEmail(stored);
+      }
+    } catch {
+      // localStorage may be disabled; gate will simply re-prompt.
+    }
+    setEmailHydrated(true);
+  }, []);
+
+  function handleEmailCaptured(email: string) {
+    setVisitorEmail(email);
+    if (typeof window !== 'undefined') {
+      try {
+        window.localStorage.setItem('karte_visitor_email', email);
+      } catch {
+        // best-effort
+      }
+    }
+    window.setTimeout(() => inputRef.current?.focus(), 0);
+  }
 
   const loadRoomHistory = useCallback(
     async (roomId: string) => {
@@ -255,13 +286,16 @@ export function ChatWidget({
     [slug],
   );
 
-  async function ensureConversation(): Promise<string> {
+  async function ensureConversation(email: string): Promise<string> {
     if (conversationId) return conversationId;
 
     const res = await fetch(`/api/chat/${slug}/conversations`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ visitorId: visitorIdRef.current }),
+      body: JSON.stringify({
+        visitorId: visitorIdRef.current,
+        visitorEmail: email,
+      }),
     });
 
     if (!res.ok) throw new Error('Failed to create conversation');
@@ -275,6 +309,7 @@ export function ChatWidget({
   const sendQuery = useCallback(async (rawQuery: string) => {
     const query = rawQuery.trim();
     if (!query || loading) return;
+    if (!visitorEmail) return; // Hard guard — gate UI should prevent this path.
 
     const cacheKey = `karte:chat:${slug}:${query}`;
     const cached = typeof window !== 'undefined' ? window.localStorage.getItem(cacheKey) : null;
@@ -289,13 +324,17 @@ export function ChatWidget({
     setLoading(true);
 
     try {
-      const convId = await ensureConversation();
+      const convId = await ensureConversation(visitorEmail);
       void saveMessage(convId, 'user', query);
 
       const res = await fetch(`/api/chat/${slug}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({
+          query,
+          visitorEmail,
+          conversationId: convId,
+        }),
       });
 
       if (!res.ok) {
@@ -360,7 +399,7 @@ export function ChatWidget({
     } finally {
       setLoading(false);
     }
-  }, [ensureConversation, loading, saveMessage, slug]);
+  }, [ensureConversation, loading, saveMessage, slug, visitorEmail]);
 
   async function handleSend() {
     await sendQuery(input);
@@ -626,6 +665,13 @@ export function ChatWidget({
                     Join chat
                   </button>
                 </div>
+              ) : emailHydrated && !visitorEmail ? (
+                <ChatEmailGate
+                  displayName={displayName}
+                  accentColor={accentColor}
+                  accentTextColor={accentTextColor}
+                  onSubmit={handleEmailCaptured}
+                />
               ) : (
                 <form
                   onSubmit={(e) => {
