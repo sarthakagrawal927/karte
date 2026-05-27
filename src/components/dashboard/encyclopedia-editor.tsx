@@ -177,7 +177,7 @@ export function EncyclopediaEditor({
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="mb-6 text-2xl font-bold text-white">
+      <h1 className="mb-6 text-2xl font-bold text-karte-text">
         Encyclopedia Editor
       </h1>
 
@@ -185,8 +185,8 @@ export function EncyclopediaEditor({
         {/* Article Body (Novel Editor) */}
         <Card>
           <div className="mb-3">
-            <h3 className="text-sm font-medium text-white">Article Body</h3>
-            <p className="mb-2 text-xs text-gray-400">
+            <h3 className="text-sm font-medium text-karte-text">Article Body</h3>
+            <p className="mb-2 text-xs text-karte-text-3">
               Write your encyclopedia article. Use / for slash commands (headings, lists, quotes).
               Select text for formatting options.
             </p>
@@ -202,8 +202,8 @@ export function EncyclopediaEditor({
         <Card>
           <div className="mb-3 flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-medium text-white">Infobox</h3>
-              <p className="mb-2 text-xs text-gray-400">
+              <h3 className="text-sm font-medium text-karte-text">Infobox</h3>
+              <p className="mb-2 text-xs text-karte-text-3">
                 Key facts displayed in the sidebar info panel
               </p>
             </div>
@@ -213,7 +213,7 @@ export function EncyclopediaEditor({
           </div>
 
           {infoboxEntries.length === 0 && (
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-karte-text-4">
               No entries yet. Click &quot;+ Add Row&quot; to start.
             </p>
           )}
@@ -238,7 +238,7 @@ export function EncyclopediaEditor({
                 <button
                   type="button"
                   onClick={() => removeInfoboxRow(key)}
-                  className="mt-1.5 shrink-0 rounded-lg p-2 text-gray-400 transition hover:bg-red-500/10 hover:text-red-400"
+                  className="mt-1.5 shrink-0 rounded-lg p-2 text-karte-text-3 transition hover:bg-red-500/10 hover:text-red-400"
                   aria-label={`Remove ${key}`}
                 >
                   <svg
@@ -263,7 +263,7 @@ export function EncyclopediaEditor({
         {/* Categories */}
         <Card>
           <Label htmlFor="categoryInput">Categories</Label>
-          <p className="mb-2 text-xs text-gray-400">
+          <p className="mb-2 text-xs text-karte-text-3">
             Tags for the article. Type and press Enter or click Add. Comma-separated values also work.
           </p>
 
@@ -272,7 +272,7 @@ export function EncyclopediaEditor({
               {content.categories.map((cat) => (
                 <Badge
                   key={cat}
-                  className="bg-white/10 text-white"
+                  className="bg-white/10 text-karte-text"
                   onRemove={() => removeCategory(cat)}
                   removeLabel={`Remove category ${cat}`}
                 >

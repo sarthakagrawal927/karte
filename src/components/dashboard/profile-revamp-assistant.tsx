@@ -58,10 +58,10 @@ function ThemeSwatch({ plan }: { plan: RevampPlan }) {
         title={`Accent: ${accent}`}
       />
       <div className="min-w-0">
-        <p className="text-xs font-semibold text-white">
+        <p className="text-xs font-semibold text-karte-text">
           {isCustom ? 'Custom colors' : preset.label}
         </p>
-        <p className="mt-0.5 text-[10px] text-gray-500">
+        <p className="mt-0.5 text-[10px] text-karte-text-4">
           {isCustom ? `${from} → ${to}` : preset.description}
         </p>
       </div>
@@ -130,8 +130,8 @@ export function ProfileRevampAssistant({
         <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-cyan-200">
           Generative UI
         </p>
-        <h1 className="mt-3 text-3xl font-bold text-white">Design your page</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-400">
+        <h1 className="mt-3 text-3xl font-bold text-karte-text">Design your page</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-7 text-karte-text-3">
           Describe the look, feel, or vibe you want. The AI picks a theme, generates
           custom colors if needed, and adds layout blocks to your public page.
         </p>
@@ -140,8 +140,8 @@ export function ProfileRevampAssistant({
       <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
         <section className="rounded-2xl border border-white/15 bg-white/[0.05] p-5 backdrop-blur-xl">
           <div>
-            <h2 className="text-lg font-semibold text-white">Design prompt</h2>
-            <p className="mt-1 text-xs text-gray-500">
+            <h2 className="text-lg font-semibold text-karte-text">Design prompt</h2>
+            <p className="mt-1 text-xs text-karte-text-4">
               Current theme: {currentTheme}
             </p>
           </div>
@@ -150,12 +150,12 @@ export function ProfileRevampAssistant({
             value={prompt}
             onChange={(event) => setPrompt(event.target.value)}
             rows={6}
-            className="mt-5 w-full rounded-xl border border-white/15 bg-black/25 px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-gray-600 focus:border-white/35"
+            className="mt-5 w-full rounded-xl border border-white/15 bg-black/25 px-4 py-3 text-sm leading-6 text-karte-text outline-none transition placeholder:text-karte-text-4 focus:border-white/35"
             placeholder="E.g. dark purple luxury brand with gold accents, minimal and editorial…"
           />
 
           <div className="mt-4">
-            <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.22em] text-gray-600">
+            <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
               Starter prompts
             </p>
             <div className="flex flex-wrap gap-2">
@@ -164,7 +164,7 @@ export function ProfileRevampAssistant({
                   key={item}
                   type="button"
                   onClick={() => setPrompt(item)}
-                  className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-gray-300 transition hover:border-white/25 hover:text-white"
+                  className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-karte-text-2 transition hover:border-white/25 hover:text-karte-text"
                 >
                   {item}
                 </button>
@@ -192,7 +192,7 @@ export function ProfileRevampAssistant({
           </div>
 
           {message && (
-            <p className={`mt-4 text-sm ${message.includes('applied') ? 'text-cyan-300' : 'text-gray-300'}`}>
+            <p className={`mt-4 text-sm ${message.includes('applied') ? 'text-cyan-300' : 'text-karte-text-2'}`}>
               {message}
             </p>
           )}
@@ -211,8 +211,8 @@ export function ProfileRevampAssistant({
                   />
                 ))}
               </div>
-              <h2 className="text-lg font-semibold text-white">No design yet</h2>
-              <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-gray-500">
+              <h2 className="text-lg font-semibold text-karte-text">No design yet</h2>
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-karte-text-4">
                 Describe your style and generate a plan. You can preview the colors
                 and blocks before applying to your live page.
               </p>
@@ -221,24 +221,24 @@ export function ProfileRevampAssistant({
             <div>
               <div className="border-b border-white/10 pb-5">
                 <ThemeSwatch plan={plan} />
-                <h2 className="mt-4 text-2xl font-semibold text-white">
+                <h2 className="mt-4 text-2xl font-semibold text-karte-text">
                   {plan.headline}
                 </h2>
               </div>
 
-              <p className="mt-5 text-sm leading-7 text-gray-300">
+              <p className="mt-5 text-sm leading-7 text-karte-text-2">
                 {plan.rationale}
               </p>
 
               <div className="mt-5">
-                <p className="text-xs font-medium uppercase tracking-[0.22em] text-gray-500">
+                <p className="text-xs font-medium uppercase tracking-[0.22em] text-karte-text-4">
                   Emphasis order
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {plan.emphasis.map((item, index) => (
                     <span
                       key={`${item}-${index}`}
-                      className="rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-xs text-gray-300"
+                      className="rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-xs text-karte-text-2"
                     >
                       {index + 1}. {item}
                     </span>
@@ -252,13 +252,13 @@ export function ProfileRevampAssistant({
                     key={`${block.title}-${index}`}
                     className="rounded-xl border border-white/10 bg-black/20 p-4"
                   >
-                    <span className="rounded-full bg-white/10 px-2 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-gray-300">
+                    <span className="rounded-full bg-white/10 px-2 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-karte-text-2">
                       {block.type}
                     </span>
-                    <h3 className="mt-3 text-base font-semibold text-white">
+                    <h3 className="mt-3 text-base font-semibold text-karte-text">
                       {block.title}
                     </h3>
-                    <p className="mt-2 line-clamp-4 text-sm leading-6 text-gray-400">
+                    <p className="mt-2 line-clamp-4 text-sm leading-6 text-karte-text-3">
                       {block.content}
                     </p>
                     {block.buttonLabel && block.buttonUrl && (

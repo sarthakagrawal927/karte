@@ -110,7 +110,7 @@ function SectionCard({
           )}
           <div className="min-w-0">
             <div className="mb-2 flex items-center gap-2">
-              <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-gray-300">
+              <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-karte-text-2">
                 #{index + 1}
               </span>
               <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-cyan-200">
@@ -118,16 +118,16 @@ function SectionCard({
               </span>
               <span
                 className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                  section.enabled ? 'bg-green-500/15 text-green-300' : 'bg-gray-500/15 text-gray-400'
+                  section.enabled ? 'bg-green-500/15 text-green-300' : 'bg-gray-500/15 text-karte-text-3'
                 }`}
               >
                 {section.enabled ? 'Enabled' : 'Disabled'}
               </span>
             </div>
-            <p className="truncate text-lg font-semibold text-white">
+            <p className="truncate text-lg font-semibold text-karte-text">
               {section.title}
             </p>
-            <p className="mt-2 line-clamp-3 text-sm leading-6 text-gray-300">
+            <p className="mt-2 line-clamp-3 text-sm leading-6 text-karte-text-2">
               {section.content}
             </p>
             {section.type === 'cta' && section.buttonLabel && section.buttonUrl && (
@@ -142,7 +142,7 @@ function SectionCard({
           <button
             type="button"
             onClick={() => onEdit(section)}
-            className="rounded-lg border border-white/20 px-3 py-1.5 text-sm text-white transition hover:bg-white/10"
+            className="rounded-lg border border-white/20 px-3 py-1.5 text-sm text-karte-text transition hover:bg-white/10"
           >
             Edit
           </button>
@@ -378,11 +378,11 @@ export function SectionEditor({
       <div>
         {editingId && (
           <div className="mb-4 flex items-center justify-between">
-            <p className="text-sm font-medium text-white">Editing section</p>
+            <p className="text-sm font-medium text-karte-text">Editing section</p>
             <button
               type="button"
               onClick={resetForm}
-              className="rounded-lg border border-white/20 px-3 py-1.5 text-sm text-white transition hover:bg-white/10"
+              className="rounded-lg border border-white/20 px-3 py-1.5 text-sm text-karte-text transition hover:bg-white/10"
             >
               Cancel
             </button>
@@ -392,13 +392,13 @@ export function SectionEditor({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-medium text-gray-400">
+              <label className="mb-1 block text-xs font-medium text-karte-text-3">
                 Type
               </label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value as PageSectionType)}
-                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white outline-none focus:border-white/40"
+                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-karte-text outline-none focus:border-white/40"
               >
                 {PAGE_SECTION_TYPES.map((item) => (
                   <option key={item.value} value={item.value} className="bg-gray-900">
@@ -409,7 +409,7 @@ export function SectionEditor({
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-medium text-gray-400">
+              <label className="mb-1 block text-xs font-medium text-karte-text-3">
                 Enabled
               </label>
               <button
@@ -431,28 +431,28 @@ export function SectionEditor({
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">
+            <label className="mb-1 block text-xs font-medium text-karte-text-3">
               Title
             </label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Section heading"
-              className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-white/40"
+              className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">
+            <label className="mb-1 block text-xs font-medium text-karte-text-3">
               Content
             </label>
             {isSocial && (
-              <p className="mb-2 text-xs text-gray-500">
+              <p className="mb-2 text-xs text-karte-text-4">
                 One social link per line using `Label | https://example.com`.
               </p>
             )}
             {isBlog && (
-              <p className="mb-2 text-xs text-gray-500">
+              <p className="mb-2 text-xs text-karte-text-4">
                 One post per line using `Title | https://example.com/post | Short description | Date`.
               </p>
             )}
@@ -471,13 +471,13 @@ export function SectionEditor({
                     ? 'Tell visitors what to send you...'
                     : 'Section body copy...'
               }
-              className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-white/40"
+              className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40"
             />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-medium text-gray-400">
+              <label className="mb-1 block text-xs font-medium text-karte-text-3">
                 Button Label {isCta ? '' : '(CTA only)'}
               </label>
               <input
@@ -485,12 +485,12 @@ export function SectionEditor({
                 onChange={(e) => setButtonLabel(e.target.value)}
                 disabled={!isCta}
                 placeholder="e.g. View Case Study"
-                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-white/40 disabled:opacity-50"
+                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40 disabled:opacity-50"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-medium text-gray-400">
+              <label className="mb-1 block text-xs font-medium text-karte-text-3">
                 Button URL {isCta ? '' : '(CTA only)'}
               </label>
               <input
@@ -498,7 +498,7 @@ export function SectionEditor({
                 onChange={(e) => setButtonUrl(e.target.value)}
                 disabled={!isCta}
                 placeholder="https://example.com"
-                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-white/40 disabled:opacity-50"
+                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/40 disabled:opacity-50"
               />
             </div>
           </div>
@@ -517,7 +517,7 @@ export function SectionEditor({
 
       {sections.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-white/20 bg-white/[0.03] p-8 text-center">
-          <p className="text-gray-400">No sections yet. Add the first one above.</p>
+          <p className="text-karte-text-3">No sections yet. Add the first one above.</p>
         </div>
       ) : (
         <DndContext

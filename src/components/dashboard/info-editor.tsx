@@ -36,7 +36,7 @@ function typeBadgeColor(type: string) {
     case 'boundaries':
       return 'bg-rose-500/20 text-rose-300';
     default:
-      return 'bg-gray-500/20 text-gray-300';
+      return 'bg-gray-500/20 text-karte-text-2';
   }
 }
 
@@ -113,7 +113,7 @@ export function InfoEditor({
                     {typeLabel(block.type)}
                   </span>
                   {block.title && (
-                    <span className="text-sm font-medium text-white">
+                    <span className="text-sm font-medium text-karte-text">
                       {block.title}
                     </span>
                   )}
@@ -125,7 +125,7 @@ export function InfoEditor({
                   Remove
                 </button>
               </div>
-              <p className="line-clamp-3 text-sm text-gray-400">
+              <p className="line-clamp-3 text-sm text-karte-text-3">
                 {block.content}
               </p>
             </div>
@@ -138,18 +138,18 @@ export function InfoEditor({
         onSubmit={addBlock}
         className="space-y-4 rounded-xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl"
       >
-        <h3 className="text-sm font-semibold text-white">
+        <h3 className="text-sm font-semibold text-karte-text">
           Add Profile Memory
         </h3>
 
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-400">
+          <label className="mb-1 block text-xs font-medium text-karte-text-3">
             Type
           </label>
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-white/30"
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text outline-none focus:border-white/30"
           >
             {BLOCK_TYPES.map((t) => (
               <option key={t.value} value={t.value} className="bg-gray-900">
@@ -160,7 +160,7 @@ export function InfoEditor({
         </div>
 
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-400">
+          <label className="mb-1 block text-xs font-medium text-karte-text-3">
             Title (optional)
           </label>
           <input
@@ -168,12 +168,12 @@ export function InfoEditor({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Work Experience"
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-white/30"
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-400">
+          <label className="mb-1 block text-xs font-medium text-karte-text-3">
             Content
           </label>
           <textarea
@@ -181,7 +181,7 @@ export function InfoEditor({
             onChange={(e) => setContent(e.target.value)}
             placeholder="Add source-backed details the chat and profile modes can use..."
             rows={5}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-white/30"
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-karte-text placeholder-gray-500 outline-none focus:border-white/30"
           />
         </div>
 

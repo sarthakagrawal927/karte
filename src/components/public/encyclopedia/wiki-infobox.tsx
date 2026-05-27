@@ -14,7 +14,7 @@ export function WikiInfobox({ infobox, displayName, avatarUrl, accentColor }: Wi
       style={{ fontSize: '14px' }}
     >
       <caption
-        className="border border-[#a2a9b1] px-3 py-3 text-center text-base font-bold text-white"
+        className="border border-[#a2a9b1] px-3 py-3 text-center text-base font-bold text-karte-text"
         style={{
           fontFamily: 'sans-serif',
           captionSide: 'top',

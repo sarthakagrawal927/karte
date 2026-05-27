@@ -24,8 +24,8 @@ function VariantMetric({
 }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-      <p className="text-[11px] uppercase tracking-[0.24em] text-gray-500">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-white">{value}</p>
+      <p className="text-[11px] uppercase tracking-[0.24em] text-karte-text-4">{label}</p>
+      <p className="mt-2 text-2xl font-semibold text-karte-text">{value}</p>
     </div>
   );
 }
@@ -43,9 +43,9 @@ export default async function ExperimentsPage() {
   if (!page) {
     return (
       <div className="space-y-6 sm:space-y-8">
-        <h1 className="text-2xl font-bold text-white">Experiments</h1>
+        <h1 className="text-2xl font-bold text-karte-text">Experiments</h1>
         <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
-          <p className="text-gray-400">Create and publish a page before testing variants.</p>
+          <p className="text-karte-text-3">Create and publish a page before testing variants.</p>
         </div>
       </div>
     );
@@ -70,8 +70,8 @@ export default async function ExperimentsPage() {
   return (
     <div className="space-y-6 sm:space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-white">Profile Experiments</h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-400">
+        <h1 className="text-2xl font-bold text-karte-text">Profile Experiments</h1>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-karte-text-3">
           Test profile framing with variant links and compare conversion events from the same
           analytics stream.
         </p>
@@ -106,8 +106,8 @@ export default async function ExperimentsPage() {
                   <p className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">
                     {variant.audience}
                   </p>
-                  <h2 className="mt-3 text-xl font-semibold text-white">{variant.label}</h2>
-                  <p className="mt-3 text-sm leading-6 text-gray-400">{variant.hypothesis}</p>
+                  <h2 className="mt-3 text-xl font-semibold text-karte-text">{variant.label}</h2>
+                  <p className="mt-3 text-sm leading-6 text-karte-text-3">{variant.hypothesis}</p>
                 </div>
                 <Link
                   href={previewUrl}
@@ -125,8 +125,8 @@ export default async function ExperimentsPage() {
               </div>
 
               <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-                <p className="text-xs uppercase tracking-[0.22em] text-gray-500">Share URL</p>
-                <p className="mt-2 break-all text-sm text-gray-300">{previewUrl}</p>
+                <p className="text-xs uppercase tracking-[0.22em] text-karte-text-4">Share URL</p>
+                <p className="mt-2 break-all text-sm text-karte-text-2">{previewUrl}</p>
               </div>
             </div>
           );

@@ -19,15 +19,15 @@ export default async function ChatsPage() {
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold text-white">Chats</h1>
-      <p className="mb-6 text-sm text-gray-400">
+      <h1 className="mb-1 text-2xl font-bold text-karte-text">Chats</h1>
+      <p className="mb-6 text-sm text-karte-text-3">
         View conversations visitors have had with your AI chatbot.
       </p>
       {page ? (
         <ChatList pageId={page.id} />
       ) : (
         <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center backdrop-blur-xl">
-          <p className="text-gray-400">Create a page first to start receiving chats.</p>
+          <p className="text-karte-text-3">Create a page first to start receiving chats.</p>
         </div>
       )}
     </div>

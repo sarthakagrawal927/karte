@@ -245,8 +245,8 @@ export function PageToggles({
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="mb-2 text-2xl font-bold text-white">Profile Modes</h1>
-      <p className="mb-6 text-sm text-gray-400">
+      <h1 className="mb-2 text-2xl font-bold text-karte-text">Profile Modes</h1>
+      <p className="mb-6 text-sm text-karte-text-3">
         Enable the alternate ways visitors can experience your identity. Each
         mode is accessible at{' '}
         <code className="text-white/60">/{slug}/&lt;page&gt;</code>
@@ -261,8 +261,8 @@ export function PageToggles({
             <Card key={feature.key}>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0">
-                  <h3 className="text-sm font-medium text-white">{feature.label}</h3>
-                  <p className="mt-1 text-xs text-gray-400">{feature.description}</p>
+                  <h3 className="text-sm font-medium text-karte-text">{feature.label}</h3>
+                  <p className="mt-1 text-xs text-karte-text-3">{feature.description}</p>
                 </div>
                 <Toggle
                   checked={enabled}
@@ -289,7 +289,7 @@ export function PageToggles({
                       href={`/${slug}/${feature.path}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-white transition hover:bg-white/10"
+                      className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-karte-text transition hover:bg-white/10"
                     >
                       Preview
                     </a>

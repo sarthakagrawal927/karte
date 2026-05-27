@@ -23,8 +23,8 @@ export default async function DomainsPage() {
   if (!page) {
     return (
       <div>
-        <h1 className="mb-2 text-2xl font-bold text-white">Domains</h1>
-        <p className="text-sm text-gray-400">
+        <h1 className="mb-2 text-2xl font-bold text-karte-text">Domains</h1>
+        <p className="text-sm text-karte-text-3">
           Create a page first from the Appearance tab.
         </p>
       </div>
@@ -46,8 +46,8 @@ export default async function DomainsPage() {
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold text-white">Custom Domains</h1>
-      <p className="mb-6 text-sm text-gray-400">
+      <h1 className="mb-1 text-2xl font-bold text-karte-text">Custom Domains</h1>
+      <p className="mb-6 text-sm text-karte-text-3">
         Connect a domain you own to your published profile. Slug routes (
         <code className="rounded bg-white/10 px-1">/{page.slug}</code>) keep
         working while Cloudflare verifies and routes your custom hostname.

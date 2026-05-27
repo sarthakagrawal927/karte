@@ -110,7 +110,7 @@ export function RoastPageClient({
               <p className="text-xs font-black uppercase tracking-[0.28em] text-[#00ffd5]">
                 Karte Roast Lab
               </p>
-              <h2 className="mt-3 text-2xl font-black uppercase leading-tight text-white sm:text-4xl">
+              <h2 className="mt-3 text-2xl font-black uppercase leading-tight text-karte-text sm:text-4xl">
                 Roasting {displayName}
               </h2>
             </div>
@@ -172,7 +172,7 @@ export function RoastPageClient({
         <div className="w-full max-w-md -rotate-1 space-y-6 border-4 border-[#f9ff00] bg-[#210815] p-8 text-center shadow-[14px_14px_0_#00ffd5] sm:p-12">
           <div className="text-6xl">🔥</div>
           <div className="space-y-2">
-            <h1 className="text-3xl font-black uppercase tracking-[-0.02em] text-white sm:text-4xl">
+            <h1 className="text-3xl font-black uppercase tracking-[-0.02em] text-karte-text sm:text-4xl">
               {displayName}&apos;s Roast
             </h1>
             <p className="text-[#f9ff00]">An unserious audit of a very serious profile.</p>
@@ -202,7 +202,7 @@ export function RoastPageClient({
 
   // Roast display
   return (
-    <div className="w-full text-white">
+    <div className="w-full text-karte-text">
       <div className="mx-auto max-w-5xl space-y-8 px-4 py-10 sm:py-16">
         <div ref={captureRef} className="space-y-8 bg-[#12020b] px-2 py-2 sm:px-6 sm:py-6">
           <div className="mx-auto max-w-4xl border-4 border-white bg-[#210815] px-5 py-8 text-center shadow-[16px_16px_0_#f9ff00]">
@@ -228,7 +228,7 @@ export function RoastPageClient({
           <RoastScoreCard vibeScore={roast.vibeScore} accentColor={accentColor} />
 
           <div className="mx-auto max-w-3xl rotate-1 border-4 border-[#00ffd5] bg-black p-6 shadow-[12px_12px_0_#ff2aa3]">
-            <p className="text-base font-medium leading-relaxed text-white sm:text-lg">
+            <p className="text-base font-medium leading-relaxed text-karte-text sm:text-lg">
               “{roast.roast}”
             </p>
           </div>

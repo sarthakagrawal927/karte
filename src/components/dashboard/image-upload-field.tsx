@@ -119,10 +119,10 @@ export function ImageUploadField({
   return (
     <div>
       <div className="mb-2 flex items-center justify-between gap-3">
-        <label htmlFor={inputId} className="block text-sm font-medium text-white">
+        <label htmlFor={inputId} className="block text-sm font-medium text-karte-text">
           {label}
         </label>
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-karte-text-4">
           Upload from device or paste a URL
         </span>
       </div>
@@ -143,7 +143,7 @@ export function ImageUploadField({
           type="button"
           disabled={!canUpload || uploading}
           onClick={() => fileInputRef.current?.click()}
-          className="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-karte-text transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {uploading ? 'Uploading...' : `Upload ${kind === 'avatar' ? 'Avatar' : 'Image'}`}
         </button>
@@ -158,7 +158,7 @@ export function ImageUploadField({
         >
           Clear
         </button>
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-karte-text-4">
           Up to {MAX_IMAGE_UPLOAD_SIZE_MB}MB. JPG, PNG, WebP, GIF, AVIF.
         </span>
       </div>
@@ -182,10 +182,10 @@ export function ImageUploadField({
           }
         }}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 text-sm text-white placeholder-gray-400 outline-none focus:border-blue-400"
+        className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 text-sm text-karte-text placeholder-gray-400 outline-none focus:border-blue-400"
       />
 
-      <p className="mt-2 text-xs text-gray-500">
+      <p className="mt-2 text-xs text-karte-text-4">
         {helpText ?? 'Upload an image from this device or paste a public URL.'}
         {!canUpload && ' Create the page first to unlock uploads.'}
       </p>

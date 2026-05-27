@@ -54,7 +54,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-zinc-200 antialiased lg:flex">
+    <div className="min-h-screen bg-[#0a0a0a] text-karte-text antialiased lg:flex">
       <NavProgress />
       <DashboardTracker />
       <Sidebar slug={page?.slug} />
@@ -180,7 +180,7 @@ async function syncUserOnce(params: {
       appUserSettings.smProjectId,
       appUserSettings.smApiKey,
       appUserSettings.smIndexId,
-      Date.now(), // eslint-disable-line react-hooks/purity
+      Date.now(),
       appUserSettings.aiEndpointUrl,
       appUserSettings.aiApiKey,
       appUserSettings.aiModel,

@@ -17,8 +17,8 @@ export default async function ProjectsPage() {
   if (!page) {
     return (
       <div>
-        <h1 className="mb-2 text-2xl font-bold text-white">Projects</h1>
-        <p className="text-sm text-gray-400">
+        <h1 className="mb-2 text-2xl font-bold text-karte-text">Projects</h1>
+        <p className="text-sm text-karte-text-3">
           Create a page first from the Appearance tab.
         </p>
       </div>
@@ -35,8 +35,8 @@ export default async function ProjectsPage() {
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold text-white">Projects</h1>
-      <p className="mb-6 text-sm text-gray-400">
+      <h1 className="mb-1 text-2xl font-bold text-karte-text">Projects</h1>
+      <p className="mb-6 text-sm text-karte-text-3">
         Showcase work with a title, link, image, and description. Drag to reorder.
       </p>
       <ProjectEditor pageId={page.id} initialProjects={pageProjects} />

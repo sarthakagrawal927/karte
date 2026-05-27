@@ -454,7 +454,7 @@ export function ChatWidget({
         >
           <div className="border-b border-white/10 px-4 py-3">
             <div className="flex items-center justify-between gap-3">
-              <h3 className="text-sm font-semibold text-white">
+              <h3 className="text-sm font-semibold text-karte-text">
                 {title}
               </h3>
               <div className="flex items-center gap-2">
@@ -471,7 +471,7 @@ export function ChatWidget({
                       className={`rounded-full border px-2.5 py-1 text-[11px] font-medium transition ${
                         shareCopied
                           ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
-                          : 'border-white/10 text-white/70 hover:text-white'
+                          : 'border-white/10 text-white/70 hover:text-karte-text'
                       }`}
                       aria-label="Copy invite link to this chat"
                     >
@@ -480,7 +480,7 @@ export function ChatWidget({
                     <button
                       type="button"
                       onClick={startNewChat}
-                      className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] font-medium text-white/70 transition hover:text-white"
+                      className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] font-medium text-white/70 transition hover:text-karte-text"
                       aria-label="Start a new chat"
                     >
                       New
@@ -495,7 +495,7 @@ export function ChatWidget({
                       className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                         mode === 'chat'
                           ? 'bg-white text-gray-900'
-                          : 'text-white/70 hover:text-white'
+                          : 'text-white/70 hover:text-karte-text'
                       }`}
                     >
                       Chat
@@ -506,7 +506,7 @@ export function ChatWidget({
                       className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                         mode === 'contact'
                           ? 'bg-white text-gray-900'
-                          : 'text-white/70 hover:text-white'
+                          : 'text-white/70 hover:text-karte-text'
                       }`}
                     >
                       DM
@@ -516,7 +516,7 @@ export function ChatWidget({
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="ml-1 flex h-6 w-6 items-center justify-center rounded-full text-white/40 transition hover:bg-white/10 hover:text-white"
+                  className="ml-1 flex h-6 w-6 items-center justify-center rounded-full text-white/40 transition hover:bg-white/10 hover:text-karte-text"
                   aria-label="Close chat"
                 >
                   ✕
@@ -551,7 +551,7 @@ export function ChatWidget({
                     <div className="mt-4 flex flex-col items-center gap-4 px-2 text-center sm:mt-8">
                       <div className="text-5xl sm:text-4xl">👋</div>
                       <div className="space-y-1.5">
-                        <p className="text-base font-semibold text-white sm:text-sm">
+                        <p className="text-base font-semibold text-karte-text sm:text-sm">
                           Ask {displayName} anything
                         </p>
                         <p className="text-sm leading-5 text-white/60 sm:text-xs">
@@ -654,7 +654,7 @@ export function ChatWidget({
                       }}
                       placeholder={isFirstMessage ? `Ask ${displayName} a question…` : 'Type a message...'}
                       disabled={loading || historyStatus === 'loading'}
-                      className={`min-w-0 flex-1 resize-none rounded-lg border bg-white/5 px-3 py-3 text-base leading-5 text-white placeholder-white/40 outline-none transition focus:border-[#f2c879] sm:py-2 sm:text-sm ${
+                      className={`min-w-0 flex-1 resize-none rounded-lg border bg-white/5 px-3 py-3 text-base leading-5 text-karte-text placeholder-white/40 outline-none transition focus:border-[#f2c879] sm:py-2 sm:text-sm ${
                         isFirstMessage
                           ? 'border-white/30 ring-1 ring-white/15 focus:ring-2 focus:ring-[#f2c879]/40'
                           : 'border-white/10'
