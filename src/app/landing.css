@@ -6,35 +6,43 @@
    of the app's Tailwind / theme system.
    ───────────────────────────────────────────────────────────────────── */
 
-/* Scroll-snap container: each card fills the viewport, scrolling
-   moves one card at a time. The deck owns its own scroll so the
-   behavior never leaks to other routes (this CSS is only loaded
-   on the landing page anyway, but doubly safe). */
-.onyx-deck {
-  width: 100%;
-  height: 100dvh;
-  overflow-y: scroll;
+/* Scroll-snap: each card fills the viewport and scrolling snaps one
+   card at a time. We put snap on html (not .onyx-deck) so the
+   browser's native scroll handles everything — putting overflow:
+   scroll on an inner div interferes with body's natural scroll and
+   the snap fails silently. Scoped via :has() so other routes (no
+   .onyx-deck on the page) scroll normally. */
+html:has(.onyx-deck),
+html:has(.onyx-deck) body {
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   overscroll-behavior-y: contain;
+}
+/* Hide the scrollbar on landing pages — the deck should read as a
+   deck, not a scrollable list. */
+html:has(.onyx-deck) body { scrollbar-width: none; }
+html:has(.onyx-deck) body::-webkit-scrollbar { display: none; }
+
+.onyx-deck {
+  width: 100%;
   background: #0a0805;
   color: #e8dfca;
   font-family: var(--font-inter), system-ui, sans-serif;
   display: flex;
   flex-direction: column;
-  /* Hide the scrollbar visually but keep scroll behavior — keeps
-     the deck looking like cards, not like a scrollable list. */
-  scrollbar-width: none;
 }
-.onyx-deck::-webkit-scrollbar { display: none; }
 
 /* ── Card frame ───────────────────────────────────────────────────── */
 .onyx-screen {
   position: relative;
   width: 100%;
+  /* Exactly one viewport per card. If content is taller than the
+     viewport on a short laptop, the card body's internal flex
+     squeezes it — never grow taller than 100dvh, otherwise scroll-
+     snap stops working (next card never reaches the snap point). */
   height: 100dvh;
-  min-height: 720px;
-  padding: 56px 72px;
+  min-height: 600px;
+  padding: clamp(28px, 4vh, 48px) clamp(20px, 5vw, 72px);
   box-sizing: border-box;
   background: radial-gradient(120% 80% at 50% 0%, #1c1813 0%, #0d0a07 55%, #050403 100%);
   border-bottom: 1px solid rgba(196, 164, 107, 0.08);
@@ -42,7 +50,7 @@
   flex-direction: column;
   overflow: hidden;
   scroll-snap-align: start;
-  scroll-snap-stop: normal;
+  scroll-snap-stop: always;
 }
 
 .onyx-screen-sheen {
@@ -205,7 +213,7 @@
 .onyx-h2 {
   font-family: var(--font-playfair), serif;
   font-weight: 500;
-  font-size: 76px;
+  font-size: clamp(36px, 6vw, 76px);
   line-height: 1.02;
   letter-spacing: -0.02em;
   margin: 14px 0 24px;
@@ -277,7 +285,10 @@
 .onyx-hero-h1 {
   font-family: var(--font-playfair), serif;
   font-weight: 500;
-  font-size: 120px;
+  /* Scales smoothly from ~48px on phones to 120px on full desktops.
+     Letter widths at Playfair Display extreme sizes outgrow card
+     padding fast, so this prevents horizontal clipping. */
+  font-size: clamp(48px, 9.5vw, 120px);
   line-height: 0.95;
   letter-spacing: -0.025em;
   margin: 6px 0 0;
@@ -337,7 +348,7 @@
   margin-top: 18px;
 }
 .onyx-how-step {
-  padding: 56px 36px;
+  padding: clamp(28px, 5vh, 56px) clamp(20px, 3vw, 36px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -392,7 +403,7 @@
   grid-template-columns: 60px 240px 1fr 280px;
   align-items: baseline;
   gap: 24px;
-  padding: 28px 0;
+  padding: clamp(14px, 2.4vh, 28px) 0;
   border-top: 1px dotted rgba(196, 164, 107, 0.22);
 }
 .onyx-surfaces-list li:last-child {
@@ -645,7 +656,7 @@
 .onyx-cta-h {
   font-family: var(--font-playfair), serif;
   font-weight: 500;
-  font-size: 128px;
+  font-size: clamp(48px, 10vw, 128px);
   line-height: 0.95;
   letter-spacing: -0.025em;
   margin: 6px 0 4px;

@@ -37,7 +37,7 @@ export default function Home() {
         <OnyxCard
           idx="i"
           serial="№ 00471"
-          kicker="KARTE · n. · GERMAN, CARD"
+          kicker="DIGITAL CARD · CARD V2026"
           footL="karte.cc/yourhandle"
           footR="Free · 60-second import"
         >
