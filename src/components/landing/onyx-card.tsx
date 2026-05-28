@@ -79,7 +79,7 @@ export function OnyxCard({ idx, serial, kicker, footL, footR, children }: OnyxCa
         <span>{footR}</span>
       </footer>
 
-      <div className="onyx-screen-idx" aria-hidden="true">card {idx} / v</div>
+      <div className="onyx-screen-idx" aria-hidden="true">card {idx} / vi</div>
     </div>
   );
 }

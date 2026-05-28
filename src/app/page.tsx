@@ -7,6 +7,7 @@ import { OnyxCard } from '@/components/landing/onyx-card';
 import { OnyxCta } from '@/components/landing/onyx-cta';
 import { OnyxHero } from '@/components/landing/onyx-hero';
 import { OnyxHow } from '@/components/landing/onyx-how';
+import { OnyxSamples } from '@/components/landing/onyx-samples';
 import { OnyxSurfaces } from '@/components/landing/onyx-surfaces';
 
 export const metadata: Metadata = {
@@ -80,6 +81,16 @@ export default function Home() {
         <OnyxCard
           idx="v"
           serial="№ 00475"
+          kicker="THE MEMBERS · CARD V"
+          footL="Sample cards built from public writing"
+          footR="Open one, talk to it →"
+        >
+          <OnyxSamples />
+        </OnyxCard>
+
+        <OnyxCard
+          idx="vi"
+          serial="№ 00476"
           kicker="CLAIM YOUR NAME · LAST CARD"
           footL="One link · four surfaces · free forever"
           footR="© MMXXVI · Karte"
