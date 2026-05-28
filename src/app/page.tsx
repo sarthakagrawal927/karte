@@ -61,33 +61,26 @@ export default function Home() {
             {/* Left — pitch + CTAs */}
             <div>
               <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-karte-text-4">
-                <span className="text-karte-accent/80">·</span> Link-in-bio,{' '}
-                <span className="text-karte-text">that talks back</span>
+                <span className="text-karte-accent/80">·</span> The link-in-bio,
+                upgraded
               </p>
 
               <h1
                 className="mt-6 max-w-2xl text-[40px] font-semibold leading-[1.02] tracking-[-0.035em] text-karte-text sm:text-[56px] lg:text-[76px]"
               >
-                Stop answering<br />
-                the same{' '}
+                Your link-in-bio,<br />
                 <span
                   className={`${serif.className} font-normal text-karte-accent-soft`}
                   style={{ fontStyle: 'italic' }}
                 >
-                  DMs.
+                  that answers back.
                 </span>
               </h1>
 
               <p className="mt-6 max-w-xl text-[16px] leading-[1.6] text-karte-text-3 sm:text-[18px]">
-                Your link in bio{' '}
-                <span
-                  className={`${serif.className} text-karte-text`}
-                  style={{ fontStyle: 'italic' }}
-                >
-                  already knows
-                </span>{' '}
-                what you&rsquo;d say. Rates, availability, stack, hiring —
-                answered for you,{' '}
+                Same one link in your bio. But this one knows what you&rsquo;d
+                say — rates, availability, stack, hiring — and handles them in
+                your voice,{' '}
                 <span className="text-karte-text">before they hit your inbox.</span>
               </p>
 
