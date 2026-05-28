@@ -37,64 +37,66 @@ Source discipline:
 - If there are no direct quotes, create quote-like pull quotes only as clearly stylized summaries, not attributed real statements.
 - If data is thin, write a charming profile of the available public footprint and make the sidebar honest.
 
-You MUST respond with valid JSON matching this exact structure:
+Output a 3-page issue. KEEP IT TIGHT — every page's leadStory body should be 2 short paragraphs, not 4. Total output must fit in roughly 1500 tokens.
+
+JSON structure (exact):
 {
-  "mastheadName": "A creative newspaper name inspired by the person (e.g. 'The [Name] Chronicle' or 'The Daily [Surname]')",
-  "dateline": "Today's date formatted like 'Saturday, March 28, 2026'",
+  "mastheadName": "Creative newspaper name (e.g. 'The [Name] Chronicle')",
+  "dateline": "Today like 'Saturday, March 28, 2026'",
   "pages": [
     {
       "sectionLabel": "Front Page",
       "leadStory": {
-        "headline": "Dramatic ALL-CAPS headline about the person's biggest current story",
-        "subheadline": "A compelling subheadline expanding on the main story",
-        "body": "A 3-4 paragraph newspaper article in third person, formal style, focused on what's most newsworthy NOW about this person.",
-        "pullQuote": "A memorable quote-style line attributed to or about them"
+        "headline": "Dramatic ALL-CAPS news-style headline about their biggest current story",
+        "subheadline": "One-line compelling subhead",
+        "body": "2 short paragraphs in third-person newspaper style. Most newsworthy NOW.",
+        "pullQuote": "One memorable styled summary line"
       },
       "secondaryStories": [
-        { "headline": "Second story headline", "body": "1-2 paragraph story on another current aspect" },
-        { "headline": "Third story headline", "body": "1-2 paragraph story" }
+        { "headline": "Second story", "body": "1 short paragraph" },
+        { "headline": "Third story", "body": "1 short paragraph" }
       ],
-      "sidebar": { "facts": ["4-5 quick facts — 'By the Numbers'"], "mood": "A weather-style mood forecast" },
-      "fakeAds": ["1-2 funny fake ad headlines"]
+      "sidebar": { "facts": ["4 quick facts"], "mood": "Weather-style mood forecast" },
+      "fakeAds": ["1 funny fake ad headline"]
     },
     {
       "sectionLabel": "Features",
       "leadStory": {
-        "headline": "Feature-style headline (slightly softer than page 1) about their longer-arc work, philosophy, or signature project",
-        "subheadline": "Subheadline framing the feature",
-        "body": "A 3-4 paragraph long-form feature — deeper, more reflective tone than the front page. Could cover the origin story of a major project, a recurring theme, or a profile of one corner of their work.",
-        "pullQuote": "A pull quote that captures the feature's argument"
+        "headline": "Feature headline (softer than page 1) about their long-arc work, philosophy, or signature project",
+        "subheadline": "One-line subhead",
+        "body": "2 short paragraphs — reflective long-form tone, different facet than page 1.",
+        "pullQuote": "Pull quote capturing the feature's argument"
       },
       "secondaryStories": [
-        { "headline": "Profile sidebar headline", "body": "Short profile of a side project, collaborator, or recurring habit" },
-        { "headline": "Behind the scenes headline", "body": "Short behind-the-scenes story" }
+        { "headline": "Profile sidebar", "body": "1 short paragraph on a side project / collaborator / habit" },
+        { "headline": "Behind the scenes", "body": "1 short paragraph" }
       ],
-      "sidebar": { "facts": ["4-5 facts about their methods / tools / routine"], "mood": "Another mood line in feature voice" },
-      "fakeAds": ["1-2 fake ads tied to feature themes"]
+      "sidebar": { "facts": ["4 facts about methods / tools / routine"], "mood": "Mood line in feature voice" },
+      "fakeAds": ["1 fake ad tied to feature themes"]
     },
     {
       "sectionLabel": "Opinion & Letters",
       "leadStory": {
-        "headline": "Opinion-style headline — a strong take attributed to or about this person",
-        "subheadline": "Subheadline framing the opinion",
-        "body": "A 3-4 paragraph editorial / opinion piece written in their voice or about their worldview. Slightly more provocative tone than features. Should feel like the kind of thing they would actually argue.",
-        "pullQuote": "A pull quote stating their strongest opinion"
+        "headline": "Opinion-style headline — a strong take in their voice",
+        "subheadline": "One-line subhead",
+        "body": "2 short paragraphs in editorial tone. The kind of argument they would actually make.",
+        "pullQuote": "Pull quote of their strongest opinion"
       },
       "secondaryStories": [
-        { "headline": "Letter to the editor headline", "body": "Short letter-style reaction from a fictional reader (mark as 'A reader writes:')" },
-        { "headline": "Counterpoint headline", "body": "Short opposing view — even-handed, not strawman" }
+        { "headline": "Letter to the editor", "body": "Short reader-letter style — mark with 'A reader writes:'" },
+        { "headline": "Counterpoint", "body": "Short even-handed opposing view" }
       ],
-      "sidebar": { "facts": ["4-5 controversial-but-fair takes drawn from their public positions"], "mood": "Mood line in opinion voice" },
-      "fakeAds": ["1-2 fake ads with editorial flavor"]
+      "sidebar": { "facts": ["4 controversial-but-fair takes drawn from their public positions"], "mood": "Mood line in opinion voice" },
+      "fakeAds": ["1 fake ad with editorial flavor"]
     }
   ]
 }
 
-Style discipline across pages:
+Discipline:
 - Each page must feel like a real broadsheet section with its own tone (news → reflective → opinion).
 - Don't repeat content across pages — each surfaces a different facet.
-- Fake ads should be in-character: aspirational, satirical, and clearly products this person would either endorse or be embarrassed by. Never offensive.
-- Pull quotes are styled summaries, not invented direct quotes — use phrasing like 'as their work suggests' rather than fake attribution.
+- Fake ads: in-character, satirical, never offensive.
+- Pull quotes are styled summaries, not invented direct quotes.
 
 Respond ONLY with the JSON object, no markdown, no code blocks, no explanation.`;
 
