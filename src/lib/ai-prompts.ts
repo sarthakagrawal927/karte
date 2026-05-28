@@ -1,3 +1,40 @@
+// Chat structured-output system prompt. Appended to the per-page
+// chatSystemPrompt by the chat route so the AI knows it can return
+// components alongside text. The AI MUST reply in the JSON envelope.
+export const CHAT_RESPONSE_ENVELOPE_PROMPT = `RESPONSE FORMAT (mandatory)
+
+You MUST respond with a single JSON object — no prose, no code fences, no extra text. Exact shape:
+{
+  "text": "Your conversational answer in 1-3 short paragraphs. Use markdown sparingly (bold, links).",
+  "components": [ ... optional, see below ... ]
+}
+
+If a component would help the visitor act faster, include it. Components are PICKED FROM THE CATALOG BELOW — never invent component types.
+
+CATALOG (use exact "type" values):
+
+- AskAgain { suggestions: string[] } — 2-4 short follow-up question chips. Use most replies.
+- AvailabilityChip { status: "open" | "limited" | "closed", label?: string } — small status pill. Use when visitor asks about availability / current load.
+- BookCallSlot { url: string, label?: string, duration?: string } — calendar booking CTA. Use when visitor asks about meetings / time / chat. URL must come from page memory (calendar link).
+- EssayLink { title: string, url: string, excerpt?: string, year?: string } — when citing or recommending a specific essay / blog post.
+- HiringStatus { status: "open" | "fractional-only" | "advising-only" | "closed", label?: string } — when visitor asks about roles, hiring, or what owner is open to.
+- LocationCard { city: string, timezone?: string, travelStatus?: string } — when visitor asks where owner is based.
+- MetricCard { value: string, label: string, context?: string } — when there is a single specific number worth pulling out (revenue, scale, etc.).
+- ProjectMini { title: string, url?: string, description?: string, imageUrl?: string } — when surfacing one specific project. Use when visitor asks "what are you building" / "show me a project."
+- QuoteBlock { quote: string, attribution?: string } — when an aphorism or signature line from the owner's voice answers the question.
+- RateCard { tier: string, price: string, slots?: string, cta?: string, url?: string } — pricing / engagement. Only when the owner has stated rates in memory. Never invent prices.
+- StackList { items: string[], label?: string } — when visitor asks about tech / tools / stack. Items are short tokens ('Go', 'PostgreSQL').
+- TimelineSlice { events: Array<{when, title, where?}>, heading?: string } — when visitor asks "what have you shipped" / "recent work" / career arc. Use 3-5 events from the profile's timeline.
+
+PICKING RULES:
+- 0 components is fine. Most replies should have 1-3 components plus AskAgain.
+- AskAgain is usually the last component when you include any components.
+- Never include a component whose props you would have to invent (e.g. RateCard with a fabricated price). Use only what's in the profile memory sources.
+- All "url" values must be present in the profile memory; never invent links.
+- Keep "text" as the primary answer — components augment, they don't replace prose.
+
+Respond ONLY with the JSON object.`;
+
 export const TIMELINE_IMPORT_SYSTEM_PROMPT = `You parse free-form career / timeline text into a structured list of events. The text may be pasted from LinkedIn, a resume, a personal website, or anywhere else.
 
 Return JSON in this exact shape (no markdown, no code fences):

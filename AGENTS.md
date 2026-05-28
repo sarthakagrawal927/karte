@@ -80,7 +80,6 @@ pnpm drizzle-kit studio     # Drizzle Studio UI
 - **SaasMaker RAG**: each user has `smProjectId`/`smApiKey`/`smIndexId`. `infoBlocks` synced to SaasMaker as documents (`smDocumentId`).
 - **R2 storage**: avatar/project images in CF R2. Requires `CLOUDFLARE_ACCOUNT_ID`, `R2_BUCKET_NAME`, `R2_PUBLIC_BASE_URL`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`.
 - **Visitor Identity**: Uses a dual-storage approach for anonymous tracking. A first-party cookie `lc_vid` (2-year expiry, SameSite=Lax, Secure in prod) provides long-term stability, while `localStorage` (`linkchat_visitor_id`) serves as a fallback and mirror for client-side persistence. Managed via `src/lib/visitor-id.ts` and `/api/track/[slug]`. See `docs/analytics.md` for details.
-- **`@saas-maker/ai`** referenced via local file path — will break on other machines.
 - Env vars: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, R2 vars, `SAASMAKER_API_URL`, `SAASMAKER_ADMIN_KEY`, `NEXT_PUBLIC_APP_URL`.
 - Husky pre-push hook configured.
 - **Auth (better-auth)**: Auth uses better-auth with the Google provider. `BETTER_AUTH_URL` must be set to the deployed origin (`https://linkchat.sarthakagrawal927.workers.dev`) along with `BETTER_AUTH_SECRET` via `wrangler secret put`, otherwise auth redirects/callbacks fail. better-auth state is backed by Cloudflare D1 `linkchat-auth`.

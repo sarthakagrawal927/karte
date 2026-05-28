@@ -26,6 +26,7 @@ const navGroups: NavGroup[] = [
       { label: 'Timeline', href: '/dashboard/timeline' },
       { label: 'Sections', href: '/dashboard/sections' },
       { label: 'Memory', href: '/dashboard/memory' },
+      { label: 'Components', href: '/dashboard/components' },
     ],
   },
   {

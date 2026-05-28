@@ -2,7 +2,9 @@ import { and,eq } from 'drizzle-orm';
 
 import { db, ensureProjectsTable } from '@/db';
 import { conversations, pages, users } from '@/db/schema';
-import { resolveAiConfig, streamResponse } from '@/lib/ai-client';
+import type { ChatResponse, RenderableComponent } from '@/lib/ai-components/types';
+import { generate, resolveAiConfig } from '@/lib/ai-client';
+import { CHAT_RESPONSE_ENVELOPE_PROMPT } from '@/lib/ai-prompts';
 import { buildProfileMemory } from '@/lib/profile-memory';
 import { rateLimit } from '@/lib/rate-limit';
 import { search } from '@/lib/saasmaker';
@@ -127,12 +129,19 @@ export async function POST(req: Request, { params }: { params: Promise<{ slug: s
       'If the sources do not answer the question, say what is missing and suggest contacting the profile owner or using a listed link.',
       `Profile Memory:\n${memory.promptContext}`,
       retrievedContext ? `Optional external index matches:\n${retrievedContext}` : '',
+      CHAT_RESPONSE_ENVELOPE_PROMPT,
     ].filter(Boolean).join('\n\n');
 
-    return streamResponse(aiConfig, {
+    const raw = await generate(aiConfig, {
       system: systemPrompt,
       prompt: query,
       reasoningLevel: 'fast',
+    });
+
+    const parsed = parseChatResponse(raw);
+    return new Response(JSON.stringify(parsed), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch {
     return new Response(JSON.stringify({ error: 'Chat service unavailable' }), {
@@ -140,4 +149,50 @@ export async function POST(req: Request, { params }: { params: Promise<{ slug: s
       headers: { 'Content-Type': 'application/json' },
     });
   }
+}
+
+// ── Response parsing ────────────────────────────────────────────────
+// AI is told to emit { text, components }. In practice we sometimes
+// get markdown fences or stray prose around the JSON. Strip + validate.
+const ALLOWED_TYPES: ReadonlySet<RenderableComponent['type']> = new Set([
+  'AskAgain', 'AvailabilityChip', 'BookCallSlot', 'EssayLink', 'HiringStatus',
+  'LocationCard', 'MetricCard', 'ProjectMini', 'QuoteBlock', 'RateCard',
+  'StackList', 'TimelineSlice',
+]);
+
+function parseChatResponse(raw: string): ChatResponse {
+  // First try: extract the first JSON object in the string.
+  const match = raw.match(/\{[\s\S]*\}/);
+  if (match) {
+    try {
+      const obj = JSON.parse(match[0]) as Record<string, unknown>;
+      const text = typeof obj.text === 'string' ? obj.text : '';
+      const components = sanitizeComponents(obj.components);
+      if (text) return { text, components: components.length ? components : undefined };
+    } catch {
+      // fall through
+    }
+  }
+  // Fallback: whatever the model returned, render as plain text. Keeps
+  // the chat working even when the JSON contract fails on a given turn.
+  return { text: raw.trim() || 'Sorry — I lost the thread on that one. Try rephrasing?' };
+}
+
+function sanitizeComponents(value: unknown): RenderableComponent[] {
+  if (!Array.isArray(value)) return [];
+  const out: RenderableComponent[] = [];
+  for (const item of value) {
+    if (!item || typeof item !== 'object') continue;
+    const r = item as Record<string, unknown>;
+    const type = typeof r.type === 'string' ? r.type : '';
+    if (!ALLOWED_TYPES.has(type as RenderableComponent['type'])) continue;
+    const props =
+      r.props && typeof r.props === 'object'
+        ? (r.props as Record<string, unknown>)
+        : {};
+    // Trust the discriminated-union check at render time — the
+    // registry's switch handles bad shapes by returning null.
+    out.push({ type, props } as unknown as RenderableComponent);
+  }
+  return out;
 }
