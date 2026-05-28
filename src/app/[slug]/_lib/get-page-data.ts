@@ -111,19 +111,18 @@ function extractStructured(type: string, content: unknown): any {
   }
 
   if (type === 'newspaper') {
+    // New multi-page schema stores stories under c.pages[0].leadStory;
+    // legacy single-page content put it at c.leadStory. Prefer the new
+    // shape but fall back so old cached content still previews.
+    const lead =
+      (Array.isArray(c?.pages) && c.pages[0]?.leadStory) || c?.leadStory;
     return {
       mastheadName: typeof c.mastheadName === 'string' ? c.mastheadName : '',
       dateline: typeof c.dateline === 'string' ? c.dateline : '',
-      headline:
-        typeof c?.leadStory?.headline === 'string' ? c.leadStory.headline : '',
+      headline: typeof lead?.headline === 'string' ? lead.headline : '',
       subheadline:
-        typeof c?.leadStory?.subheadline === 'string'
-          ? c.leadStory.subheadline
-          : '',
-      body:
-        typeof c?.leadStory?.body === 'string'
-          ? truncate(c.leadStory.body, 200)
-          : '',
+        typeof lead?.subheadline === 'string' ? lead.subheadline : '',
+      body: typeof lead?.body === 'string' ? truncate(lead.body, 200) : '',
     };
   }
 
