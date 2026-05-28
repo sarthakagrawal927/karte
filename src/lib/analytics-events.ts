@@ -6,7 +6,7 @@
  * build one cross-fleet funnel (signup -> activated -> core_action) and a
  * D1/D7 retention insight, with no custom dashboard.
  *
- * Every event carries `project: "linkchat"`.
+ * Every event carries `project_id: "linkchat"`.
  *
  * NOTE: this is the OWNER-facing taxonomy. It is deliberately separate from
  * `src/lib/analytics.ts`, which is the visitor-facing event pipeline for
@@ -30,22 +30,22 @@ export type CoreAction = "page_published" | "mode_generated";
 
 interface AnalyticsEventMap {
   /** First session after an account is created. */
-  signup: { project: typeof PROJECT };
+  signup: { project_id: typeof PROJECT };
   /** The user reaches first real value — their first published profile. */
-  activated: { project: typeof PROJECT };
+  activated: { project_id: typeof PROJECT };
   /** The thing the product exists to do. */
-  core_action: { project: typeof PROJECT; action: CoreAction };
+  core_action: { project_id: typeof PROJECT; action: CoreAction };
   /** A return session by a user with prior activity. */
-  returned: { project: typeof PROJECT };
+  returned: { project_id: typeof PROJECT };
 }
 
 function emit<K extends keyof AnalyticsEventMap>(
   event: K,
-  props: Omit<AnalyticsEventMap[K], "project">,
+  props: Omit<AnalyticsEventMap[K], "project_id">,
 ): void {
   try {
     if (typeof window === "undefined") return;
-    posthog.capture(event, { project: PROJECT, ...props });
+    posthog.capture(event, { project_id: PROJECT, ...props });
   } catch {
     // Analytics must never break a user flow. Swallow and move on.
   }

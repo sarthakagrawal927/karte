@@ -17,7 +17,7 @@ function messageFrom(error: unknown) {
 
 export function capturePageCrash(error: unknown, source: "window_error" | "unhandled_rejection") {
   posthog.capture("foundry_page_crash", {
-    project_slug: PROJECT_SLUG,
+    project_id: PROJECT_SLUG,
     route: route(),
     source,
     message: messageFrom(error),
@@ -46,7 +46,7 @@ export function captureError(
 ) {
   try {
     posthog.capture("error_captured", {
-      project_slug: PROJECT_SLUG,
+      project_id: PROJECT_SLUG,
       route: route(),
       scope: options.scope ?? "unknown",
       digest: options.digest,
@@ -69,7 +69,7 @@ export function captureActionFailure(
 ) {
   try {
     posthog.capture("action_failed", {
-      project_slug: PROJECT_SLUG,
+      project_id: PROJECT_SLUG,
       route: route(),
       action: options.action,
       source: options.source ?? "client",
