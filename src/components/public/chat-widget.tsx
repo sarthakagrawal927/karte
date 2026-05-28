@@ -696,7 +696,7 @@ export function ChatWidget({
                           <ChatMessageBody content={msg.content} />
                           {msg.components && msg.components.length > 0 && (
                             <div className="mt-2">
-                              {msg.components.map((c, i) => renderComponent(c, i))}
+                              {msg.components.map((c, i) => renderComponent(c, i, i))}
                             </div>
                           )}
                         </>

@@ -7,6 +7,7 @@
 // so non-gold profiles (cyan, etc.) render their own tint without
 // per-component CSS.
 
+import { motion } from 'motion/react';
 import Link from 'next/link';
 import posthog from 'posthog-js';
 import { useEffect, type ReactElement } from 'react';
@@ -515,13 +516,31 @@ function TrackedComponent({
 // Discriminated dispatch — the chat widget calls renderComponent on
 // each entry in the server's components[] array. Unknown types return
 // null so an AI-invented component name doesn't crash the bubble.
-export function renderComponent(c: RenderableComponent, key: number | string): ReactElement | null {
+//
+// Each component fades up with a slight stagger based on its index in
+// the components array, so multiple cards materialize one after the
+// other instead of all popping at once. Respects prefers-reduced-motion
+// via motion's built-in handling.
+export function renderComponent(
+  c: RenderableComponent,
+  key: number | string,
+  index: number = 0,
+): ReactElement | null {
   const child = pickComponent(c);
   if (!child) return null;
   return (
-    <TrackedComponent key={key} type={c.type}>
-      {child}
-    </TrackedComponent>
+    <motion.div
+      key={key}
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.32,
+        delay: index * 0.08,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+    >
+      <TrackedComponent type={c.type}>{child}</TrackedComponent>
+    </motion.div>
   );
 }
 

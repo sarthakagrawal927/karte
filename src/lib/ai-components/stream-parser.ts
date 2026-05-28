@@ -7,19 +7,15 @@
 // Used by the chat widget to:
 //   1. Stream text live to the message bubble.
 //   2. Detect the marker even when it arrives split across chunks.
-//   3. Buffer the JSON tail, then parse + sanitize on stream end.
+//   3. Buffer the JSON tail, then parse + validate against Zod schemas
+//      on stream end.
 //
 // Self-contained: no React, no DOM. Pure state machine.
 
+import { renderableComponentSchema } from './schemas';
 import type { RenderableComponent } from './types';
 
 const MARKER = '<<<COMPONENTS>>>';
-
-const ALLOWED_TYPES: ReadonlySet<RenderableComponent['type']> = new Set([
-  'AskAgain', 'AvailabilityChip', 'BookCallSlot', 'EssayLink', 'HiringStatus',
-  'LocationCard', 'MetricCard', 'ProjectMini', 'QuoteBlock', 'RateCard',
-  'StackList', 'TimelineSlice',
-]);
 
 // Default suggestions appended when the AI returned other components
 // but forgot AskAgain. Three options that work for almost any profile.
@@ -140,18 +136,12 @@ function parseComponentsBuffer(raw: string): RenderableComponent[] {
 
   const out: RenderableComponent[] = [];
   for (const item of parsed) {
-    if (!item || typeof item !== 'object') continue;
-    const r = item as Record<string, unknown>;
-    const type = typeof r.type === 'string' ? r.type : '';
-    if (!ALLOWED_TYPES.has(type as RenderableComponent['type'])) continue;
-    const props =
-      r.props && typeof r.props === 'object'
-        ? (r.props as Record<string, unknown>)
-        : {};
-    // Skip half-baked components with no props — they render as blank
-    // cards otherwise.
-    if (Object.keys(props).length === 0) continue;
-    out.push({ type, props } as unknown as RenderableComponent);
+    // Zod validates type + per-component prop shape in one shot.
+    // Unknown types fail discrimination; bad props for known types
+    // fail field-level constraints. Either way: silently skip.
+    const parsedResult = renderableComponentSchema.safeParse(item);
+    if (!parsedResult.success) continue;
+    out.push(parsedResult.data as RenderableComponent);
   }
   return out;
 }
