@@ -54,7 +54,7 @@ export default function OpengraphImage() {
             alignItems: 'center',
             justifyContent: 'space-between',
             paddingBottom: '20px',
-            borderBottom: `1px dotted ${GOLD}44`,
+            borderBottom: `1px dashed ${GOLD}44`,
             zIndex: 2,
           }}
         >
@@ -172,7 +172,7 @@ export default function OpengraphImage() {
             alignItems: 'center',
             justifyContent: 'space-between',
             paddingTop: '20px',
-            borderTop: `1px dotted ${GOLD}44`,
+            borderTop: `1px dashed ${GOLD}44`,
             fontSize: '13px',
             letterSpacing: '0.26em',
             color: `${GOLD}b3`,
