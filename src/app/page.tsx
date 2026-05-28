@@ -8,7 +8,6 @@ import { OnyxCta } from '@/components/landing/onyx-cta';
 import { OnyxHero } from '@/components/landing/onyx-hero';
 import { OnyxHow } from '@/components/landing/onyx-how';
 import { OnyxSurfaces } from '@/components/landing/onyx-surfaces';
-import { PublicTopBar } from '@/components/public/public-top-bar';
 
 export const metadata: Metadata = {
   title: 'Karte — Your link-in-bio, that answers back',
@@ -31,10 +30,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
-      {/* Top nav lives above the deck per the 2026-05-28 decision —
-          revisit once we see how it feels live. */}
-      <PublicTopBar current="home" variant="minimal" />
-
+      {/* Top nav intentionally omitted on the landing page — the deck
+          is self-contained and the nav was competing with card I's
+          own header strip. CTAs inside cards I + V cover login/create. */}
       <div className="onyx-deck">
         <OnyxCard
           idx="i"
