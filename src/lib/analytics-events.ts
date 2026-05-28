@@ -39,16 +39,20 @@ interface AnalyticsEventMap {
   returned: { project_id: typeof PROJECT };
 }
 
+export function trackEvent(event: string, properties: Record<string, unknown> = {}): void {
+  try {
+    if (typeof window === "undefined") return;
+    posthog.capture(event, { project_id: PROJECT, ...properties });
+  } catch {
+    // Analytics must never break a user flow. Swallow and move on.
+  }
+}
+
 function emit<K extends keyof AnalyticsEventMap>(
   event: K,
   props: Omit<AnalyticsEventMap[K], "project_id">,
 ): void {
-  try {
-    if (typeof window === "undefined") return;
-    posthog.capture(event, { project_id: PROJECT, ...props });
-  } catch {
-    // Analytics must never break a user flow. Swallow and move on.
-  }
+  trackEvent(event, props);
 }
 
 /** Fire once, on the first session after an account is created. */
