@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { HeroChatDemo } from '@/components/public/hero-chat-demo';
 import { LandingDemo } from '@/components/public/landing-demo';
 import { PublicTopBar } from '@/components/public/public-top-bar';
+import { TiltCard } from '@/components/public/tilt-card';
 
 // Landing content changes only on deploy. Long TTL keeps it cached at every
 // CF PoP for an hour, with another day of stale-while-revalidate. Deploys
@@ -59,36 +60,58 @@ export default function Home() {
         <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-12 sm:px-6 sm:pt-16 lg:pb-24 lg:pt-20">
           {/* THE CARD — the landing page itself is a Karte. Same brand
               metaphor every profile carries: a digital business card
-              that talks. Rounded frame, premium hairline border, soft
-              accent glow inside. */}
-          <div
-            className="relative overflow-hidden rounded-[28px] border border-white/[0.10] bg-gradient-to-br from-white/[0.03] via-white/[0.015] to-transparent shadow-[0_40px_120px_-32px_rgba(0,0,0,0.7),0_8px_24px_-12px_rgba(0,0,0,0.5)] backdrop-blur-2xl sm:rounded-[36px]"
+              that talks. Mouse-tracked 3D tilt makes it feel held;
+              paper grain + edge highlights make it feel material. */}
+          <TiltCard
+            className="group relative overflow-hidden rounded-[28px] border border-white/[0.10] shadow-[0_50px_140px_-40px_rgba(0,0,0,0.75),0_12px_32px_-12px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-2xl sm:rounded-[36px]"
             style={{
               backgroundImage:
-                'radial-gradient(circle at 0% 0%, rgba(103,232,249,0.06), transparent 45%), radial-gradient(circle at 100% 0%, rgba(255,255,255,0.025), transparent 50%), linear-gradient(135deg, rgba(255,255,255,0.025), rgba(255,255,255,0.005))',
+                'radial-gradient(circle at 0% 0%, rgba(103,232,249,0.10), transparent 45%), radial-gradient(circle at 100% 0%, rgba(255,255,255,0.03), transparent 50%), radial-gradient(circle at 50% 100%, rgba(0,0,0,0.18), transparent 55%), linear-gradient(135deg, rgba(255,255,255,0.035), rgba(255,255,255,0.005))',
             }}
           >
-            {/* Hairline highlight along the top edge — the metallic
-                catch you get on a real card */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.18] to-transparent" />
+            {/* Paper grain — subtle SVG noise overlay. Makes the
+                surface feel like cardstock, not glass. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 opacity-[0.045] mix-blend-overlay"
+              style={{
+                backgroundImage:
+                  "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
+              }}
+            />
+
+            {/* Metallic top-edge highlight + faint inner glow on hover */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.22] to-transparent" />
+            <div className="pointer-events-none absolute inset-x-12 -bottom-px h-px bg-gradient-to-r from-transparent via-white/[0.10] to-transparent" />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              style={{
+                background:
+                  'radial-gradient(circle at 50% 0%, rgba(103,232,249,0.10), transparent 60%)',
+              }}
+            />
 
             {/* Card metadata strip — like the issuer / network row
                 on a real card. Brand wordmark left, card-type label
-                right. */}
-            <div className="flex items-center justify-between border-b border-white/[0.06] px-6 py-3 sm:px-10">
-              <div className="flex items-center gap-2.5">
+                right. Lifted slightly via translateZ for parallax. */}
+            <div
+              className="relative flex items-center justify-between border-b border-white/[0.06] px-6 py-3.5 sm:px-10"
+              style={{ transform: 'translateZ(20px)' }}
+            >
+              <div className="flex items-center gap-3">
                 <span
                   aria-hidden="true"
-                  className="block h-5 w-7 rounded-[3px] bg-gradient-to-br from-karte-accent/80 via-karte-accent-soft/70 to-karte-accent/40 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.15)]"
+                  className="block h-6 w-8 rounded-[4px] bg-gradient-to-br from-karte-accent/85 via-karte-accent-soft/70 to-karte-accent/35 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.20),inset_0_-2px_3px_rgba(0,0,0,0.25),0_1px_2px_rgba(0,0,0,0.4)]"
                 />
                 <span
-                  className={`${serif.className} text-[18px] tracking-tight text-karte-text`}
+                  className={`${serif.className} text-[22px] tracking-tight text-karte-text`}
                   style={{ fontStyle: 'italic' }}
                 >
                   Karte
                 </span>
               </div>
-              <div className="flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.22em] text-karte-text-5">
+              <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-karte-text-5">
                 <span className="hidden sm:inline">Digital business card</span>
                 <span className="inline sm:hidden">Card</span>
                 <span aria-hidden="true" className="h-1 w-1 rounded-full bg-karte-accent/60" />
@@ -96,8 +119,13 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Card body — the existing two-column hero content */}
-            <div className="px-6 py-10 sm:px-10 sm:py-12 lg:px-14 lg:py-14">
+            {/* Card body — the existing two-column hero content.
+                translateZ pushes interior slightly forward so tilt
+                gives a parallax depth feel. */}
+            <div
+              className="relative px-6 py-10 sm:px-10 sm:py-12 lg:px-14 lg:py-14"
+              style={{ transform: 'translateZ(30px)' }}
+            >
           <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
             {/* Left — pitch + CTAs */}
             <div>
@@ -203,20 +231,31 @@ export default function Home() {
           </div>
             </div>
 
-            {/* Card footer — like the network strip on the bottom edge
-                of a real card. Issue + footer markers. */}
-            <div className="flex items-center justify-between border-t border-white/[0.06] px-6 py-3 sm:px-10">
+            {/* Card footer — etched detail row, foil-like accents.
+                Lifted slightly via translateZ to match the top strip. */}
+            <div
+              className="relative flex items-center justify-between border-t border-white/[0.06] px-6 py-3.5 sm:px-10"
+              style={{ transform: 'translateZ(20px)' }}
+            >
               <span className="font-mono text-[10.5px] tracking-[0.18em] text-karte-text-5">
-                ISSUED → YOU
+                ISSUED&nbsp;&nbsp;→&nbsp;&nbsp;YOU
               </span>
-              <span className="text-[10.5px] font-medium uppercase tracking-[0.22em] text-karte-text-5">
-                <span className="text-karte-accent/80">●</span> Chat &nbsp;
-                <span className="text-karte-accent/80">●</span> Wiki &nbsp;
-                <span className="text-karte-accent/80">●</span> Press &nbsp;
-                <span className="text-karte-accent/80">●</span> Roast
+              <span className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-karte-text-4">
+                <span className="flex items-center gap-1.5">
+                  <span className="h-1 w-1 rounded-full bg-karte-accent/80" /> Chat
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="h-1 w-1 rounded-full bg-karte-accent/80" /> Wiki
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="h-1 w-1 rounded-full bg-karte-accent/80" /> Press
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="h-1 w-1 rounded-full bg-karte-accent/80" /> Roast
+                </span>
               </span>
             </div>
-          </div>
+          </TiltCard>
         </div>
       </section>
 
