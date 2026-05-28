@@ -1,6 +1,5 @@
-import Image from 'next/image';
-
 import { OpenChatButton } from '@/components/public/open-chat-button';
+import { ProfileAvatar } from '@/components/public/profile-avatar';
 import { SocialIconRow } from '@/components/public/social-icon-row';
 
 interface QuickAction {
@@ -123,26 +122,12 @@ export function ProfileHero({
               animation: 'karte-avatar-glow 4s ease-in-out infinite',
             }}
           />
-          {avatarUrl ? (
-            <Image
-              src={avatarUrl}
-              alt={displayName}
-              width={128}
-              height={128}
-              sizes="128px"
-              priority
-              className="relative h-28 w-28 rounded-3xl object-cover ring-1 ring-white/[0.10] sm:h-32 sm:w-32"
-            />
-          ) : (
-            <div
-              className="relative flex h-28 w-28 items-center justify-center rounded-3xl text-3xl font-semibold text-zinc-950 ring-1 ring-white/[0.10] sm:h-32 sm:w-32 sm:text-4xl"
-              style={{
-                background: `linear-gradient(135deg, ${accentColor}, ${accentColor}aa)`,
-              }}
-            >
-              {initials}
-            </div>
-          )}
+          <ProfileAvatar
+            src={avatarUrl}
+            alt={displayName}
+            initials={initials}
+            accentColor={accentColor}
+          />
         </div>
 
         {location && (
