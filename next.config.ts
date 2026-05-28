@@ -53,18 +53,13 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'pub-b339ffd5395643a28df3655ef3aa943d.r2.dev',
-      },
-      {
-        protocol: 'https',
-        hostname: 'avatars.githubusercontent.com',
-      },
+      { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
+      { protocol: 'https', hostname: 'pub-b339ffd5395643a28df3655ef3aa943d.r2.dev' },
+      { protocol: 'https', hostname: 'avatars.githubusercontent.com' },
+      // Demo profile avatars + project logos.
+      { protocol: 'https', hostname: 'api.dicebear.com' },
+      { protocol: 'https', hostname: 'www.google.com' },
+      { protocol: 'https', hostname: 'github.com' },
     ],
   },
 };
