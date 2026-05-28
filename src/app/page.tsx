@@ -56,7 +56,48 @@ export default function Home() {
           Karte
         </div>
 
-        <div className="relative mx-auto max-w-6xl px-6 pb-16 pt-16 sm:pt-20 lg:pb-24 lg:pt-24">
+        <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-12 sm:px-6 sm:pt-16 lg:pb-24 lg:pt-20">
+          {/* THE CARD — the landing page itself is a Karte. Same brand
+              metaphor every profile carries: a digital business card
+              that talks. Rounded frame, premium hairline border, soft
+              accent glow inside. */}
+          <div
+            className="relative overflow-hidden rounded-[28px] border border-white/[0.10] bg-gradient-to-br from-white/[0.03] via-white/[0.015] to-transparent shadow-[0_40px_120px_-32px_rgba(0,0,0,0.7),0_8px_24px_-12px_rgba(0,0,0,0.5)] backdrop-blur-2xl sm:rounded-[36px]"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 0% 0%, rgba(103,232,249,0.06), transparent 45%), radial-gradient(circle at 100% 0%, rgba(255,255,255,0.025), transparent 50%), linear-gradient(135deg, rgba(255,255,255,0.025), rgba(255,255,255,0.005))',
+            }}
+          >
+            {/* Hairline highlight along the top edge — the metallic
+                catch you get on a real card */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.18] to-transparent" />
+
+            {/* Card metadata strip — like the issuer / network row
+                on a real card. Brand wordmark left, card-type label
+                right. */}
+            <div className="flex items-center justify-between border-b border-white/[0.06] px-6 py-3 sm:px-10">
+              <div className="flex items-center gap-2.5">
+                <span
+                  aria-hidden="true"
+                  className="block h-5 w-7 rounded-[3px] bg-gradient-to-br from-karte-accent/80 via-karte-accent-soft/70 to-karte-accent/40 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.15)]"
+                />
+                <span
+                  className={`${serif.className} text-[18px] tracking-tight text-karte-text`}
+                  style={{ fontStyle: 'italic' }}
+                >
+                  Karte
+                </span>
+              </div>
+              <div className="flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.22em] text-karte-text-5">
+                <span className="hidden sm:inline">Digital business card</span>
+                <span className="inline sm:hidden">Card</span>
+                <span aria-hidden="true" className="h-1 w-1 rounded-full bg-karte-accent/60" />
+                <span className="text-karte-text-4">v2026</span>
+              </div>
+            </div>
+
+            {/* Card body — the existing two-column hero content */}
+            <div className="px-6 py-10 sm:px-10 sm:py-12 lg:px-14 lg:py-14">
           <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
             {/* Left — pitch + CTAs */}
             <div>
@@ -158,6 +199,22 @@ export default function Home() {
             {/* Right — live conversation demo */}
             <div className="lg:pl-4">
               <HeroChatDemo />
+            </div>
+          </div>
+            </div>
+
+            {/* Card footer — like the network strip on the bottom edge
+                of a real card. Issue + footer markers. */}
+            <div className="flex items-center justify-between border-t border-white/[0.06] px-6 py-3 sm:px-10">
+              <span className="font-mono text-[10.5px] tracking-[0.18em] text-karte-text-5">
+                ISSUED → YOU
+              </span>
+              <span className="text-[10.5px] font-medium uppercase tracking-[0.22em] text-karte-text-5">
+                <span className="text-karte-accent/80">●</span> Chat &nbsp;
+                <span className="text-karte-accent/80">●</span> Wiki &nbsp;
+                <span className="text-karte-accent/80">●</span> Press &nbsp;
+                <span className="text-karte-accent/80">●</span> Roast
+              </span>
             </div>
           </div>
         </div>
