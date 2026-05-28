@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { useCallback,useEffect, useRef, useState } from 'react';
 
 import { ChatEmailGate } from '@/components/public/chat-email-gate';
+import { ChatMessageBody } from '@/components/public/chat-message-body';
 import { ContactFormSection } from '@/components/public/contact-form-section';
 import type { DmMode } from '@/db/schema';
 import { trackEvent } from '@/lib/analytics';
@@ -644,7 +645,11 @@ export function ChatWidget({
                           <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white/60" style={{ animationDelay: '150ms' }} />
                           <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white/60" style={{ animationDelay: '300ms' }} />
                         </span>
-                      ) : msg.content}
+                      ) : msg.role === 'assistant' ? (
+                        <ChatMessageBody content={msg.content} />
+                      ) : (
+                        msg.content
+                      )}
                     </div>
                   </div>
                 ))}
