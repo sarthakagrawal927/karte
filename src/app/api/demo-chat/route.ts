@@ -64,6 +64,7 @@ export async function POST(req: Request) {
     const answer = await generate(config, {
       system: SYSTEM_PROMPT,
       prompt: query,
+      reasoningLevel: 'fast',
     });
     return NextResponse.json({ answer: answer.trim() });
   } catch {

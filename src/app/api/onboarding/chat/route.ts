@@ -170,6 +170,7 @@ export async function POST(req: Request) {
     aiText = await generateChat(ai, {
       system: fullSystem,
       messages: messages.map((m) => ({ role: m.role, content: m.content })),
+      reasoningLevel: 'fast',
     });
   } catch (err) {
     console.error('onboarding-chat ai error', err);

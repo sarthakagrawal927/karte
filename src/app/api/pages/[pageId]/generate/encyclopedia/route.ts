@@ -53,6 +53,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ pageId:
     const raw = await generate(aiConfig, {
       system: systemPrompt,
       prompt: `Write a Wikipedia-style encyclopedia article about this person using this source file:\n\n${memory.promptContext}`,
+      reasoningLevel: 'deep',
     });
 
     const encyclopedia = parseAIResponse<EncyclopediaContent>(raw);

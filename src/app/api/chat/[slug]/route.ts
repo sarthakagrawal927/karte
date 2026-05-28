@@ -129,7 +129,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ slug: s
       retrievedContext ? `Optional external index matches:\n${retrievedContext}` : '',
     ].filter(Boolean).join('\n\n');
 
-    return streamResponse(aiConfig, { system: systemPrompt, prompt: query });
+    return streamResponse(aiConfig, {
+      system: systemPrompt,
+      prompt: query,
+      reasoningLevel: 'fast',
+    });
   } catch {
     return new Response(JSON.stringify({ error: 'Chat service unavailable' }), {
       status: 502,

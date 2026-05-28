@@ -78,6 +78,7 @@ export async function POST(
     const raw = await generate(aiConfig, {
       system: systemPrompt,
       prompt: `Roast this person based on this profile research packet:\n\n${memory.promptContext}`,
+      reasoningLevel: 'deep',
     });
 
     const roast = parseAIResponse<RoastContent>(raw);

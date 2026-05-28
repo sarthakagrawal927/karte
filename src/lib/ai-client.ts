@@ -45,16 +45,25 @@ function getProvider(config: AiConfig) {
   });
 }
 
-function getProviderOptions(config: AiConfig) {
+// Latency vs. quality intent. Sent to the free-ai gateway as
+// `reasoning_level`; the gateway picks the actual model. Karte
+// surfaces decide based on UX:
+//   - `fast`  → chat, demo-chat, welcome cards (real-time / one-shot
+//               where latency matters)
+//   - `deep`  → newspaper, encyclopedia, roast (one-shot generations
+//               where output quality matters more than latency)
+export type ReasoningLevel = 'fast' | 'deep';
+
+function getProviderOptions(config: AiConfig, reasoningLevel?: ReasoningLevel) {
   if (!config.endpointUrl.includes('free-ai-gateway.sarthakagrawal927.workers.dev')) {
     return undefined;
   }
 
-  return {
-    custom: {
-      project_id: 'linkchat',
-    },
-  };
+  const custom: Record<string, string> = { project_id: 'linkchat' };
+  if (reasoningLevel) {
+    custom.reasoning_level = reasoningLevel;
+  }
+  return { custom };
 }
 
 /**
@@ -62,14 +71,14 @@ function getProviderOptions(config: AiConfig) {
  */
 export async function generate(
   config: AiConfig,
-  opts: { system: string; prompt: string },
+  opts: { system: string; prompt: string; reasoningLevel?: ReasoningLevel },
 ): Promise<string> {
   const provider = getProvider(config);
   const { text } = await generateText({
     model: provider.chatModel(config.model),
     system: opts.system,
     prompt: opts.prompt,
-    providerOptions: getProviderOptions(config),
+    providerOptions: getProviderOptions(config, opts.reasoningLevel),
   });
   return text;
 }
@@ -83,6 +92,7 @@ export async function generateChat(
   opts: {
     system: string;
     messages: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>;
+    reasoningLevel?: ReasoningLevel;
   },
 ): Promise<string> {
   const provider = getProvider(config);
@@ -90,7 +100,7 @@ export async function generateChat(
     model: provider.chatModel(config.model),
     system: opts.system,
     messages: opts.messages,
-    providerOptions: getProviderOptions(config),
+    providerOptions: getProviderOptions(config, opts.reasoningLevel),
   });
   return text;
 }
@@ -100,14 +110,14 @@ export async function generateChat(
  */
 export function streamResponse(
   config: AiConfig,
-  opts: { system: string; prompt: string },
+  opts: { system: string; prompt: string; reasoningLevel?: ReasoningLevel },
 ): Response {
   const provider = getProvider(config);
   const result = streamText({
     model: provider.chatModel(config.model),
     system: opts.system,
     prompt: opts.prompt,
-    providerOptions: getProviderOptions(config),
+    providerOptions: getProviderOptions(config, opts.reasoningLevel),
   });
   return result.toTextStreamResponse();
 }

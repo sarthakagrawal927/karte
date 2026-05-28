@@ -203,6 +203,7 @@ Allowed block types: text, blog, cta, social, testimonial, contact.
 Every block title must be short. Blog content format is one post per line: Title | URL | Short description | Date.
 CTA blocks require buttonLabel and an absolute https URL.
 Do not suggest deleting user content. Prefer adding clarifying blocks and changing the theme.`,
+    reasoningLevel: 'deep',
     prompt: JSON.stringify({
       requestedRevamp: prompt,
       page: {
@@ -253,6 +254,10 @@ Do not suggest deleting user content. Prefer adding clarifying blocks and changi
     return fallbackPlan(prompt, page);
   }
 }
+
+// Note: revamp() uses generate() above. Reasoning level for revamp
+// is 'deep' since it's a one-shot full-page redesign where output
+// quality dominates UX. Added directly to the generate() call.
 
 async function applyPlan(pageId: string, plan: RevampPlan) {
   await db.transaction(async (tx) => {

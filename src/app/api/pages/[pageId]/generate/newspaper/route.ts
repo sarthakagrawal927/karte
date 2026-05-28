@@ -77,6 +77,7 @@ export async function POST(
     const raw = await generate(aiConfig, {
       system: systemPrompt,
       prompt: `Write a newspaper front page about this person using this source desk:\n\n${memory.promptContext}`,
+      reasoningLevel: 'deep',
     });
 
     const newspaper = parseAIResponse<NewspaperContent>(raw);

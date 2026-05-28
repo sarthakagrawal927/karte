@@ -182,6 +182,7 @@ async function generateCards(opts: {
     const raw = await generate(config, {
       system: SYSTEM,
       prompt: buildUserPrompt(opts),
+      reasoningLevel: 'fast',
     });
     const parsed = parseCards(raw);
     return parsed ?? fallbackCards(opts);
