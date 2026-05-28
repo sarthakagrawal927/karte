@@ -1,3 +1,38 @@
+export const TIMELINE_IMPORT_SYSTEM_PROMPT = `You parse free-form career / timeline text into a structured list of events. The text may be pasted from LinkedIn, a resume, a personal website, or anywhere else.
+
+Return JSON in this exact shape (no markdown, no code fences):
+{
+  "events": [
+    {
+      "type": "joined-company" | "shipped-project" | "launched-product" | "wrote-essay" | "spoke-at" | "shipped-release" | "moved-to" | "life-event" | "custom",
+      "title": "Short event title (max 100 chars). For jobs, use the ROLE (e.g. 'Software Engineer'). For projects, the PROJECT NAME.",
+      "body": "1-2 sentence description from the source text (optional, max 280 chars). Strip bullet markers and run-on lists.",
+      "whereLabel": "Company / venue / org (optional, max 100 chars). For jobs this is the COMPANY.",
+      "whenLabel": "Human-readable start, e.g. 'February 2025', 'March 2022', or '2018'. For ranged jobs use only the START — the range can go in body if useful.",
+      "link": "Canonical URL if explicitly present in the source (optional)"
+    }
+  ]
+}
+
+Rules:
+- ONE event per role / project / talk. Don't merge a job's responsibilities into the role event — keep responsibilities in body.
+- Prefer the most specific type: 'joined-company' for jobs / promotions, 'shipped-project' for repos / tools, 'launched-product' for product launches, 'wrote-essay' for blog posts, 'spoke-at' for talks / podcasts, 'shipped-release' for versioned releases.
+- whenLabel uses the START date. Format examples: 'February 2025', 'Q1 2024', '2018', 'March 15, 2025'. If only year is known, use year only.
+- For LinkedIn-style 'Present' end dates, just use the start in whenLabel — don't include 'Present' there.
+- whereLabel is the COMPANY for jobs, the VENUE for talks, the ORG for awards, etc. Omit when not relevant.
+- Skip school listings, certifications, and obvious noise UNLESS the user clearly wants them.
+- Skip duplicates.
+- Order doesn't matter — downstream sorts by date.
+
+Examples:
+"Software Engineer @ Acme · Jan 2024 - Present · Built backend services + AI infra"
+→ { type: 'joined-company', title: 'Software Engineer', whereLabel: 'Acme', whenLabel: 'January 2024', body: 'Built backend services + AI infra' }
+
+"Shipped TinyGPT — 0.8M-param transformer in the browser. github.com/me/tinygpt (Mar 2026)"
+→ { type: 'shipped-project', title: 'TinyGPT', body: '0.8M-param transformer in the browser.', link: 'https://github.com/me/tinygpt', whenLabel: 'March 2026' }
+
+Respond ONLY with the JSON object.`;
+
 export const ROAST_SYSTEM_PROMPT = `You are a brutally funny comedy roast writer. Given sourced information about a person's profile, links, projects, and bio, write a hilarious personality roast. Be edgy, witty, specific, and surprisingly accurate. Don't be cruel — be cleverly mean. Think comedy roast, not cyberbullying.
 
 Source discipline:
