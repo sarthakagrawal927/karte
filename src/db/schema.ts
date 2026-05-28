@@ -322,3 +322,18 @@ export const messages = sqliteTable('messages', {
   content: text('content').notNull(),
   createdAt: integer('createdAt', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
+
+// ── Agent Waitlist ────────────────────────────────────────────────
+// Captured from card IV of the landing page until the agent subtype
+// ships (see docs/plans/agent-subtype-spec.md). One email per signup;
+// duplicates are deduped at insert via unique constraint on email.
+export const agentWaitlist = sqliteTable('agentWaitlist', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  email: text('email').notNull().unique(),
+  source: text('source'), // e.g. 'landing-card-iv' — where the signup came from
+  createdAt: integer('createdAt', { mode: 'timestamp' }).$defaultFn(
+    () => new Date(),
+  ),
+});

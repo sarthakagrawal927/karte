@@ -1,7 +1,14 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Inter,
+  Instrument_Serif,
+  JetBrains_Mono,
+  Playfair_Display,
+} from "next/font/google";
 
 import { AnalyticsProvider } from "@/components/posthog-provider";
 import { PageAnalyticsTracker } from "@/components/public/page-analytics-tracker";
@@ -21,6 +28,30 @@ const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
   style: "italic",
+});
+
+// ── Landing-page faces ──────────────────────────────────────────────
+// Playfair Display is the gold-foil serif used across the Onyx deck.
+// Inter and JetBrains Mono pair with it: Inter for body/UI, JetBrains
+// for the agent-spec labels. These names match the CSS variables in
+// src/app/landing.css (--font-playfair, --font-inter, --font-jetbrains).
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains",
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
 });
 
 const SITE_URL = "https://karte.cc";
@@ -63,7 +94,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} ${playfairDisplay.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <AnalyticsProvider>
           <PageAnalyticsTracker />
