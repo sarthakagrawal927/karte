@@ -13,6 +13,7 @@ import { TrackableSection } from '@/components/public/trackable-section';
 import { TypedText } from '@/components/public/typed-text';
 import { VideoEmbed } from '@/components/public/video-embed';
 import type { ProjectCardData } from '@/components/public/widgets';
+import { isDemoSlug } from '@/lib/demo-profiles';
 import { getProfileVariant } from '@/lib/profile-variants';
 import { resolveThemeConfig } from '@/lib/themes';
 
@@ -218,6 +219,21 @@ export default async function ProfilePage({ params }: Props) {
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-5 pb-16 pt-8 sm:px-8">
+        {isDemoSlug(slug) && (
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-400/25 bg-amber-400/[0.06] px-4 py-2.5 text-[12px] text-amber-200/90">
+            <span>
+              <span className="font-semibold text-amber-200">Sample profile.</span>{' '}
+              Built from public information about {page.displayName} to demo
+              Karte. Not an official page.
+            </span>
+            <Link
+              href="/create"
+              className="rounded-full bg-amber-200/15 px-3 py-1 text-[11.5px] font-medium text-amber-100 transition hover:bg-amber-200/25"
+            >
+              Build yours →
+            </Link>
+          </div>
+        )}
         <div className="grid gap-10 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:gap-14 xl:gap-20">
           <ProfileHero
             displayName={page.displayName}

@@ -124,18 +124,33 @@ export default function Home() {
                 Free · no card · 60-second import from Linktree, Beacons, or Bento.
               </p>
 
-              {/* Showcase placeholder — filled in once the demo profiles ship */}
-              <div className="mt-10 max-w-md rounded-2xl border border-dashed border-white/[0.10] bg-white/[0.015] px-5 py-4">
+              {/* Showcase — live sample profiles built from public info */}
+              <div className="mt-10 max-w-md rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4">
                 <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-karte-text-5">
-                  <span className="text-karte-accent/80">·</span> Coming this week
+                  <span className="text-karte-accent/80">·</span> Try a sample profile
                 </p>
-                <p className="mt-2 text-[13px] leading-[1.5] text-karte-text-3">
-                  Demo profiles for{' '}
-                  <span className="text-karte-text">Naval</span>,{' '}
-                  <span className="text-karte-text">Pieter Levels</span>,{' '}
-                  <span className="text-karte-text">Paul Graham</span>, and others —
-                  built from their public writing. See how the chat would handle
-                  their inbound.
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {[
+                    { slug: 'naval', label: 'Naval' },
+                    { slug: 'levelsio', label: 'levelsio' },
+                    { slug: 'pg', label: 'Paul Graham' },
+                    { slug: 'karpathy', label: 'Karpathy' },
+                  ].map((p) => (
+                    <Link
+                      key={p.slug}
+                      href={`/${p.slug}`}
+                      className="group inline-flex items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.02] px-3 py-1.5 text-[12.5px] font-medium text-karte-text-2 transition hover:border-karte-accent/30 hover:bg-white/[0.04] hover:text-karte-text"
+                    >
+                      {p.label}
+                      <span className="text-karte-text-4 transition-transform duration-200 group-hover:translate-x-0.5">
+                        →
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+                <p className="mt-3 text-[11.5px] leading-[1.5] text-karte-text-4">
+                  Built from public writing. Ask them what they charge, where
+                  they live, what stack they use.
                 </p>
               </div>
             </div>
