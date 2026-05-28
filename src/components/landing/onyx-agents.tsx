@@ -84,7 +84,7 @@ export function OnyxAgents() {
                 setState({ kind: 'open', email: '', submitting: false, message: '', error: false })
               }
             >
-              Issue an agent card <span aria-hidden="true">→</span>
+              Coming soon — notify me <span aria-hidden="true">→</span>
             </button>
           </div>
         ) : (
