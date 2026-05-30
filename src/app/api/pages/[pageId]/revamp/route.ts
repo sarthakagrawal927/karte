@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, like, notLike } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, like, notLike } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
 import { db, ensureProjectsTable } from '@/db';
@@ -41,6 +41,11 @@ type RevampPlan = {
   rationale: string;
   emphasis: string[];
   blocks: RevampBlock[];
+  // IDs of existing pageSections to remove. Safe because the
+  // preview-then-apply flow lets the owner see what's slated for
+  // deletion before committing. Server validates that each ID actually
+  // belongs to the page being revamped before deleting.
+  removeSectionIds: string[];
 };
 
 const REVAMP_TITLE_PREFIX = 'AI Revamp:';
@@ -129,6 +134,13 @@ function normalizePlan(value: unknown): RevampPlan {
         .slice(0, 5)
     : ['Links', 'Chat', 'Projects', 'Writing'];
 
+  const removeSectionIds = Array.isArray(source.removeSectionIds)
+    ? source.removeSectionIds
+        .filter((id): id is string => typeof id === 'string' && id.trim().length > 0)
+        .map((id) => id.trim())
+        .slice(0, 12)
+    : [];
+
   return {
     themePresetId,
     ...(customColors ? { customColors } : {}),
@@ -140,6 +152,7 @@ function normalizePlan(value: unknown): RevampPlan {
     ),
     emphasis,
     blocks,
+    removeSectionIds,
   };
 }
 
@@ -162,6 +175,7 @@ function fallbackPlan(prompt: string, page: typeof pages.$inferSelect): RevampPl
     rationale:
       'Lead with links and chat, then use projects, writing, and generated modes as supporting proof. Keep the page polished enough for professional visitors while preserving shareability.',
     emphasis: ['Find Me Online', 'Chat', 'Projects', 'Writing', 'Generated modes'],
+    removeSectionIds: [],
     blocks: [
       {
         type: 'text',
@@ -202,7 +216,10 @@ You may recommend at most 3 new public blocks.
 Allowed block types: text, blog, cta, social, testimonial, contact.
 Every block title must be short. Blog content format is one post per line: Title | URL | Short description | Date.
 CTA blocks require buttonLabel and an absolute https URL.
-Do not suggest deleting user content. Prefer adding clarifying blocks and changing the theme.`,
+
+REMOVALS: when the user's prompt explicitly asks to remove, drop, or hide a section ("remove the writing section", "drop the testimonials", "hide the contact form"), include the matching pageSections IDs in "removeSectionIds". Match by section title/type from the page state below. Only include IDs that appear in that list. Never invent IDs. If the user doesn't ask for removals, leave removeSectionIds empty.
+
+Prefer additive changes when the prompt is purely about vibe/theme. The owner sees a preview before anything is removed, so honest removal proposals are safe.`,
     reasoningLevel: 'deep',
     prompt: JSON.stringify({
       requestedRevamp: prompt,
@@ -220,6 +237,7 @@ Do not suggest deleting user content. Prefer adding clarifying blocks and changi
         description: item.description,
       })),
       sections: sections.map((item) => ({
+        id: item.id,
         type: item.type,
         title: item.title,
         content: item.content,
@@ -235,6 +253,7 @@ Do not suggest deleting user content. Prefer adding clarifying blocks and changi
         headline: 'Short name for the revamp',
         rationale: 'Why this structure works',
         emphasis: ['ordered list of public blocks to emphasize'],
+        removeSectionIds: ['(optional) list of pageSection IDs from `sections` above that the user explicitly asked to remove'],
         blocks: [
           {
             type: 'text',
@@ -263,7 +282,11 @@ async function applyPlan(pageId: string, plan: RevampPlan) {
   // D1 rejects drizzle's BEGIN/COMMIT transactions. We instead:
   //   1. Read the max sortOrder of NON-revamp sections up front
   //      (the old revamp rows are about to be deleted anyway).
-  //   2. Run the UPDATE + DELETE + INSERTs as a single atomic batch.
+  //   2. Validate that each removeSectionIds entry actually belongs
+  //      to this page so the AI can't be tricked into deleting
+  //      somebody else's data.
+  //   3. Run the UPDATE + DELETE(revamp prefix) + DELETE(by ID) +
+  //      INSERTs as a single atomic batch.
   // The pre-batch read is the trade-off — a concurrent insert between
   // the read and the batch could collide on sortOrder, but revamp is
   // a per-page, per-user action so contention is effectively zero.
@@ -280,6 +303,20 @@ async function applyPlan(pageId: string, plan: RevampPlan) {
     .limit(1);
 
   const startOrder = (maxSection?.sortOrder ?? -1) + 1;
+
+  let removableIds: string[] = [];
+  if (plan.removeSectionIds.length > 0) {
+    const ownedRows = await db
+      .select({ id: pageSections.id })
+      .from(pageSections)
+      .where(
+        and(
+          eq(pageSections.pageId, pageId),
+          inArray(pageSections.id, plan.removeSectionIds),
+        ),
+      );
+    removableIds = ownedRows.map((row) => row.id);
+  }
 
   const writes = [
     db
@@ -300,6 +337,18 @@ async function applyPlan(pageId: string, plan: RevampPlan) {
           like(pageSections.title, `${REVAMP_TITLE_PREFIX}%`),
         ),
       ),
+    ...(removableIds.length > 0
+      ? [
+          db
+            .delete(pageSections)
+            .where(
+              and(
+                eq(pageSections.pageId, pageId),
+                inArray(pageSections.id, removableIds),
+              ),
+            ),
+        ]
+      : []),
     ...plan.blocks.map((block, index) =>
       db.insert(pageSections).values({
         pageId,
@@ -364,7 +413,18 @@ export async function POST(
       await applyPlan(pageId, plan);
     }
 
-    return NextResponse.json({ plan, applied: shouldApply });
+    // Resolve the IDs the AI proposed to remove into display data
+    // (title + type) so the dashboard's preview panel can show what
+    // would actually go. The intersection with `sections` here is the
+    // same validation applyPlan does — IDs that don't belong to the
+    // page get silently dropped.
+    const removedSections = plan.removeSectionIds.length > 0
+      ? sections
+          .filter((s) => plan.removeSectionIds.includes(s.id))
+          .map((s) => ({ id: s.id, title: s.title, type: s.type }))
+      : [];
+
+    return NextResponse.json({ plan, applied: shouldApply, removedSections });
   } catch (error) {
     // Any throw from generate(), applyPlan(), or the DB reads above
     // would otherwise become a framework-default 500 with an empty

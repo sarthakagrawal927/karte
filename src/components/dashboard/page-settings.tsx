@@ -32,6 +32,13 @@ interface RevampPlan {
     buttonLabel?: string | null;
     buttonUrl?: string | null;
   }>;
+  removeSectionIds: string[];
+}
+
+interface RemovedSectionPreview {
+  id: string;
+  title: string;
+  type: string;
 }
 
 interface PageData {
@@ -144,6 +151,7 @@ export function PageSettings({
   // mutating; applyPendingPlan commits the previewed plan. Lets the
   // user inspect (and discard) before any DB write or theme swap.
   const [pendingPlan, setPendingPlan] = useState<RevampPlan | null>(null);
+  const [pendingRemovals, setPendingRemovals] = useState<RemovedSectionPreview[]>([]);
   // Bumped on every successful save to force the live-preview iframe to
   // reload with fresh content. Cheap way to keep the preview honest
   // without manually wiring a postMessage channel.
@@ -157,6 +165,7 @@ export function PageSettings({
     setAiRunning(true);
     setAiMessage('');
     setPendingPlan(null);
+    setPendingRemovals([]);
     try {
       const res = await fetch(`/api/pages/${page.id}/revamp`, {
         method: 'POST',
@@ -166,11 +175,13 @@ export function PageSettings({
       const data = (await res.json().catch(() => ({}))) as {
         error?: string;
         plan?: RevampPlan;
+        removedSections?: RemovedSectionPreview[];
       };
       if (!res.ok || !data.plan) {
         throw new Error(data.error || 'Failed to generate theme');
       }
       setPendingPlan(data.plan);
+      setPendingRemovals(data.removedSections ?? []);
       setAiMessage('Preview ready — review below, then Apply when you are happy.');
     } catch (error) {
       setAiMessage(error instanceof Error ? error.message : 'Failed to generate theme');
@@ -202,6 +213,7 @@ export function PageSettings({
       }
       setAiMessage('Theme applied.');
       setPendingPlan(null);
+      setPendingRemovals([]);
       setAiPrompt('');
       setPreviewRefreshKey((n) => n + 1);
       router.refresh();
@@ -214,6 +226,7 @@ export function PageSettings({
 
   function discardPendingPlan() {
     setPendingPlan(null);
+    setPendingRemovals([]);
     setAiMessage('');
   }
   const [saving, setSaving] = useState(false);
@@ -426,6 +439,7 @@ export function PageSettings({
           {pendingPlan && (
             <RevampPreview
               plan={pendingPlan}
+              removals={pendingRemovals}
               applying={aiRunning}
               onApply={applyPendingPlan}
               onDiscard={discardPendingPlan}
@@ -832,11 +846,13 @@ export function PageSettings({
 // blocks that would be added before any DB write happens.
 function RevampPreview({
   plan,
+  removals,
   applying,
   onApply,
   onDiscard,
 }: {
   plan: RevampPlan;
+  removals: RemovedSectionPreview[];
   applying: boolean;
   onApply: () => void;
   onDiscard: () => void;
@@ -884,6 +900,29 @@ function RevampPreview({
           </span>
         ))}
       </div>
+
+      {removals.length > 0 && (
+        <div className="mt-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-rose-300/75">
+            {removals.length} will be removed
+          </p>
+          <ul className="mt-2 space-y-1.5">
+            {removals.map((section) => (
+              <li
+                key={section.id}
+                className="flex items-baseline justify-between gap-3 rounded-lg border border-rose-500/20 bg-rose-500/[0.05] px-3 py-2"
+              >
+                <p className="truncate text-[13px] font-medium text-karte-text/90 line-through decoration-rose-400/60">
+                  {section.title}
+                </p>
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-rose-300/70">
+                  {section.type}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {plan.blocks.length > 0 && (
         <div className="mt-4">
