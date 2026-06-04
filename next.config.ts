@@ -4,6 +4,11 @@ import type { NextConfig } from 'next';
 initOpenNextCloudflareForDev();
 
 const nextConfig: NextConfig = {
+  // `next build` writes the standalone bundle to .next/standalone/ which
+  // both Beasties (post-build inline-critical-css.mjs) and OpenNext need
+  // to share. Without this, OpenNext's own build step regenerates the
+  // standalone copy after Beasties runs, wiping the inlined CSS.
+  output: "standalone",
   reactCompiler: true,
   serverExternalPackages: [
     '@libsql/client',
