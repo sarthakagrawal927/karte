@@ -10,6 +10,12 @@ import { OnyxHow } from '@/components/landing/onyx-how';
 import { OnyxSamples } from '@/components/landing/onyx-samples';
 import { OnyxSurfaces } from '@/components/landing/onyx-surfaces';
 
+// Static + ISR: pre-rendered at build, served from CF edge cache for an
+// hour. psi-swarm flagged TTFB ≈ 902ms because OpenNext was re-rendering
+// the deck on every request. The deck content is fully static — no DB,
+// no auth, no per-user variance — so a long s-maxage is safe.
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: 'Karte — Your link-in-bio, that answers back',
   description:
