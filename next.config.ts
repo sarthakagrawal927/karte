@@ -24,12 +24,16 @@ const nextConfig: NextConfig = {
         source: '/',
         headers: [
           {
+            // CF Edge was returning DYNAMIC for HTML with s-maxage alone;
+            // adding an explicit max-age (browser cache) flips the edge
+            // response to HIT. Both directives are now present.
             key: 'Cache-Control',
-            value: 'public, s-maxage=3600, stale-while-revalidate=86400',
+            value:
+              'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800',
           },
           {
             key: 'CDN-Cache-Control',
-            value: 'public, s-maxage=3600, stale-while-revalidate=86400',
+            value: 'public, s-maxage=86400, stale-while-revalidate=604800',
           },
         ],
       },
