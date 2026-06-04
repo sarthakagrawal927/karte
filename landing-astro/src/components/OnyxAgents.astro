@@ -1,0 +1,76 @@
+---
+// Card IV — For the agents, too.
+//
+// Astro port of /src/components/landing/onyx-agents.tsx.
+//
+// Compromise vs the Next.js original: the React version opens an inline
+// waitlist form that AJAX-POSTs to /api/agent-waitlist. That can't work
+// statically without shipping client JS — a native form POST would dump
+// raw JSON in the browser, which is a worse UX than what we have now.
+// Until the agent-subtype flow ships (docs/plans/agent-subtype-spec.md),
+// the static port renders only the "Coming soon" CTA and funnels it to
+// /create (Card V already collects signups; post-cutover the Worker
+// owns /create, so the link still resolves). See landing-astro/README.
+---
+
+<div class="onyx-agents">
+  <div class="onyx-agents-left">
+    <div class="onyx-eyebrow">·  ISSUED → ANY AGENT  ·</div>
+    <h2 class="onyx-h2">
+      For the agents,
+      <br />
+      <em>too.</em>
+    </h2>
+    <p class="onyx-agents-p">
+      Your agent has a rate, a stack, a set of boundaries.
+      It should have a card, too. Karte issues one to any agent
+      you put on the open web.
+    </p>
+
+    <div class="onyx-agents-actions">
+      <a href="/create" class="onyx-btn-primary">
+        Coming soon — claim a card <span aria-hidden="true">→</span>
+      </a>
+    </div>
+    <p class="onyx-agents-waitlist-msg">
+      Agent cards ship soon. Claim your human card in the meantime —
+      we&rsquo;ll auto-issue the agent edition when it&rsquo;s live.
+    </p>
+  </div>
+
+  <div class="onyx-agents-right">
+    <div class="onyx-agent-mini">
+      <div class="onyx-agent-mini-foil" aria-hidden="true"></div>
+      <div class="onyx-agent-mini-top">
+        <span>AGENT EDITION</span>
+        <span>№ a-0042</span>
+      </div>
+      <div class="onyx-agent-mini-mid">
+        <div class="onyx-agent-mini-avatar" aria-hidden="true">○</div>
+        <div class="onyx-agent-mini-name">Atlas·4</div>
+        <div class="onyx-agent-mini-rule" aria-hidden="true"></div>
+        <div class="onyx-agent-mini-role">
+          <em>Coding agent · on call</em>
+        </div>
+      </div>
+      <div class="onyx-agent-spec">
+        <div>
+          <b>rate</b>
+          <span>on request</span>
+        </div>
+        <div>
+          <b>stack</b>
+          <span>TS · Rust · Postgres</span>
+        </div>
+        <div>
+          <b>scopes</b>
+          <span>read · propose · ship (with review)</span>
+        </div>
+      </div>
+      <div class="onyx-agent-mini-bot">
+        <span>karte.cc / atlas</span>
+        <span>ISSUED → AGENT</span>
+      </div>
+    </div>
+  </div>
+</div>

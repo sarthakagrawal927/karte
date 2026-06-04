@@ -1,0 +1,31 @@
+---
+// Card III — The Flip: four living surfaces.
+//
+// Editorial typographic list with leader-dot rules between title and
+// description. Astro port of /src/components/landing/onyx-surfaces.tsx.
+const SURFACES = [
+  { i: 'i.',   t: 'Chat',         b: 'Your AI version, on call.' },
+  { i: 'ii.',  t: 'Encyclopedia', b: 'The official record.' },
+  { i: 'iii.', t: 'Newspaper',    b: 'Above the fold.' },
+  { i: 'iv.',  t: 'Roast',        b: 'Built for screenshots.' },
+] as const;
+---
+
+<div class="onyx-surfaces">
+  <div class="onyx-eyebrow center">·  THE FLIP  ·</div>
+  <h2 class="onyx-h2 center">
+    One memory.
+    <br />
+    <em>Four living surfaces.</em>
+  </h2>
+  <ol class="onyx-surfaces-list">
+    {SURFACES.map((s) => (
+      <li>
+        <span class="onyx-sf-i">{s.i}</span>
+        <span class="onyx-sf-t">{s.t}</span>
+        <span class="onyx-sf-dots" aria-hidden="true"></span>
+        <span class="onyx-sf-b">{s.b}</span>
+      </li>
+    ))}
+  </ol>
+</div>

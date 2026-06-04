@@ -1,0 +1,94 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import OnyxCard from '@/components/OnyxCard.astro';
+import OnyxHero from '@/components/OnyxHero.astro';
+import OnyxHow from '@/components/OnyxHow.astro';
+import OnyxSurfaces from '@/components/OnyxSurfaces.astro';
+import OnyxAgents from '@/components/OnyxAgents.astro';
+import OnyxSamples from '@/components/OnyxSamples.astro';
+import OnyxCta from '@/components/OnyxCta.astro';
+
+// Karte landing — Onyx deck.
+//
+// Six cards, deck-numbered. Each card is an OnyxCard frame around a
+// body component. The deck IS the page — no above-deck nav decoration,
+// no below-deck proof sections; everything the visitor needs to buy
+// the pitch lives inside these six surfaces.
+//
+// Port of /src/app/page.tsx (Next.js). The composition (idx / serial /
+// kicker / footL / footR / body) mirrors the React file 1:1 so the
+// existing landing.css selectors keep working unchanged.
+
+const TITLE = 'Karte — Your link-in-bio, that answers back';
+const DESCRIPTION =
+  'A single page for every link you carry. Karte is your digital calling card — and an AI that knows what you would say. German for card. This one talks back.';
+---
+
+<Layout title={TITLE} description={DESCRIPTION}>
+  <main>
+    {/* Top nav intentionally omitted on the landing page — the deck
+        is self-contained and the nav was competing with card I's
+        own header strip. CTAs inside cards I + VI cover login/create. */}
+    <div class="onyx-deck">
+      <OnyxCard
+        idx="i"
+        serial="№ 00471"
+        kicker="DIGITAL CARD · CARD V2026"
+        footL="karte.cc/yourhandle"
+        footR="Free · 60-second import"
+      >
+        <OnyxHero />
+      </OnyxCard>
+
+      <OnyxCard
+        idx="ii"
+        serial="№ 00472"
+        kicker="HOW IT WORKS · CARD II"
+        footL="Three steps · one afternoon"
+        footR="Scroll for next →"
+      >
+        <OnyxHow />
+      </OnyxCard>
+
+      <OnyxCard
+        idx="iii"
+        serial="№ 00473"
+        kicker="THE FLIP · CARD III"
+        footL="One memory · four living surfaces"
+        footR="Same sources"
+      >
+        <OnyxSurfaces />
+      </OnyxCard>
+
+      <OnyxCard
+        idx="iv"
+        serial="№ 00474"
+        kicker="FOR THE AGENTS · CARD IV"
+        footL="Issued to humans · & to their agents"
+        footR="karte.cc/agents"
+      >
+        <OnyxAgents />
+      </OnyxCard>
+
+      <OnyxCard
+        idx="v"
+        serial="№ 00475"
+        kicker="THE MEMBERS · CARD V"
+        footL="Sample cards built from public writing"
+        footR="Open one, talk to it →"
+      >
+        <OnyxSamples />
+      </OnyxCard>
+
+      <OnyxCard
+        idx="vi"
+        serial="№ 00476"
+        kicker="CLAIM YOUR NAME · LAST CARD"
+        footL="One link · four surfaces · free forever"
+        footR="© MMXXVI · Karte"
+      >
+        <OnyxCta />
+      </OnyxCard>
+    </div>
+  </main>
+</Layout>

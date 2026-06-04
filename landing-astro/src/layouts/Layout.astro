@@ -1,0 +1,97 @@
+---
+import '@/styles/landing.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+const SITE_URL = 'https://karte.cc';
+// OG/Twitter image lives on the Next.js Worker at /opengraph-image
+// (Next file convention → dynamic JSX → PNG). Astro can't trivially
+// reproduce that. Post-cutover Pages takes `/` and Workers keeps every
+// other route, so this URL still resolves. See README → cutover notes.
+const OG_IMAGE = `${SITE_URL}/opengraph-image`;
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="application-name" content="Karte" />
+
+    <link rel="canonical" href={SITE_URL} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={SITE_URL} />
+    <meta property="og:site_name" content="Karte" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={OG_IMAGE} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={OG_IMAGE} />
+
+    <meta name="keywords" content="link in bio, personal website, digital card, Linktree alternative" />
+
+    {/* ── Fonts ────────────────────────────────────────────────────
+       Playfair Display (gold-foil serif on the LCP h1) + Inter (body
+       on the deck) are the two faces on the LCP path. Use the async
+       preload pattern: preload, then swap media print → all on load
+       so the stylesheet never blocks first paint. Plain <link
+       rel="stylesheet"> below is the no-JS fallback inside <noscript>.
+
+       Geist, Geist Mono, JetBrains Mono and Instrument Serif from the
+       Next.js layout are intentionally NOT preloaded — they aren't on
+       the LCP path. JetBrains is referenced by .onyx-agent-spec deep
+       in card IV, so we don't load it at all on this static port; the
+       agent-spec falls through to the CSS-stack fallback. */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600&display=swap"
+      />
+    </noscript>
+
+    {/* Wire the same CSS vars Next.js's next/font set up, so landing.css
+       (which references var(--font-playfair) / var(--font-inter)) keeps
+       working without changes. */}
+    <style is:inline>
+      :root {
+        --font-playfair: 'Playfair Display', Georgia, 'Times New Roman', serif;
+        --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
+        --font-instrument-serif: 'Instrument Serif', Georgia, serif;
+        --font-geist-sans: 'Geist', system-ui, sans-serif;
+        --font-geist-mono: 'Geist Mono', ui-monospace, monospace;
+        --font-jetbrains: 'JetBrains Mono', ui-monospace, monospace;
+      }
+      html.dark { color-scheme: dark; }
+      body { margin: 0; }
+    </style>
+  </head>
+  <body class="antialiased">
+    <slot />
+  </body>
+</html>
