@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
   // standalone copy after Beasties runs, wiping the inlined CSS.
   output: "standalone",
   reactCompiler: true,
+  // experimental.useLightningcss intentionally NOT enabled: Next.js 16 is
+  // strict about this — the flag throws "lightningcss-loader does not work
+  // with postcss plugins" when Tailwind v4 is in the pipeline. Fleet
+  // standard records Lightning CSS belongs in the Vite/Astro projects
+  // where it can actually run; future Next.js Tailwind v4 work will pick
+  // it up automatically once Next removes the postcss conflict.
   serverExternalPackages: [
     '@libsql/client',
     '@libsql/hrana-client',
