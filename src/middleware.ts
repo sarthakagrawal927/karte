@@ -97,6 +97,26 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
+  // Force CF Edge to cache karte.cc /. OpenNext emits s-maxage which CF
+  // was treating as DYNAMIC; max-age + CDN-Cache-Control flips it to HIT.
+  if (
+    request.method === 'GET' &&
+    onAppHost &&
+    request.nextUrl.pathname === '/' &&
+    !hasSessionCookie(request)
+  ) {
+    const res = NextResponse.next();
+    res.headers.set(
+      'Cache-Control',
+      'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800',
+    );
+    res.headers.set(
+      'CDN-Cache-Control',
+      'public, s-maxage=86400, stale-while-revalidate=604800',
+    );
+    return res;
+  }
+
   const response = NextResponse.next();
 
   // Edge-cache profile pages so repeat visits hit CF's CDN, not the worker.
