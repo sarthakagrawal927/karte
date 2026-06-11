@@ -13,6 +13,18 @@ export type PageSettings = {
 
 export type DmMode = 'off' | 'anonymous' | 'email';
 
+export type PageType = 'person' | 'agent';
+
+export type AgentVerificationMethod = 'well-known' | 'dns-txt';
+
+export type BrainEndpointShape = 'openai-chat' | 'a2a' | 'webhook';
+
+export type AgentCapability = {
+  id: string;
+  label?: string;
+  description: string;
+};
+
 // ── User (better-auth default + linkchat custom fields) ──────────────
 // Table name `user` (singular) — matches better-auth defaults so its
 // drizzleAdapter resolves without a custom schema mapping.
@@ -116,6 +128,19 @@ export const pages = sqliteTable('pages', {
   // user can keep a real photo as the avatar and a character as pet.
   petUrl: text('petUrl'),
   petEnabled: integer('petEnabled', { mode: 'boolean' }).default(true),
+  pageType: text('pageType').$type<PageType>().notNull().default('person'),
+  verifiedDomain: text('verifiedDomain'),
+  verifiedAt: integer('verifiedAt', { mode: 'timestamp' }),
+  verificationMethod: text('verificationMethod').$type<AgentVerificationMethod>(),
+  verificationToken: text('verificationToken'),
+  agentPurpose: text('agentPurpose'),
+  agentOperator: text('agentOperator'),
+  agentOperatorUrl: text('agentOperatorUrl'),
+  agentCapabilities: text('agentCapabilities', { mode: 'json' }).$type<AgentCapability[]>(),
+  agentDisclosurePolicy: text('agentDisclosurePolicy'),
+  brainEndpointUrl: text('brainEndpointUrl'),
+  brainEndpointAuth: text('brainEndpointAuth'),
+  brainEndpointShape: text('brainEndpointShape').$type<BrainEndpointShape>().default('openai-chat'),
   createdAt: integer('createdAt', { mode: 'timestamp' }).$defaultFn(
     () => new Date(),
   ),
@@ -370,6 +395,30 @@ export const timelineEvents = sqliteTable('timelineEvents', {
 // Captured from card IV of the landing page until the agent subtype
 // ships (see docs/plans/agent-subtype-spec.md). One email per signup;
 // duplicates are deduped at insert via unique constraint on email.
+export const apiKeys = sqliteTable('apiKeys', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text('userId')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  keyPrefix: text('keyPrefix').notNull(),
+  keyHash: text('keyHash').notNull().unique(),
+  createdAt: integer('createdAt', { mode: 'timestamp' }).notNull(),
+  revokedAt: integer('revokedAt', { mode: 'timestamp' }),
+});
+
+export const agentAuthCodes = sqliteTable('agentAuthCodes', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  email: text('email').notNull(),
+  codeHash: text('codeHash').notNull(),
+  expiresAt: integer('expiresAt', { mode: 'timestamp' }).notNull(),
+  createdAt: integer('createdAt', { mode: 'timestamp' }).notNull(),
+});
+
 export const agentWaitlist = sqliteTable('agentWaitlist', {
   id: text('id')
     .primaryKey()

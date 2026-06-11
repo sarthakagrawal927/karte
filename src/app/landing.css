@@ -513,6 +513,34 @@ html:has(.onyx-deck) body::-webkit-scrollbar { display: none; }
 .onyx-agents-waitlist-msg.error {
   color: #ff8a80;
 }
+.onyx-agents-docs-link {
+  font: 400 12px/1 var(--font-inter), sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(196, 164, 107, 0.85);
+  text-decoration: none;
+}
+.onyx-agents-docs-link:hover {
+  color: #e2c081;
+}
+.onyx-agents-success {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 520px;
+}
+.onyx-agents-key {
+  display: block;
+  overflow-x: auto;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(196, 164, 107, 0.22);
+  color: #f4ebd4;
+  font: 400 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  word-break: break-all;
+}
 .onyx-agents-right {
   display: flex;
   justify-content: center;
