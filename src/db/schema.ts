@@ -416,6 +416,17 @@ export const agentAuthCodes = sqliteTable('agentAuthCodes', {
   email: text('email').notNull(),
   codeHash: text('codeHash').notNull(),
   expiresAt: integer('expiresAt', { mode: 'timestamp' }).notNull(),
+  attempts: integer('attempts').notNull().default(0),
+  ipHash: text('ipHash'),
+  createdAt: integer('createdAt', { mode: 'timestamp' }).notNull(),
+});
+
+export const agentAuthSendLog = sqliteTable('agentAuthSendLog', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  email: text('email').notNull(),
+  ipHash: text('ipHash').notNull(),
   createdAt: integer('createdAt', { mode: 'timestamp' }).notNull(),
 });
 
