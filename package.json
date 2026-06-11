@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "node --test --test-reporter=spec 'tests/**/*.unit.test.mjs'",
+    "smoke:agent": "node scripts/smoke-agent-api.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "backfill:aggregates": "node scripts/backfill-aggregates.mjs",

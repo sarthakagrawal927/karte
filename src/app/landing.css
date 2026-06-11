@@ -600,6 +600,13 @@ html:has(.onyx-deck) body::-webkit-scrollbar { display: none; }
   padding-top: 10px;
   border-top: 0.5px dotted rgba(140, 180, 210, 0.2);
 }
+.onyx-agent-mini-link {
+  color: rgba(168, 220, 255, 0.85);
+  text-decoration: none;
+}
+.onyx-agent-mini-link:hover {
+  color: #e0f2fe;
+}
 .onyx-agent-mini-mid {
   position: relative;
   z-index: 2;

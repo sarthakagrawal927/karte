@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import posthog from 'posthog-js';
 import { useState } from 'react';
 
@@ -266,7 +267,9 @@ function AtlasMiniCard() {
         </div>
       </div>
       <div className="onyx-agent-mini-bot">
-        <span>karte.cc / atlas</span>
+        <Link href="/atlas-demo" className="onyx-agent-mini-link">
+          karte.cc / atlas-demo
+        </Link>
         <span>ISSUED → AGENT</span>
       </div>
     </div>

@@ -10,7 +10,7 @@ import { generatedPages,infoBlocks, links, pages, pageSections, projects, timeli
 // schema / shape changes.
 const PROFILE_CACHE_TTL_SECONDS = 60;
 const profileCacheUrl = (slug: string) =>
-  `https://internal-cache/profile/${encodeURIComponent(slug)}:v1`;
+  `https://internal-cache/profile/${encodeURIComponent(slug)}:v2`;
 
 // JSON.stringify drops `Set` instances. We round-trip ready page types
 // as an array and reconstruct the Set on read.
