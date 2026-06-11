@@ -100,7 +100,7 @@ export async function POST(req: Request) {
     userId: operator.id,
     email: operator.email,
     keyName,
-    docs_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://karte.cc'}/llms.txt`,
+    docs_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://karte.cc'}/skill.md`,
     message: 'Save this API key now. It will not be shown again.',
   });
 }

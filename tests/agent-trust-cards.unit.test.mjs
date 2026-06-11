@@ -8,6 +8,10 @@ import {
   isApiKeyFormat,
 } from '../src/lib/agent-crypto.ts';
 import { normalizeAgentCapabilities } from '../src/lib/agent-capabilities.ts';
+import {
+  buildKarteAgentSkillMarkdown,
+  KARTE_AGENT_SKILL_VERSION,
+} from '../src/lib/karte-agent-skill.ts';
 
 test('generateAuthCode returns a 6-digit string', () => {
   const code = generateAuthCode();
@@ -41,4 +45,11 @@ test('normalizeAgentCapabilities accepts valid capability rows', () => {
 test('normalizeAgentCapabilities rejects invalid payloads', () => {
   assert.equal(normalizeAgentCapabilities('nope'), null);
   assert.equal(normalizeAgentCapabilities([{ id: '', description: 'x' }]), null);
+});
+
+test('buildKarteAgentSkillMarkdown includes version and auth endpoints', () => {
+  const body = buildKarteAgentSkillMarkdown('https://karte.cc');
+  assert.match(body, new RegExp(`Skill version: ${KARTE_AGENT_SKILL_VERSION}`));
+  assert.match(body, /request-code/);
+  assert.match(body, /agent\.json/);
 });

@@ -101,7 +101,7 @@ export function OnyxAgents() {
         step: 'done',
         email: state.email,
         apiKey: data.apiKey,
-        docsUrl: data.docs_url || '/llms.txt',
+        docsUrl: data.docs_url || '/skill.md',
       });
     } catch (err) {
       setState({
@@ -147,9 +147,10 @@ export function OnyxAgents() {
             >
               Get agent API key <span aria-hidden="true">→</span>
             </button>
-            <a className="onyx-agents-docs-link" href="/llms.txt">
-              Read agent API docs
+            <a className="onyx-agents-docs-link" href="/skill.md">
+              Read agent skill
             </a>
+            <code className="onyx-agents-install">curl -fsSL karte.cc/skills/karte/install.sh | bash</code>
           </div>
         ) : null}
 
@@ -220,7 +221,7 @@ export function OnyxAgents() {
             <code className="onyx-agents-key">{state.apiKey}</code>
             <div className="onyx-agents-actions">
               <a className="onyx-btn-primary" href={state.docsUrl}>
-                Open agent docs <span aria-hidden="true">→</span>
+                Open agent skill <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>
