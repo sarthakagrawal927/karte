@@ -513,6 +513,41 @@ html:has(.onyx-deck) body::-webkit-scrollbar { display: none; }
 .onyx-agents-waitlist-msg.error {
   color: #ff8a80;
 }
+.onyx-agents-docs-link {
+  font: 400 12px/1 var(--font-inter), sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(196, 164, 107, 0.85);
+  text-decoration: none;
+}
+.onyx-agents-docs-link:hover {
+  color: #e2c081;
+}
+.onyx-agents-success {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 520px;
+}
+.onyx-agents-key {
+  display: block;
+  overflow-x: auto;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(196, 164, 107, 0.22);
+  color: #f4ebd4;
+  font: 400 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  word-break: break-all;
+}
+.onyx-agents-install {
+  display: block;
+  margin-top: 10px;
+  font: 400 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: rgba(232, 223, 202, 0.55);
+  word-break: break-all;
+}
 .onyx-agents-right {
   display: flex;
   justify-content: center;
@@ -564,6 +599,13 @@ html:has(.onyx-deck) body::-webkit-scrollbar { display: none; }
 .onyx-agent-mini-bot {
   padding-top: 10px;
   border-top: 0.5px dotted rgba(140, 180, 210, 0.2);
+}
+.onyx-agent-mini-link {
+  color: rgba(168, 220, 255, 0.85);
+  text-decoration: none;
+}
+.onyx-agent-mini-link:hover {
+  color: #e0f2fe;
 }
 .onyx-agent-mini-mid {
   position: relative;
