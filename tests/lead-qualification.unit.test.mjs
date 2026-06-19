@@ -30,3 +30,8 @@ test('dm_submit is scored like other direct lead submissions', () => {
   assert.equal(dmScore, 12);
 });
 
+test('dm_submit scores like a direct lead submission', () => {
+  assert.equal(scoreLead([{ eventType: 'contact_submit' }]), 12);
+  assert.equal(scoreLead([{ eventType: 'dm_submit' }]), 12);
+  assert.equal(scoreLead([{ eventType: 'dm_submit' }]), scoreLead([{ eventType: 'contact_submit' }]));
+});
