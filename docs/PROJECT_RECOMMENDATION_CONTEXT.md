@@ -1,8 +1,10 @@
 # Project Recommendation Context
 
-Generated: 2026-06-06T21:14:19.573Z
+Generated: 2026-06-06T21:14:19.573Z (tooling note refreshed 2026-06-20)
 
 This file is a CodeVetter Repo Unpacked-inspired audit written for Starboard recommendations. It is intentionally local, evidence-oriented, and safe to commit: it records product context, feature areas, stack inventory, and recommendation guidance without secrets or environment values.
+
+**2026-06-20:** Removed `@saas-maker/eslint-config` and `@saas-maker/astro-landing`. Local eslint config and `scripts/run-*-astro-landing.mjs`.
 
 ## Project Identity
 
@@ -124,7 +126,6 @@ Direct dependencies:
 
 Development dependencies:
 - `@playwright/test`
-- `@saas-maker/eslint-config`
 - `@tailwindcss/postcss`
 - `@types/node`
 - `@types/react`
