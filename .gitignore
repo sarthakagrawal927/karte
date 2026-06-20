@@ -61,3 +61,7 @@ cache.bin
 
 # Claude Code agent worktrees
 .claude/worktrees/
+
+# build output — never commit (inlines secrets)
+.pages-deploy/
+.open-next/
