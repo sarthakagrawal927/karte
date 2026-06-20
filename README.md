@@ -53,8 +53,10 @@ pnpm dev                              # http://localhost:3000
 | `R2_PUBLIC_BASE_URL`                  | R2       | Public R2 base URL                             |
 | `R2_ACCESS_KEY_ID`                    | R2       | R2 credential                                  |
 | `R2_SECRET_ACCESS_KEY`                | R2       | R2 credential                                  |
-| `SAASMAKER_API_URL`                   | Optional | SaasMaker RAG endpoint                         |
-| `SAASMAKER_ADMIN_KEY`                 | Optional | SaasMaker admin token                          |
+| `RAG_SERVICE_KEY`                     | Optional | Preferred Cloudflare RAG service key for profile memory search |
+| `RAG_SERVICE_URL`                     | Optional | Fallback public RAG service URL when the service binding is unavailable |
+| `SAASMAKER_API_URL`                   | Optional | Legacy SaasMaker RAG endpoint                  |
+| `SAASMAKER_ADMIN_KEY`                 | Optional | Legacy SaasMaker admin token                   |
 
 ## Commands
 
@@ -93,7 +95,7 @@ pnpm drizzle-kit studio     # Drizzle Studio UI
 - **Dual deploy** — local uses `file:local.db`; production uses Turso + D1 on CF Workers.
 - **Generated content** lifecycle: `pending → generating → ready | error`.
 - **Rate limiter is in-memory** (`src/lib/rate-limit.ts`) — resets on deploy.
-- **SaasMaker RAG** — each user has `smProjectId`/`smApiKey`/`smIndexId`; `infoBlocks` sync to SaasMaker as documents.
+- **RAG service** — `infoBlocks` sync to the shared Cloudflare `knowledgebase` Worker when `RAG_SERVICE_KEY` is configured, with legacy SaasMaker RAG as fallback.
 - **SSRF-safe scraping** — `src/lib/scraper.ts` blocks loopback / RFC 1918 / link-local addresses before fetching.
 
 ## Deploy

@@ -94,6 +94,10 @@
   ],
   "services": [
     {
+      "binding": "RAG_SERVICE",
+      "service": "knowledgebase"
+    },
+    {
       "binding": "WORKER_SELF_REFERENCE",
       "service": "linkchat"
     }

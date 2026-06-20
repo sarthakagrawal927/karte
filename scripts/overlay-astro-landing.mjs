@@ -1,45 +1,10 @@
-#!/usr/bin/env node
-// overlay-astro-landing.mjs — copies the Astro landing build over the
-// Next.js / OpenNext asset bundle so the Worker can serve a single
-// deployment: Astro static HTML for `/`, OpenNext SSR for everything else.
-//
-// Why this exists: the Onyx Deck landing was 2.9s LCP on the Next.js
-// Worker (SSR + Tailwind v4 + React hydration). Hand-porting it to Astro
-// drops LCP to ~340ms when deployed to CF Pages. But we don't want two
-// deployments per project — instead, we let the Astro build emit
-// `dist/index.html` and overlay it into `.open-next/assets/` so the
-// Workers static-assets binding serves it directly for `/`, no Worker
-// invocation at all. Cold-start cost eliminated for the LCP path.
-//
-// Layout assumptions:
-//   - Astro project lives at `landing-astro/` with `output: 'static'`
-//   - It builds to `landing-astro/dist/`
-//   - The Next.js + OpenNext build has already populated
-//     `.open-next/assets/` (run AFTER `opennextjs-cloudflare build`)
-//
-// What gets overlaid:
-//   - `landing-astro/dist/index.html` → `.open-next/assets/index.html`
-//   - `landing-astro/dist/_headers` is merged with the existing
-//     `.open-next/assets/_headers` if present (Astro's headers go first
-//     so they win for `/`)
-//   - any other top-level files from Astro dist are copied unless they
-//     would clobber a Next.js path (e.g. `_next/`, `cdn-cgi/`)
-//
-// This runs as the LAST step of `cf:build`, after OpenNext has finished
-// writing its bundle. Safe to re-run; idempotent.
+import { copyFile, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 
-import { readdir, readFile, writeFile, copyFile, stat, mkdir } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import { join, resolve, dirname } from "node:path";
+const PROTECTED_PREFIXES = ['_next/', 'cdn-cgi/', 'BUILD_ID'];
 
-const ASTRO_DIST = resolve("landing-astro/dist");
-const TARGET = resolve(".open-next/assets");
-
-// Paths under `.open-next/assets/` we must never overwrite — these belong
-// to Next.js / OpenNext and clobbering them would break the Worker.
-const PROTECTED_PREFIXES = ["_next/", "cdn-cgi/", "BUILD_ID"];
-
-async function walk(dir, rel = "") {
+async function walk(dir, rel = '') {
   const entries = await readdir(dir, { withFileTypes: true });
   const out = [];
   for (const e of entries) {
@@ -56,30 +21,42 @@ async function walk(dir, rel = "") {
 
 async function mergeHeaders(astroHeadersPath, targetHeadersPath) {
   const astroHeaders = existsSync(astroHeadersPath)
-    ? await readFile(astroHeadersPath, "utf8")
-    : "";
+    ? await readFile(astroHeadersPath, 'utf8')
+    : '';
   const targetHeaders = existsSync(targetHeadersPath)
-    ? await readFile(targetHeadersPath, "utf8")
-    : "";
+    ? await readFile(targetHeadersPath, 'utf8')
+    : '';
   if (!astroHeaders) return false;
-  // Astro headers FIRST so they win for the routes they declare (typically `/`).
-  // The Next.js `_headers` (security headers, `/_next/*` cache rules) come second.
   const merged = `# --- from landing-astro/dist/_headers (LCP-critical, takes precedence) ---\n${astroHeaders.trim()}\n\n# --- from Next.js / OpenNext build ---\n${targetHeaders.trim()}\n`;
   await writeFile(targetHeadersPath, merged);
   return true;
 }
 
-async function main() {
-  if (!existsSync(ASTRO_DIST)) {
-    console.warn(`[overlay-astro] no landing-astro/dist — skipping. Build it first with: cd landing-astro && pnpm build`);
+export async function runOverlay(opts = {}) {
+  const astroDist = resolve(opts.astroDist ?? 'landing-astro/dist');
+  const target = resolve(opts.assets ?? '.open-next/assets');
+  const strict = opts.strict ?? false;
+
+  if (!existsSync(astroDist)) {
+    const msg = `[overlay-astro] no ${astroDist} — skipping. Build landing-astro first.`;
+    if (strict) {
+      console.error(msg);
+      process.exit(1);
+    }
+    console.warn(msg);
     return;
   }
-  if (!existsSync(TARGET)) {
-    console.warn(`[overlay-astro] no .open-next/assets — OpenNext build hasn't run yet. Skipping.`);
+  if (!existsSync(target)) {
+    const msg = `[overlay-astro] no ${target} — OpenNext build hasn't run yet. Skipping.`;
+    if (strict) {
+      console.error(msg);
+      process.exit(1);
+    }
+    console.warn(msg);
     return;
   }
 
-  const files = await walk(ASTRO_DIST);
+  const files = await walk(astroDist);
   let copied = 0;
   let skipped = 0;
   for (const { src, rel } of files) {
@@ -87,21 +64,19 @@ async function main() {
       skipped += 1;
       continue;
     }
-    // _headers gets merged, not overwritten.
-    if (rel === "_headers") {
-      const merged = await mergeHeaders(src, join(TARGET, "_headers"));
-      console.log(`[overlay-astro] merged _headers (Astro wins for /)${merged ? "" : " — no Astro headers found"}`);
+    if (rel === '_headers') {
+      const merged = await mergeHeaders(src, join(target, '_headers'));
+      console.log(
+        `[overlay-astro] merged _headers (Astro wins for /)${merged ? '' : ' — no Astro headers found'}`,
+      );
       continue;
     }
-    const dest = join(TARGET, rel);
+    const dest = join(target, rel);
     await mkdir(dirname(dest), { recursive: true });
     await copyFile(src, dest);
     copied += 1;
   }
-  console.log(`[overlay-astro] copied ${copied} file(s) from landing-astro/dist → .open-next/assets/, skipped ${skipped} protected path(s)`);
+  console.log(
+    `[overlay-astro] copied ${copied} file(s) from ${astroDist} → ${target}, skipped ${skipped} protected path(s)`,
+  );
 }
-
-main().catch((err) => {
-  console.error("[overlay-astro] fatal:", err);
-  process.exit(1);
-});
