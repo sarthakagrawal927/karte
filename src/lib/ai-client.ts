@@ -9,6 +9,7 @@ export type AiConfig = {
 
 const DEFAULT_AI_ENDPOINT_URL = 'https://free-ai-gateway.sarthakagrawal927.workers.dev/v1';
 const DEFAULT_AI_MODEL = 'workers-ai-llama-3.3-70b';
+const FREE_AI_PROJECT_ID = 'linkchat';
 
 export function getDefaultAiConfig(): AiConfig | null {
   const apiKey = process.env.LINKCHAT_DEFAULT_AI_API_KEY;
@@ -37,34 +38,43 @@ export function resolveAiConfig(config?: {
   return getDefaultAiConfig();
 }
 
-function getProvider(config: AiConfig) {
+export type ReasoningLevel = 'fast' | 'deep';
+
+function reasoningEffortFor(level?: ReasoningLevel): 'low' | 'high' | undefined {
+  if (level === 'fast') return 'low';
+  if (level === 'deep') return 'high';
+  return undefined;
+}
+
+function isFreeAiGateway(config: AiConfig): boolean {
+  return config.endpointUrl.includes('free-ai-gateway.sarthakagrawal927.workers.dev');
+}
+
+function getProvider(config: AiConfig, reasoningLevel?: ReasoningLevel) {
+  const freeAi = isFreeAiGateway(config);
+  const reasoningEffort = reasoningEffortFor(reasoningLevel);
   return createOpenAICompatible({
     name: 'custom',
     baseURL: config.endpointUrl,
     apiKey: config.apiKey,
+    headers: freeAi ? { 'x-gateway-project-id': FREE_AI_PROJECT_ID } : undefined,
+    transformRequestBody: freeAi
+      ? (body) => ({
+          ...body,
+          project_id: FREE_AI_PROJECT_ID,
+          ...(reasoningEffort ? { reasoning_effort: reasoningEffort } : {}),
+        })
+      : undefined,
   });
 }
 
-// Latency vs. quality intent. Sent to the free-ai gateway as
-// `reasoning_level`; the gateway picks the actual model. Karte
+// Latency vs. quality intent. Sent to the free-ai gateway as OpenAI-compatible
+// `reasoning_effort`; the gateway picks the actual model. Karte
 // surfaces decide based on UX:
 //   - `fast`  → chat, demo-chat, welcome cards (real-time / one-shot
 //               where latency matters)
 //   - `deep`  → newspaper, encyclopedia, roast (one-shot generations
 //               where output quality matters more than latency)
-export type ReasoningLevel = 'fast' | 'deep';
-
-function getProviderOptions(config: AiConfig, reasoningLevel?: ReasoningLevel) {
-  if (!config.endpointUrl.includes('free-ai-gateway.sarthakagrawal927.workers.dev')) {
-    return undefined;
-  }
-
-  const custom: Record<string, string> = { project_id: 'linkchat' };
-  if (reasoningLevel) {
-    custom.reasoning_level = reasoningLevel;
-  }
-  return { custom };
-}
 
 /**
  * Generate a non-streaming text completion.
@@ -73,12 +83,11 @@ export async function generate(
   config: AiConfig,
   opts: { system: string; prompt: string; reasoningLevel?: ReasoningLevel },
 ): Promise<string> {
-  const provider = getProvider(config);
+  const provider = getProvider(config, opts.reasoningLevel);
   const { text } = await generateText({
     model: provider.chatModel(config.model),
     system: opts.system,
     prompt: opts.prompt,
-    providerOptions: getProviderOptions(config, opts.reasoningLevel),
   });
   return text;
 }
@@ -95,12 +104,11 @@ export async function generateChat(
     reasoningLevel?: ReasoningLevel;
   },
 ): Promise<string> {
-  const provider = getProvider(config);
+  const provider = getProvider(config, opts.reasoningLevel);
   const { text } = await generateText({
     model: provider.chatModel(config.model),
     system: opts.system,
     messages: opts.messages,
-    providerOptions: getProviderOptions(config, opts.reasoningLevel),
   });
   return text;
 }
@@ -112,12 +120,11 @@ export function streamResponse(
   config: AiConfig,
   opts: { system: string; prompt: string; reasoningLevel?: ReasoningLevel },
 ): Response {
-  const provider = getProvider(config);
+  const provider = getProvider(config, opts.reasoningLevel);
   const result = streamText({
     model: provider.chatModel(config.model),
     system: opts.system,
     prompt: opts.prompt,
-    providerOptions: getProviderOptions(config, opts.reasoningLevel),
   });
   return result.toTextStreamResponse();
 }
