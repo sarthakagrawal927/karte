@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { SafeImage } from '@/components/public/safe-image';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 interface RoamingCharacterProps {
@@ -17,6 +18,36 @@ const TALK_INTERVAL_MIN_MS = 2400;
 const TALK_INTERVAL_MAX_MS = 5800;
 const TALK_DURATION_MS = 5800;
 const TYPE_MS = 32;
+
+function initialsForName(displayName: string): string {
+  const parts = displayName.split(/\s+/).filter(Boolean);
+  return (
+    parts
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? '')
+      .join('') || 'K'
+  );
+}
+
+function CharacterFallback({
+  displayName,
+  accentColor,
+}: {
+  displayName: string;
+  accentColor: string;
+}) {
+  return (
+    <span
+      className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-[28px] text-2xl font-semibold text-zinc-950 ring-1 ring-white/20"
+      style={{
+        background: `linear-gradient(135deg, ${accentColor}, ${accentColor}aa)`,
+      }}
+    >
+      <span className="absolute inset-0 bg-[radial-gradient(circle_at_30%_18%,rgba(255,255,255,0.55),transparent_34%)]" />
+      <span className="relative">{initialsForName(displayName)}</span>
+    </span>
+  );
+}
 
 /**
  * Codex-pets style mascot. The user's avatar bobs along the bottom
@@ -41,44 +72,10 @@ export function RoamingCharacter({
   const [lineIdx, setLineIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
   const [lookOffset, setLookOffset] = useState({ x: 0, y: 0 });
-  // Pet only walks if we have a real cartoon image — a single letter
-  // walking across the screen looks broken, not friendly. Better to
-  // hide the pet entirely than ship a stand-in initial.
-  // Key by url so changing avatarUrl doesn't require a sync setState
-  // reset inside the effect.
-  const [avatarOutcomes, setAvatarOutcomes] = useState<Record<string, 'loaded' | 'error'>>({});
-  const avatarReady: boolean | null = !avatarUrl
-    ? false
-    : avatarOutcomes[avatarUrl] === 'loaded'
-      ? true
-      : avatarOutcomes[avatarUrl] === 'error'
-        ? false
-        : null;
   const reducedMotion = useReducedMotion();
-  // Derived from preconditions — no sync setState-in-effect needed.
-  const enabled = !reducedMotion && lines.length > 0 && avatarReady === true;
+  const enabled = !reducedMotion && lines.length > 0;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-
-  // Pre-load the avatar image to determine whether to enable the pet.
-  useEffect(() => {
-    if (!avatarUrl) return;
-    if (avatarOutcomes[avatarUrl]) return;
-    let cancelled = false;
-    const img = new window.Image();
-    img.onload = () => {
-      if (!cancelled) setAvatarOutcomes((prev) => ({ ...prev, [avatarUrl]: 'loaded' }));
-    };
-    img.onerror = () => {
-      if (!cancelled) setAvatarOutcomes((prev) => ({ ...prev, [avatarUrl]: 'error' }));
-    };
-    img.src = avatarUrl;
-    return () => {
-      cancelled = true;
-      img.onload = null;
-      img.onerror = null;
-    };
-  }, [avatarUrl, avatarOutcomes]);
 
   // Look at cursor — apply a small translate that makes the pet lean
   // toward the mouse. Throttled via requestAnimationFrame.
@@ -172,6 +169,9 @@ export function RoamingCharacter({
   const current = lines[lineIdx] ?? '';
   const typed = current.slice(0, charIdx);
   const facingFlip = dir === -1 ? 'scaleX(-1)' : 'scaleX(1)';
+  const fallback = (
+    <CharacterFallback displayName={displayName} accentColor={accentColor} />
+  );
 
   return (
     <div
@@ -220,22 +220,21 @@ export function RoamingCharacter({
         aria-label={`Chat with ${displayName}`}
         className="pointer-events-auto relative block h-20 w-20 transition-transform duration-150 hover:scale-110 active:scale-95"
         style={{
-          transform: `translate(${lookOffset.x}px, calc(${lookOffset.y}px + ${bobUp ? '-3px' : '0px'})) ${facingFlip}`,
+          transform: `translate(${lookOffset.x}px, calc(${lookOffset.y}px + ${bobUp ? '-3px' : '0px'}))`,
           transition: 'transform 180ms cubic-bezier(0.16, 1, 0.3, 1)',
           filter: `drop-shadow(0 6px 14px ${accentColor}88) drop-shadow(0 2px 4px rgba(0,0,0,0.45))`,
         }}
       >
-        {/* avatarUrl is guaranteed loaded at this point — the effect
-            above gates `enabled` on avatarReady=true. */}
-        {avatarUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+        <span className="block h-20 w-20">
+          <SafeImage
             src={avatarUrl}
             alt=""
             className="relative h-20 w-20 object-contain"
-            style={{ background: 'transparent' }}
+            style={{ background: 'transparent', transform: facingFlip }}
+            loading={fallback}
+            fallback={fallback}
           />
-        )}
+        </span>
       </button>
 
       <style>{`

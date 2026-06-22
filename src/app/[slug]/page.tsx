@@ -550,11 +550,10 @@ export default async function ProfilePage({ params }: Props) {
         />
       )}
 
-      {/* Codex-pets style mascot — the user's avatar (or a future
-          custom cartoon character — pages.petUrl is on the roadmap)
-          walks along the bottom of the viewport and pops up with
-          AI-generated lines every 6-14 seconds. Click → opens chat. */}
-      {(page.petEnabled ?? true) && (page.petUrl || page.avatarUrl) && (
+      {/* Codex-pets style mascot — prefer petUrl/avatarUrl, but fall
+          back to initials so the roaming character never disappears
+          because an external image failed. Click → opens chat. */}
+      {(page.petEnabled ?? true) && (
         <RoamingCharacter
           avatarUrl={isDemoProfile ? page.avatarUrl : page.petUrl || page.avatarUrl}
           displayName={page.displayName}
