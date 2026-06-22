@@ -12,7 +12,6 @@ function read(relativePath) {
 describe('knowledgebase RAG integration contract', () => {
   it('keeps profile memory routes on the shared knowledgebase client', () => {
     const routes = [
-      'src/app/api/settings/ai-key/route.ts',
       'src/app/api/pages/[pageId]/info/route.ts',
       'src/app/api/pages/[pageId]/info/[blockId]/route.ts',
       'src/app/api/chat/[slug]/route.ts',
@@ -28,16 +27,20 @@ describe('knowledgebase RAG integration contract', () => {
   it('does not keep the legacy SaasMaker RAG helper', () => {
     assert.equal(existsSync(join(root, 'src/lib/saasmaker.ts')), false);
     const client = read('src/lib/knowledgebase.ts');
+    const indexHelper = read('src/lib/profile-memory-index.ts');
     assert.match(client, /RAG_SERVICE/);
     assert.match(client, /knowledgebase/);
     assert.match(client, /filter/);
+    assert.match(indexHelper, /@\/lib\/knowledgebase/);
     assert.doesNotMatch(client, /SAASMAKER_API_URL|SAASMAKER_ADMIN_KEY/);
   });
 
   it('scopes indexed profile memory by account and page', () => {
     const infoRoute = read('src/app/api/pages/[pageId]/info/route.ts');
-    assert.match(infoRoute, /createIndex\(`linkchat-\$\{auth\.userId\}`\)/);
-    assert.match(infoRoute, /set\(\{\s*smIndexId:\s*indexId\s*\}\)/);
+    const indexHelper = read('src/lib/profile-memory-index.ts');
+    assert.match(indexHelper, /createIndex\(`linkchat-\$\{userId\}`\)/);
+    assert.match(indexHelper, /set\(\{\s*smIndexId:\s*index\.id\s*\}\)/);
+    assert.match(infoRoute, /ensureProfileMemoryIndex\(auth\.userId\)/);
     assert.match(infoRoute, /userId:\s*auth\.userId/);
     assert.match(infoRoute, /pageId:\s*page\.id/);
     assert.match(infoRoute, /pageSlug:\s*page\.slug/);

@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { users } from '@/db/schema';
 import { requireUser } from '@/lib/api-auth';
-import { createIndex } from '@/lib/knowledgebase';
+import { ensureProfileMemoryIndex } from '@/lib/profile-memory-index';
 
 export async function GET() {
   const auth = await requireUser();
@@ -53,8 +53,7 @@ export async function PUT(req: Request) {
     let indexId = user.smIndexId;
     if (!indexId) {
       try {
-        const index = await createIndex(`linkchat-${auth.userId}`);
-        indexId = index.id;
+        indexId = await ensureProfileMemoryIndex(auth.userId);
       } catch {
         return NextResponse.json({ error: 'Failed to initialize chat index' }, { status: 502 });
       }

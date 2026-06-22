@@ -2,9 +2,10 @@ import { desc, eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
 import { db } from '@/db';
-import { infoBlocks, users } from '@/db/schema';
+import { infoBlocks } from '@/db/schema';
 import { loadOwnedPage, requireUser } from '@/lib/api-auth';
-import { createIndex, ingestDocument } from '@/lib/knowledgebase';
+import { ingestDocument } from '@/lib/knowledgebase';
+import { ensureProfileMemoryIndex } from '@/lib/profile-memory-index';
 import { MAX_CONTENT_LENGTH } from '@/lib/validation';
 
 const ALLOWED_INFO_BLOCK_TYPES = new Set(['text', 'resume', 'faq', 'current', 'voice', 'boundaries']);
@@ -96,31 +97,19 @@ export async function POST(
     .returning();
 
   // Ingest profile memory into the shared knowledgebase Worker.
-  const [user] = await db.select().from(users).where(eq(users.id, auth.userId));
-  let indexId = user?.smIndexId ?? null;
-  if (!indexId) {
-    try {
-      const index = await createIndex(`linkchat-${auth.userId}`);
-      indexId = index.id;
-      await db.update(users).set({ smIndexId: indexId }).where(eq(users.id, auth.userId));
-    } catch {
-      console.error('Failed to initialize knowledgebase RAG index');
-    }
-  }
-  if (indexId) {
-    try {
-      const doc = await ingestDocument(indexId, content, {
-        userId: auth.userId,
-        pageId: page.id,
-        pageSlug: page.slug,
-        type,
-        title: title || undefined,
-        blockId: block.id,
-      });
-      await db.update(infoBlocks).set({ smDocumentId: doc.id }).where(eq(infoBlocks.id, block.id));
-    } catch {
-      console.error('Failed to ingest info block into knowledgebase RAG');
-    }
+  try {
+    const indexId = await ensureProfileMemoryIndex(auth.userId);
+    const doc = await ingestDocument(indexId, content, {
+      userId: auth.userId,
+      pageId: page.id,
+      pageSlug: page.slug,
+      type,
+      title: title || undefined,
+      blockId: block.id,
+    });
+    await db.update(infoBlocks).set({ smDocumentId: doc.id }).where(eq(infoBlocks.id, block.id));
+  } catch {
+    console.error('Failed to ingest info block into knowledgebase RAG');
   }
 
   return NextResponse.json(block, { status: 201 });

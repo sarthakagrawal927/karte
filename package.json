@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test --test-reporter=spec 'tests/**/*.unit.test.mjs'",
     "smoke:agent": "node scripts/smoke-agent-api.mjs",
+    "smoke:profile-memory": "node scripts/smoke-profile-memory.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "backfill:aggregates": "node scripts/backfill-aggregates.mjs",
