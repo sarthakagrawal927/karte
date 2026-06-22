@@ -39,6 +39,11 @@ interface Message {
 
 type ChatPosition = 'bottom-right' | 'bottom-left';
 
+const EMPTY_CHAT_RESPONSE_MESSAGE =
+  "I didn't get a response back. Please try again in a moment.";
+const CHAT_SERVICE_UNAVAILABLE_MESSAGE =
+  "Couldn't reach the chat service. Check your connection and try sending again.";
+
 function ChatLoadingIndicator({ label }: { label: string }) {
   return (
     <span className="inline-flex items-center gap-2 py-0.5 text-white/65">
@@ -439,17 +444,45 @@ export function ChatWidget({
           window.localStorage.setItem(cacheKey, finalText);
         }
         void saveMessage(convId, 'assistant', finalText);
+      } else {
+        setMessages((prev) => {
+          const updated = [...prev];
+          const last = updated[updated.length - 1];
+          if (last?.role === 'assistant' && !last.content.trim()) {
+            updated[updated.length - 1] = {
+              ...last,
+              content: EMPTY_CHAT_RESPONSE_MESSAGE,
+              components: undefined,
+              layout: undefined,
+            };
+            return updated;
+          }
+          return [
+            ...updated,
+            { role: 'assistant', content: EMPTY_CHAT_RESPONSE_MESSAGE },
+          ];
+        });
+        void saveMessage(convId, 'assistant', EMPTY_CHAT_RESPONSE_MESSAGE);
       }
     } catch (err) {
       captureActionFailure(err, { action: 'chat_send' });
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'assistant',
-          content:
-            "Couldn't reach the chat service. Check your connection and try sending again.",
-        },
-      ]);
+      setMessages((prev) => {
+        const updated = [...prev];
+        const last = updated[updated.length - 1];
+        if (last?.role === 'assistant' && !last.content.trim()) {
+          updated[updated.length - 1] = {
+            ...last,
+            content: CHAT_SERVICE_UNAVAILABLE_MESSAGE,
+            components: undefined,
+            layout: undefined,
+          };
+          return updated;
+        }
+        return [
+          ...updated,
+          { role: 'assistant', content: CHAT_SERVICE_UNAVAILABLE_MESSAGE },
+        ];
+      });
     } finally {
       setLoading(false);
     }

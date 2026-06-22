@@ -4,8 +4,6 @@
 
 import { hostnameFromUrl } from '@/lib/hostname';
 
-import { SafeImage } from './safe-image';
-
 interface SocialLink {
   id?: string;
   title: string;
@@ -78,10 +76,6 @@ function pathByHost(host: string): { d: string; viewBox?: string } | null {
   return null;
 }
 
-function faviconUrlForHost(host: string): string {
-  return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=64`;
-}
-
 function domainInitial(host: string): string {
   const parts = host
     .replace(/^www\./, '')
@@ -127,7 +121,6 @@ export function SocialIconRow({
         const host = hostnameFromUrl(link.url);
         const brandGlyph = host ? pathByHost(host) : null;
         const userIcon = link.icon?.trim();
-        const genericFavicon = host && !brandGlyph ? faviconUrlForHost(host) : null;
         const fallbackHost = host ?? link.title;
         return (
           <a
@@ -147,13 +140,6 @@ export function SocialIconRow({
               <span aria-hidden="true" className="text-[15px]">
                 {userIcon}
               </span>
-            ) : genericFavicon ? (
-              <SafeImage
-                src={genericFavicon}
-                alt=""
-                className="h-[22px] w-[22px] rounded-[5px]"
-                fallback={<DomainIconFallback host={host} accentColor={accentColor} />}
-              />
             ) : brandGlyph ? (
               <svg
                 viewBox={brandGlyph.viewBox ?? '0 0 24 24'}
