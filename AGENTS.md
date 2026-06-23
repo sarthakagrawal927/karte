@@ -59,7 +59,7 @@ open-next.config.ts       # OpenNext CF config
 ```bash
 pnpm dev              # next dev (localhost:3000)
 pnpm build            # next build
-pnpm lint             # eslint
+pnpm lint             # biome check
 
 # Cloudflare deployment
 pnpm deploy:cf        # cf:build + deploy to CF Workers
