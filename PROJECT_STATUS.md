@@ -52,7 +52,7 @@ cp .env.example .env.local
 pnpm drizzle-kit push
 pnpm dev                    # :3000
 pnpm build | pnpm lint | pnpm typecheck
-pnpm test                   # node:test unit (hostname, scraper, …)
+pnpm test                   # Vitest unit (hostname, scraper, …)
 pnpm test:e2e               # Playwright (expects dev on :3000)
 pnpm preview | pnpm deploy:cf | pnpm upload:cf
 pnpm cf:build               # Next + Astro landing overlay + OpenNext populateCache

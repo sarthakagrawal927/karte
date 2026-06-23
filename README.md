@@ -62,7 +62,7 @@ pnpm dev                              # http://localhost:3000
 pnpm dev                  # next dev
 pnpm build                # next build
 pnpm lint                 # eslint
-pnpm test                 # node:test unit tests (hostname, scraper, ...)
+pnpm test                 # Vitest unit tests (hostname, scraper, ...)
 pnpm test:e2e             # playwright (assumes pnpm dev on :3000)
 pnpm preview              # opennextjs-cloudflare build + local preview
 pnpm deploy:cf            # cf:build + deploy to CF Workers

@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "smoke:agent": "node scripts/smoke-agent-api.mjs",
     "smoke:profile-memory": "node scripts/smoke-profile-memory.mjs",
