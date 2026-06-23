@@ -1,5 +1,5 @@
 import { strict as assert } from 'node:assert';
-import { test } from 'node:test';
+import { test } from 'vitest';
 
 // Re-implementation mirror of src/lib/hostname.ts kept identical so this test
 // runs without a TS compile step. If src/lib/hostname.ts changes, mirror here.

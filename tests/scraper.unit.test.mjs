@@ -1,5 +1,5 @@
 import { strict as assert } from 'node:assert';
-import { test } from 'node:test';
+import { test } from 'vitest';
 
 // Re-implementation mirror of pure helpers from src/lib/scraper.ts. Kept
 // identical so this test runs without a TS compile step. If src/lib/scraper.ts
