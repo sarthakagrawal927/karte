@@ -14,6 +14,7 @@ import { ImageResponse } from 'next/og';
 export const alt = 'Karte — Your link-in-bio, that answers back';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
+export const revalidate = 3600; // cache OG image for 1 hour
 
 const GOLD = '#c4a46b';
 const GOLD_BRIGHT = '#f4ebd4';
