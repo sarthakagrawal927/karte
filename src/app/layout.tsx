@@ -12,6 +12,7 @@ import {
 
 import { AnalyticsProvider } from "@/components/posthog-provider";
 import { PageAnalyticsTracker } from "@/components/public/page-analytics-tracker";
+import { VitalsReporter } from "@/components/VitalsReporter";
 
 // preload: false on the dashboard/app fonts — they aren't used on the
 // LCP path (which is the Onyx landing deck). Browsers still fetch them
@@ -109,6 +110,7 @@ export default function RootLayout({
       >
         <AnalyticsProvider>
           <PageAnalyticsTracker />
+          <VitalsReporter />
           {children}
         </AnalyticsProvider>
       </body>
