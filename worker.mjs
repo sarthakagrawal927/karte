@@ -158,7 +158,11 @@ export default {
       clientResponse.headers.set('x-edge-cache', 'MISS');
       return clientResponse;
     } catch (err) {
-      console.error(`[error] ${request.method} ${new URL(request.url).pathname}:`, err.message, err.stack);
+      console.error(
+        `[error] ${request.method} ${new URL(request.url).pathname}:`,
+        err.message,
+        err.stack,
+      );
       return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },

@@ -32,7 +32,9 @@ let _projectSlug = 'karte';
 
 /** True for fetch() and XMLHttpRequest calls only (not scripts, images, etc.). */
 function isApiCall(entry: PerformanceResourceTiming): boolean {
-  return entry.initiatorType === 'fetch' || entry.initiatorType === 'xmlhttprequest';
+  return (
+    entry.initiatorType === 'fetch' || entry.initiatorType === 'xmlhttprequest'
+  );
 }
 
 /** Match same-origin /api/ paths OR any configured extra patterns. */
@@ -40,7 +42,8 @@ function matchesPatterns(url: string): boolean {
   try {
     const u = new URL(url, window.location.origin);
     // Same-origin /api/ — always include.
-    if (u.origin === window.location.origin && u.pathname.startsWith('/api/')) return true;
+    if (u.origin === window.location.origin && u.pathname.startsWith('/api/'))
+      return true;
     // Extra patterns (e.g. cross-origin API hosts).
     return _extraPatterns.some((p) => p.test(url));
   } catch {
@@ -57,7 +60,12 @@ function normalizeRoute(url: string): string {
     const u = new URL(url, window.location.origin);
     const segments = u.pathname.split('/').map((seg) => {
       if (/^\d+$/.test(seg)) return ':id';
-      if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(seg)) return ':id';
+      if (
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          seg,
+        )
+      )
+        return ':id';
       if (/^[a-zA-Z0-9_-]{20,}$/.test(seg)) return ':id';
       return seg;
     });
@@ -76,7 +84,9 @@ function percentile(sorted: number[], p: number): number {
 }
 
 function collectAndFlush(): void {
-  const entries = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+  const entries = performance.getEntriesByType(
+    'resource',
+  ) as PerformanceResourceTiming[];
   if (entries.length === 0) return;
 
   const samples: ApiTimingSample[] = [];
@@ -100,7 +110,9 @@ function collectAndFlush(): void {
   if (samples.length === 0) return;
 
   const posthog = (
-    window as unknown as { posthog?: { capture: (e: string, p: Record<string, unknown>) => void } }
+    window as unknown as {
+      posthog?: { capture: (e: string, p: Record<string, unknown>) => void };
+    }
   ).posthog;
   if (!posthog?.capture) return;
 
