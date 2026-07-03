@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { OnyxAgents } from '@/components/landing/onyx-agents';
 import { OnyxCard } from '@/components/landing/onyx-card';
 import { OnyxCta } from '@/components/landing/onyx-cta';
+import { OnyxFaq } from '@/components/landing/onyx-faq';
 import { OnyxHero } from '@/components/landing/onyx-hero';
 import { OnyxHow } from '@/components/landing/onyx-how';
 import { OnyxSamples } from '@/components/landing/onyx-samples';
@@ -103,6 +104,11 @@ export default function Home() {
           <OnyxCta />
         </OnyxCard>
       </div>
+
+      {/* FAQ — outside the scroll-snap deck so the existing card i/vi
+          indicators stay untouched. Added for GEO (AI search engines
+          lift 35-60 word factual passages). */}
+      <OnyxFaq />
     </main>
   );
 }
