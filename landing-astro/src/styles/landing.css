@@ -883,3 +883,74 @@ html:has(.onyx-deck) body::-webkit-scrollbar { display: none; }
   .onyx-cta-prefix { font-size: 15px; }
   .onyx-cta-input { font-size: 18px; width: 100%; min-width: 0; flex: 1; }
 }
+
+/* ── Fleet cross-link footer ──────────────────────────────────────── */
+/* Sits below the snap-scroll deck. Styled as a quiet colophon in the
+   same Onyx palette — gold-on-near-black, Playfair italics, dotted
+   hairline rules — so it reads as a sign-off, not a new section. */
+.fleet-footer {
+  background: #0a0805;
+  color: #e8dfca;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  padding: clamp(40px, 6vh, 72px) clamp(20px, 5vw, 72px) clamp(32px, 5vh, 56px);
+  border-top: 1px solid rgba(196, 164, 107, 0.08);
+}
+.fleet-footer-label {
+  margin: 0 0 22px;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #c4a46b;
+  text-align: center;
+}
+.fleet-footer-list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 760px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border-top: 1px dotted rgba(196, 164, 107, 0.22);
+}
+.fleet-footer-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px dotted rgba(196, 164, 107, 0.22);
+}
+.fleet-footer-list li:nth-child(odd) {
+  border-right: 1px dotted rgba(196, 164, 107, 0.22);
+}
+.fleet-footer-list a {
+  font-family: var(--font-playfair), serif;
+  font-size: 17px;
+  color: #f0e6cf;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 200ms var(--karte-ease);
+}
+.fleet-footer-list a:hover {
+  color: #c4a46b;
+}
+.fleet-footer-list span {
+  font-family: var(--font-playfair), serif;
+  font-style: italic;
+  font-size: 13px;
+  color: rgba(232, 223, 202, 0.55);
+  margin-left: auto;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .fleet-footer-list {
+    grid-template-columns: 1fr;
+  }
+  .fleet-footer-list li:nth-child(odd) {
+    border-right: 0;
+  }
+  .fleet-footer-list span {
+    font-size: 12px;
+  }
+}
