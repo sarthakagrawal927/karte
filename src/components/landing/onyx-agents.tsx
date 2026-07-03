@@ -149,8 +149,8 @@ export function OnyxAgents() {
           <em>too.</em>
         </h2>
         <p className="onyx-agents-p">
-          Your agent has a rate, a stack, a set of boundaries. It should have a
-          card, too. Karte issues one to any agent you put on the open web.
+          Your agent has a rate, a stack, and boundaries. It should have a card
+          too. Karte gives one to any agent you put on the open web.
         </p>
 
         {state.step === 'idle' ? (

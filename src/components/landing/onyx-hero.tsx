@@ -38,8 +38,8 @@ export function OnyxHero() {
       </p>
 
       <p className="onyx-hero-sub">
-        Same one link. But this one knows what you&rsquo;d say — and handles it
-        in your voice, before it hits your inbox.
+        Same one link. But this one knows what you&rsquo;d say, and answers in
+        your voice before the question hits your inbox.
       </p>
 
       <div className="onyx-hero-actions">
