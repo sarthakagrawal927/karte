@@ -39,9 +39,7 @@ export function OnyxCta() {
         <br />
         <em>they talk to.</em>
       </h2>
-      <p className="onyx-cta-sub">
-        One link. Four surfaces. Free forever.
-      </p>
+      <p className="onyx-cta-sub">One link. Four surfaces. Free forever.</p>
       <form className="onyx-cta-form" onSubmit={handleSubmit}>
         <span className="onyx-cta-prefix">karte.cc /</span>
         <input
