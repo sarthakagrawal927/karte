@@ -281,6 +281,9 @@ export default async function ProfilePage({ params }: Props) {
             newsletterUrl={page.newsletterUrl}
             tipUrl={page.tipUrl}
             socialLinks={socialLinks}
+            inboxEmailAddress={
+              page.emailInboxEnabled ? `${slug}@karte.cc` : null
+            }
           />
 
           {/* Right column — scrolling content stream */}

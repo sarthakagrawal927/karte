@@ -53,6 +53,7 @@ export function ProfileHero({
   newsletterUrl,
   tipUrl,
   socialLinks,
+  inboxEmailAddress,
 }: {
   displayName: string;
   bio: string | null;
@@ -72,6 +73,7 @@ export function ProfileHero({
     url: string;
     icon: string | null;
   }>;
+  inboxEmailAddress?: string | null;
 }) {
   const searchParams = useSearchParams();
   const selectedVariant = getProfileVariant(searchParams.get('variant'));
@@ -152,6 +154,17 @@ export function ProfileHero({
             />
             {location}
           </div>
+        )}
+        {inboxEmailAddress && (
+          <a
+            href={`mailto:${inboxEmailAddress}`}
+            className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/[0.06] bg-white/[0.025] px-3 py-1 text-[11px] font-medium text-karte-text-3 transition-colors duration-200 hover:border-white/[0.18] hover:text-karte-text-2"
+          >
+            <span aria-hidden="true" className="text-[11px]">
+              ✉︎
+            </span>
+            {inboxEmailAddress}
+          </a>
         )}
       </div>
 
