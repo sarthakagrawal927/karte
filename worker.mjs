@@ -11,18 +11,22 @@
 //
 // All non-GET, non-`/` requests pass straight through to OpenNext.
 
-import openNext from './.open-next/worker.js';
+import openNext, {
+  BucketCachePurge as OpenNextBucketCachePurge,
+  DOQueueHandler as OpenNextDOQueueHandler,
+  DOShardedTagCache as OpenNextDOShardedTagCache,
+} from './.open-next/worker.js';
+import { RateLimiterDO as RateLimiterDurableObject } from './rate-limiter-do.mjs';
 import { withTiming } from './timing.mjs';
 
 // Durable Objects must be re-exported from the entry that wrangler.toml
 // points at, otherwise the bindings can't resolve them at deploy time.
-export {
-  BucketCachePurge,
-  DOQueueHandler,
-  DOShardedTagCache,
-} from './.open-next/worker.js';
-// Durable sliding-window rate limiter backing src/lib/rate-limit.ts.
-export { RateLimiterDO } from './rate-limiter-do.mjs';
+export class BucketCachePurge extends OpenNextBucketCachePurge {}
+export class DOQueueHandler extends OpenNextDOQueueHandler {}
+export class DOShardedTagCache extends OpenNextDOShardedTagCache {}
+// Durable sliding-window rate limiter backing src/lib/rate-limit.ts. Export a
+// concrete class here so workerd can detect it from the configured entrypoint.
+export class RateLimiterDO extends RateLimiterDurableObject {}
 
 const CACHE_PATH = '/';
 const CACHE_CONTROL =

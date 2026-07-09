@@ -21,13 +21,14 @@ function sectionId(heading: string): string {
 function extractHeadings(html: string): TocEntry[] {
   const headings: TocEntry[] = [];
   const regex = /<h2[^>]*>(.*?)<\/h2>/gi;
-  let match;
-  while ((match = regex.exec(html)) !== null) {
+  let match = regex.exec(html);
+  while (match !== null) {
     // Strip any nested HTML tags from heading text
-    const text = match[1].replace(/<[^>]*>/g, '').trim();
+    const text = (match[1] ?? '').replace(/<[^>]*>/g, '').trim();
     if (text) {
       headings.push({ text, id: sectionId(text) });
     }
+    match = regex.exec(html);
   }
   return headings;
 }
@@ -39,7 +40,7 @@ interface WikiTocFromHtmlProps {
   accentColor: string;
 }
 
-export function WikiTocFromHtml({ html, accentColor }: WikiTocFromHtmlProps) {
+export function WikiTocFromHtml({ html }: WikiTocFromHtmlProps) {
   const headings = useMemo(() => extractHeadings(html), [html]);
   const [activeId, setActiveId] = useState<string>('');
   const [collapsed, setCollapsed] = useState(false);

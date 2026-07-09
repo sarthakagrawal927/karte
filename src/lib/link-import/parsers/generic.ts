@@ -14,11 +14,12 @@ function extractFromAnchors(html: string, sourceUrl: string): ImportedLink[] {
   const items: ImportedLink[] = [];
   const seen = new Set<string>();
   const anchorPattern = /<a\b([^>]*)>([\s\S]*?)<\/a>/gi;
-  let match: RegExpExecArray | null;
+  let match = anchorPattern.exec(html);
 
-  while ((match = anchorPattern.exec(html)) !== null) {
+  while (match !== null) {
     const attrs = match[1] ?? '';
     const body = match[2] ?? '';
+    match = anchorPattern.exec(html);
     const hrefMatch = attrs.match(/\shref\s*=\s*["']([^"']+)["']/i);
     if (!hrefMatch?.[1]) continue;
 

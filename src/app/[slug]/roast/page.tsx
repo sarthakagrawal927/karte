@@ -25,7 +25,7 @@ export default async function RoastPage({
   if (!page) notFound();
   if (!page.roastEnabled) notFound();
 
-  const theme = resolveThemeConfig(page.themeConfig as any);
+  const theme = resolveThemeConfig(page.themeConfig);
 
   const [generatedPage, links, projects] = await Promise.all([
     getGeneratedPage(page.id, 'roast'),

@@ -4,7 +4,10 @@ import { db, ensureProjectsTable } from '@/db';
 import { generatedPages } from '@/db/schema';
 import { loadOwnedPage } from '@/lib/api-auth';
 import { getSession } from '@/lib/auth-server';
-import type { EncyclopediaContent } from '@/lib/generated-page-types';
+import {
+  asGeneratedPageContent,
+  type EncyclopediaContent,
+} from '@/lib/generated-page-types';
 
 export async function PUT(
   req: Request,
@@ -47,7 +50,7 @@ export async function PUT(
     await db
       .update(generatedPages)
       .set({
-        content: body as any,
+        content: asGeneratedPageContent(body),
         status: 'ready',
         updatedAt: new Date(),
       })
@@ -56,7 +59,7 @@ export async function PUT(
     await db.insert(generatedPages).values({
       pageId,
       type: 'encyclopedia',
-      content: body as any,
+      content: asGeneratedPageContent(body),
       status: 'ready',
     });
   }

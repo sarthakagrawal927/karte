@@ -79,9 +79,12 @@ function cloudflareHeaders(): HeadersInit {
 }
 
 function customHostnamesUrl(path = '', query?: URLSearchParams): string {
-  const zoneId = encodeURIComponent(process.env.CLOUDFLARE_ZONE_ID!);
+  const zoneId = process.env.CLOUDFLARE_ZONE_ID;
+  if (!zoneId) {
+    throw new Error('CLOUDFLARE_ZONE_ID is required');
+  }
   const suffix = query ? `?${query.toString()}` : '';
-  return `${CLOUDFLARE_API}/zones/${zoneId}/custom_hostnames${path}${suffix}`;
+  return `${CLOUDFLARE_API}/zones/${encodeURIComponent(zoneId)}/custom_hostnames${path}${suffix}`;
 }
 
 function cloudflareError(

@@ -40,10 +40,10 @@ export function LinkCard({
         className="group flex w-full items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.025] p-4 text-left transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-white/[0.20] hover:bg-white/[0.05]"
         style={accentColor ? { borderColor: `${accentColor}28` } : undefined}
       >
-        {hasImage ? (
+        {imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={imageUrl!}
+            src={imageUrl}
             alt=""
             className="h-14 w-14 shrink-0 rounded-xl object-cover"
           />

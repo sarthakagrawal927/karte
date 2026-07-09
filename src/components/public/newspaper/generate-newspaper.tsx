@@ -14,7 +14,6 @@ interface GenerateNewspaperProps {
 
 export function GenerateNewspaper({
   pageId,
-  slug,
   accentColor,
 }: GenerateNewspaperProps) {
   const router = useRouter();

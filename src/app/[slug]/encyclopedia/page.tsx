@@ -21,7 +21,7 @@ export default async function EncyclopediaPage({
   if (!page) notFound();
   if (!page.encyclopediaEnabled) notFound();
 
-  const theme = resolveThemeConfig(page.themeConfig as any);
+  const theme = resolveThemeConfig(page.themeConfig);
   const generatedPage = await getGeneratedPage(page.id, 'encyclopedia');
 
   // Visitors see a generating-in-progress placeholder rather than 404 while

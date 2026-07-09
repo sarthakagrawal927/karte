@@ -1,5 +1,6 @@
 import { AnimatedReveal } from '@/components/public/animated-reveal';
 import {
+  type AnyWidgetData,
   allVariantsById,
   type LinkCardData,
   type ProjectCardData,
@@ -14,8 +15,7 @@ interface LayoutRendererProps {
 }
 
 interface AnyPick {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
+  data: AnyWidgetData;
   variantId: string;
 }
 

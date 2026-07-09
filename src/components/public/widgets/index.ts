@@ -4,7 +4,9 @@
 //
 // See docs/plans/generative-ui.md for the larger plan.
 
-import type { WidgetVariant } from '@/lib/widget-types';
+import type { ReactNode } from 'react';
+
+import type { WidgetRenderContext, WidgetVariant } from '@/lib/widget-types';
 
 import {
   type LinkCardData,
@@ -31,15 +33,22 @@ export {
  * every available shape and its `bestFor` hint) and for validation
  * when a stored layout plan references a variant id.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const allVariants: ReadonlyArray<WidgetVariant<any>> = [
-  ...linkCardVariants,
-  ...projectCardVariants,
+export type AnyWidgetData = LinkCardData | ProjectCardData;
+export type AnyWidgetVariant = Omit<
+  WidgetVariant<AnyWidgetData>,
+  'render' | 'requires'
+> & {
+  requires: ReadonlyArray<string>;
+  render: (data: AnyWidgetData, ctx: WidgetRenderContext) => ReactNode;
+};
+
+export const allVariants: ReadonlyArray<AnyWidgetVariant> = [
+  ...(linkCardVariants as unknown as ReadonlyArray<AnyWidgetVariant>),
+  ...(projectCardVariants as unknown as ReadonlyArray<AnyWidgetVariant>),
   // future: ...sectionCardVariants, ...infoBlockVariants
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const allVariantsById: Readonly<Record<string, WidgetVariant<any>>> =
+export const allVariantsById: Readonly<Record<string, AnyWidgetVariant>> =
   Object.freeze(Object.fromEntries(allVariants.map((v) => [v.id, v])));
 
 /**

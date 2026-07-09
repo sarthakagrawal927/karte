@@ -6,6 +6,8 @@ import { db } from '@/db';
 import { pages } from '@/db/schema';
 import { getSession } from '@/lib/auth-server';
 
+type Session = Awaited<ReturnType<typeof getSession>>;
+
 type PublicTopBarProps = {
   accentColor?: string;
   current?: 'home' | 'create' | 'login' | 'profile';
@@ -28,12 +30,11 @@ export async function PublicTopBar({
   current = 'home',
   variant = 'default',
 }: PublicTopBarProps) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let session: any = null;
+  let session: Session | null = null;
   let userPage: { slug: string } | null = null;
 
   try {
-    session = (await getSession()) as typeof session;
+    session = await getSession();
     if (session?.user?.id) {
       userPage =
         (await db.query.pages.findFirst({

@@ -13,6 +13,7 @@ import {
   users,
 } from '@/db/schema';
 import { resolvePublicProfileSlug } from '@/lib/demo-profiles';
+import type { NewspaperContent } from '@/lib/generated-page-types';
 
 // CF Edge cache for resolved profile data. Owner edits propagate in
 // ~60s — short enough to feel live, long enough to absorb the bulk of
@@ -29,14 +30,33 @@ type CachedPageData = Omit<
   'readyPages'
 > & { readyPages: string[] };
 
+type EdgeCacheGlobal = typeof globalThis & {
+  caches?: { default?: Cache };
+};
+
+type EncyclopediaGeneratedContent = {
+  markdown?: unknown;
+};
+
+type RoastGeneratedContent = {
+  roast?: unknown;
+};
+
+type GeneratedContent = Partial<NewspaperContent> &
+  EncyclopediaGeneratedContent &
+  RoastGeneratedContent;
+
+function isGeneratedContent(content: unknown): content is GeneratedContent {
+  return Boolean(content && typeof content === 'object');
+}
+
 /**
  * Single query to load everything needed for a public profile page.
  * Returns page + user + links + projects + sections + readyPageTypes in one call.
  */
 export const getFullPageData = cache(async (slug: string) => {
   const resolvedSlug = resolvePublicProfileSlug(slug);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const edgeCache = (globalThis as any).caches?.default as Cache | undefined;
+  const edgeCache = (globalThis as EdgeCacheGlobal).caches?.default;
   const cacheUrl = profileCacheUrl(resolvedSlug);
 
   if (edgeCache) {
@@ -155,7 +175,13 @@ async function loadFullPageData(slug: string) {
     const preview = extractPreview(row.type, row.content);
     if (preview) modePreviews[row.type] = preview;
     const structured = extractStructured(row.type, row.content);
-    if (structured) modeContent[row.type as keyof ModeContent] = structured;
+    if (row.type === 'encyclopedia' && structured) {
+      modeContent.encyclopedia = structured as ModeContent['encyclopedia'];
+    } else if (row.type === 'newspaper' && structured) {
+      modeContent.newspaper = structured as ModeContent['newspaper'];
+    } else if (row.type === 'roast' && structured) {
+      modeContent.roast = structured as ModeContent['roast'];
+    }
   }
 
   return {
@@ -188,14 +214,13 @@ export interface ModeContent {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function extractStructured(type: string, content: unknown): any {
-  if (!content || typeof content !== 'object') return null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const c = content as any;
-
+function extractStructured(
+  type: string,
+  content: unknown,
+): ModeContent[keyof ModeContent] | null {
+  if (!isGeneratedContent(content)) return null;
   if (type === 'encyclopedia') {
-    const html = typeof c.markdown === 'string' ? c.markdown : '';
+    const html = typeof content.markdown === 'string' ? content.markdown : '';
     // Plain-text body — first paragraph, trimmed.
     const stripped = html
       .replace(/<[^>]+>/g, ' ')
@@ -205,10 +230,11 @@ function extractStructured(type: string, content: unknown): any {
     // Topic chips — pull <h2> headings from the HTML, max 4.
     const topics: string[] = [];
     const h2Re = /<h2[^>]*>([\s\S]*?)<\/h2>/gi;
-    let m;
-    while ((m = h2Re.exec(html)) !== null && topics.length < 4) {
-      const t = m[1].replace(/<[^>]+>/g, '').trim();
+    let match = h2Re.exec(html);
+    while (match !== null && topics.length < 4) {
+      const t = (match[1] ?? '').replace(/<[^>]+>/g, '').trim();
       if (t) topics.push(t);
+      match = h2Re.exec(html);
     }
     return body ? { body, topics } : null;
   }
@@ -218,10 +244,12 @@ function extractStructured(type: string, content: unknown): any {
     // legacy single-page content put it at c.leadStory. Prefer the new
     // shape but fall back so old cached content still previews.
     const lead =
-      (Array.isArray(c?.pages) && c.pages[0]?.leadStory) || c?.leadStory;
+      (Array.isArray(content.pages) && content.pages[0]?.leadStory) ||
+      content.leadStory;
     return {
-      mastheadName: typeof c.mastheadName === 'string' ? c.mastheadName : '',
-      dateline: typeof c.dateline === 'string' ? c.dateline : '',
+      mastheadName:
+        typeof content.mastheadName === 'string' ? content.mastheadName : '',
+      dateline: typeof content.dateline === 'string' ? content.dateline : '',
       headline: typeof lead?.headline === 'string' ? lead.headline : '',
       subheadline:
         typeof lead?.subheadline === 'string' ? lead.subheadline : '',
@@ -230,7 +258,7 @@ function extractStructured(type: string, content: unknown): any {
   }
 
   if (type === 'roast') {
-    const text = typeof c.roast === 'string' ? c.roast : '';
+    const text = typeof content.roast === 'string' ? content.roast : '';
     // First two sentences make the strongest pull-quote.
     const first =
       text
@@ -258,24 +286,23 @@ function truncate(s: string, max: number): string {
  * per type and trims to ~140 chars.
  */
 function extractPreview(type: string, content: unknown): string {
-  if (!content || typeof content !== 'object') return '';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const c = content as any;
+  if (!isGeneratedContent(content)) return '';
   let text = '';
   if (type === 'encyclopedia') {
-    const html = typeof c.markdown === 'string' ? c.markdown : '';
+    const html = typeof content.markdown === 'string' ? content.markdown : '';
     text = html
       .replace(/<[^>]+>/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
   } else if (type === 'newspaper') {
     const lead =
-      (Array.isArray(c?.pages) && c.pages[0]?.leadStory) || c?.leadStory;
+      (Array.isArray(content.pages) && content.pages[0]?.leadStory) ||
+      content.leadStory;
     const headline = typeof lead?.headline === 'string' ? lead.headline : '';
     const sub = typeof lead?.subheadline === 'string' ? lead.subheadline : '';
     text = [headline, sub].filter(Boolean).join(' — ').trim();
   } else if (type === 'roast') {
-    text = typeof c.roast === 'string' ? c.roast : '';
+    text = typeof content.roast === 'string' ? content.roast : '';
   }
   if (!text) return '';
   // Keep previews short — a tantalizing single line, not a paragraph.

@@ -20,6 +20,7 @@ export default async function DashboardLayout({
 }) {
   const session = await getSession();
   if (!session?.user) redirect('/login');
+  if (!session.user.email) redirect('/login');
 
   const [appUser, page] = await Promise.all([
     db.query.user.findFirst({
@@ -37,7 +38,7 @@ export default async function DashboardLayout({
       .insert(userTable)
       .values({
         id: session.user.id,
-        email: session.user.email!,
+        email: session.user.email,
         name: session.user.name ?? '',
         image: session.user.image ?? null,
         emailVerified: true,

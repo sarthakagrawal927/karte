@@ -237,10 +237,11 @@ function extractFromAnchors(html, sourceUrl) {
   const items = [];
   const seen = new Set();
   const re = /<a\b([^>]*)>([\s\S]*?)<\/a>/gi;
-  let m;
-  while ((m = re.exec(html)) !== null) {
+  let m = re.exec(html);
+  while (m !== null) {
     const attrs = m[1] ?? '';
     const body = m[2] ?? '';
+    m = re.exec(html);
     const href = attrs.match(/\shref\s*=\s*["']([^"']+)["']/i)?.[1];
     if (!href) continue;
     const url = normalizeUrl(href, sourceUrl);

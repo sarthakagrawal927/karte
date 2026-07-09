@@ -38,7 +38,8 @@ export function isApiKeyFormat(value: string): boolean {
 }
 
 export function generateAuthCode(): string {
-  const n = crypto.getRandomValues(new Uint32Array(1))[0]! % 1_000_000;
+  const [randomValue = 0] = crypto.getRandomValues(new Uint32Array(1));
+  const n = randomValue % 1_000_000;
   return n.toString().padStart(6, '0');
 }
 

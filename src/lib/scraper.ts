@@ -74,12 +74,9 @@ export async function scrapeUrls(
     unique.map((url) => scrapeSingleUrl(url, options)),
   );
 
-  return results
-    .filter(
-      (r): r is PromiseFulfilledResult<ScrapedPage | null> =>
-        r.status === 'fulfilled' && r.value !== null,
-    )
-    .map((r) => r.value!);
+  return results.flatMap((r) =>
+    r.status === 'fulfilled' && r.value !== null ? [r.value] : [],
+  );
 }
 
 async function scrapeSingleUrl(

@@ -5,14 +5,14 @@ import { drizzle } from 'drizzle-orm/d1';
 
 import { account, session, user, verification } from '@/db/schema';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let _auth: any = null;
+type D1Database = Parameters<typeof drizzle>[0];
+
+let _auth: unknown = null;
 let authTablesReady: Promise<void> | null = null;
 
-function getD1() {
+function getD1(): D1Database {
   const { env } = getCloudflareContext();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (env as any).DB;
+  return (env as { DB: D1Database }).DB;
 }
 
 export function createAuth() {
@@ -20,13 +20,17 @@ export function createAuth() {
   const db = getD1();
   const authSchema = { user, session, account, verification };
   const authDb = drizzle(db, { schema: authSchema });
+  const googleClientId =
+    process.env.GOOGLE_CLIENT_ID || process.env.AUTH_GOOGLE_ID;
+  const googleClientSecret =
+    process.env.GOOGLE_CLIENT_SECRET || process.env.AUTH_GOOGLE_SECRET;
   const baseURL =
     process.env.BETTER_AUTH_URL ||
     process.env.AUTH_URL ||
     process.env.NEXT_PUBLIC_APP_URL ||
     'http://localhost:3000';
 
-  _auth = betterAuth({
+  const auth = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET || process.env.AUTH_SECRET,
     baseURL,
     database: drizzleAdapter(authDb, {
@@ -34,18 +38,22 @@ export function createAuth() {
       schema: authSchema,
     }),
     socialProviders: {
-      google: {
-        clientId: (process.env.GOOGLE_CLIENT_ID || process.env.AUTH_GOOGLE_ID)!,
-        clientSecret: (process.env.GOOGLE_CLIENT_SECRET ||
-          process.env.AUTH_GOOGLE_SECRET)!,
-      },
+      ...(googleClientId && googleClientSecret
+        ? {
+            google: {
+              clientId: googleClientId,
+              clientSecret: googleClientSecret,
+            },
+          }
+        : {}),
     },
     trustedOrigins: [baseURL],
     rateLimit: {
       enabled: false,
     },
   });
-  return _auth as ReturnType<typeof betterAuth>;
+  _auth = auth;
+  return auth;
 }
 
 export async function ensureAuthTables() {

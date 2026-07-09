@@ -213,10 +213,9 @@ export function TimelineEditor({ pageId }: TimelineEditorProps) {
       if (!res.ok || !data.event) {
         throw new Error(data.error || 'Could not save.');
       }
+      const event = data.event;
       setEvents((prev) =>
-        [...prev, data.event!].sort((a, b) =>
-          b.whenLabel.localeCompare(a.whenLabel),
-        ),
+        [...prev, event].sort((a, b) => b.whenLabel.localeCompare(a.whenLabel)),
       );
       setForm(BLANK_FORM);
     } catch (err) {
@@ -253,9 +252,10 @@ export function TimelineEditor({ pageId }: TimelineEditorProps) {
       setError(data.error || 'Could not save.');
       return;
     }
+    const event = data.event;
     setEvents((prev) =>
       prev
-        .map((e) => (e.id === id ? data.event! : e))
+        .map((e) => (e.id === id ? event : e))
         .sort((a, b) => b.whenLabel.localeCompare(a.whenLabel)),
     );
     setEditingId(null);

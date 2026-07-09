@@ -61,8 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // or bio, location, theme accent) and the edge cache absorbs
   // repeated shares of the same content.
   const theme = resolveThemeConfig(page.themeConfig);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const newsHeadline = (modeContent?.newspaper as any)?.headline;
+  const newsHeadline = modeContent.newspaper?.headline;
   const liveHeadline =
     typeof newsHeadline === 'string' && newsHeadline.trim()
       ? newsHeadline.trim()

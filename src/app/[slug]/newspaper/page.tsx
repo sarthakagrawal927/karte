@@ -21,7 +21,7 @@ export default async function NewspaperPage({
   if (!page) notFound();
   if (!page.newspaperEnabled) notFound();
 
-  const theme = resolveThemeConfig(page.themeConfig as any);
+  const theme = resolveThemeConfig(page.themeConfig);
   const generatedPage = await getGeneratedPage(page.id, 'newspaper');
 
   const existingNewspaper =

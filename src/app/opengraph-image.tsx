@@ -11,7 +11,7 @@ import { ImageResponse } from 'next/og';
  * carry the brand feel. The deck's full Playfair Display rendering
  * shows up the moment a visitor clicks through.
  */
-export const alt = 'Karte — Everyone gets an inbound agent';
+export const alt = 'Karte - Everyone gets an inbound agent';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 export const revalidate = 3600; // cache OG image for 1 hour
@@ -55,7 +55,6 @@ export default function OpengraphImage() {
           justifyContent: 'space-between',
           paddingBottom: '20px',
           borderBottom: `1px dashed ${GOLD}44`,
-          zIndex: 2,
         }}
       >
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
@@ -89,7 +88,7 @@ export default function OpengraphImage() {
             display: 'flex',
           }}
         >
-          Inbound Agent · Card V2026
+          Inbound Agent / Card V2026
         </div>
         <div
           style={{
@@ -99,7 +98,7 @@ export default function OpengraphImage() {
             display: 'flex',
           }}
         >
-          № 00471
+          No. 00471
         </div>
       </div>
 
@@ -113,7 +112,6 @@ export default function OpengraphImage() {
           alignItems: 'center',
           textAlign: 'center',
           gap: '24px',
-          zIndex: 2,
         }}
       >
         <div
@@ -125,7 +123,7 @@ export default function OpengraphImage() {
             display: 'flex',
           }}
         >
-          ◆ The public agent for your inbound
+          The public agent for your inbound
         </div>
         <div
           style={{
@@ -161,7 +159,7 @@ export default function OpengraphImage() {
             lineHeight: 1.4,
           }}
         >
-          karte · /ˈkartə/ — German for card. This one handles inbound.
+          karte / KAR-tuh - German for card. This one handles inbound.
         </div>
       </div>
 
@@ -177,11 +175,10 @@ export default function OpengraphImage() {
           letterSpacing: '0.26em',
           color: `${GOLD}b3`,
           textTransform: 'uppercase',
-          zIndex: 2,
         }}
       >
         <div style={{ display: 'flex' }}>karte.cc/yourhandle</div>
-        <div style={{ display: 'flex' }}>Free · first-pass assistant</div>
+        <div style={{ display: 'flex' }}>Free / first-pass assistant</div>
       </div>
     </div>,
     { ...size },

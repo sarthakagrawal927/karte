@@ -6,13 +6,18 @@ import * as schema from './schema';
 // Single D1 database for both auth (better-auth) and app data. The Turso →
 // D1 migration eliminated the dual-DB sync and cut per-query latency from
 // 200-400ms (Turso HTTP/WSS) to 5-15ms (D1 native binding).
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type D1 = any;
+type D1PreparedStatement = {
+  bind(...values: unknown[]): D1PreparedStatement;
+  all(): Promise<{ results?: unknown[] }>;
+};
 
-function getD1(): D1 {
+type D1Database = {
+  prepare(query: string): D1PreparedStatement;
+};
+
+function getD1(): D1Database {
   const { env } = getCloudflareContext();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (env as any).DB;
+  return (env as { DB: D1Database }).DB;
 }
 
 type DB = ReturnType<typeof drizzle<typeof schema>>;
@@ -47,7 +52,7 @@ export async function appDbExecute(
 ): Promise<{ rows: Record<string, unknown>[] }> {
   const stmt = getD1()
     .prepare(sql)
-    .bind(...(args as never[]));
+    .bind(...args);
   const result = await stmt.all();
   return { rows: (result.results ?? []) as Record<string, unknown>[] };
 }

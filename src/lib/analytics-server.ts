@@ -35,7 +35,7 @@ interface AnalyticsEngineDataset {
 function getAnalyticsDataset(): AnalyticsEngineDataset | null {
   try {
     const { env } = getCloudflareContext();
-    return (env as any).ANALYTICS ?? null;
+    return (env as { ANALYTICS?: AnalyticsEngineDataset }).ANALYTICS ?? null;
   } catch {
     return null;
   }
