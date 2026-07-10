@@ -162,4 +162,4 @@ Browser → Cloudflare Worker (OpenNext) → Turso (pages, links, chat, projects
 
 ### Closure
 
-- **Finish-and-pause (2026-07-10):** Karte remains a stable public inbound-assistant surface. Reopen only for a concrete creator conversion or paid-design-partner signal.
+- **Personal-use support (2026-07-10):** Keep Karte available for direct use. No roadmap expansion; accept only maintenance, reliability, or personally requested workflow fixes.
