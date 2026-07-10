@@ -142,9 +142,9 @@ Browser → Cloudflare Worker (OpenNext) → Turso (pages, links, chat, projects
 
 ### Planned
 
-1. Make profile creation/editing resilient across guest, authenticated, and returning-user flows.
-2. Make memory/data connection zero-config: a creator should be able to say "I am sending data your way" through upload, paste, URL, email/webhook, or API, and Karte should infer structure, ingest through Knowledgebase, show status, and make chat use it automatically without exposing indexes, embeddings, or RAG mechanics.
-3. Creator-facing analytics for link clicks, chat interactions, and profile-mode usage (dashboard analytics exists — deepen product metrics).
+1. ~~Make profile creation/editing resilient across guest, authenticated, and returning-user flows.~~ **Paused** at current validated flow.
+2. ~~Make memory/data connection zero-config.~~ **Paused** at current Knowledgebase-backed ingest.
+3. ~~Creator-facing analytics depth.~~ **Paused** with existing dashboard hooks retained.
 4. Harden rate limiting beyond the durable sliding-window limiter when traffic or abuse evidence justifies stricter per-endpoint caps.
 5. Keep AI-generated content reviewable and traceable for profile owners.
 6. Wire richer PostHog funnels for mode usage (chat vs encyclopedia vs roast vs newspaper).
@@ -159,3 +159,7 @@ Browser → Cloudflare Worker (OpenNext) → Turso (pages, links, chat, projects
 ### Blocked
 
 - E2E tests assume local dev server — not run in CI by default without documented harness.
+
+### Closure
+
+- **Finish-and-pause (2026-07-10):** Karte remains a stable public inbound-assistant surface. Reopen only for a concrete creator conversion or paid-design-partner signal.
