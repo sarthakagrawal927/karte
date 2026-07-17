@@ -71,6 +71,15 @@ const SITE_DESCRIPTION =
   'Your digital card on the open web — links, projects, bio, and an AI version of you. One page, one link: karte.cc/yourhandle.';
 
 export const metadata: Metadata = {
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
+
   metadataBase: new URL(SITE_URL),
   title: {
     default: 'Karte — Your digital card',
