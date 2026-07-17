@@ -1,5 +1,8 @@
 # linkchat
 
+**Product:** [karte.cc](https://karte.cc)
+
+
 Link-in-bio platform with AI-enhanced profile modes — chat, encyclopedia, roast, and newspaper — deployed on Cloudflare via OpenNext.
 
 ## Deployment & External Services
