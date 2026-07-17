@@ -36,7 +36,19 @@ export class DOShardedTagCache extends OpenNextDOShardedTagCache {}
 // concrete class here so workerd can detect it from the configured entrypoint.
 export class RateLimiterDO extends RateLimiterDurableObject {}
 
-const CACHE_PATH = '/';
+// Landing + static marketing only. Dynamic /{slug} profiles stay uncached here.
+const CACHEABLE_EXACT = new Set([
+  '/',
+  '/about',
+  '/create',
+  '/welcome',
+  '/login',
+  '/privacy',
+  '/terms',
+]);
+function isCacheableDocumentPath(pathname) {
+  return CACHEABLE_EXACT.has(pathname);
+}
 export default {
   fetch: withTiming(async function fetch(request, env, ctx) {
 
@@ -54,7 +66,7 @@ export default {
         return openNext.fetch(request, env, ctx);
       }
       const url = new URL(request.url);
-      if (url.pathname !== CACHE_PATH) {
+      if (!isCacheableDocumentPath(url.pathname)) {
         const response = await openNext.fetch(request, env, ctx);
         return routed.cacheProfile
           ? addProfileCacheHeaders(response)
@@ -76,7 +88,8 @@ export default {
       // responses (Lighthouse flagged ~80 KB wasted on uncompressed HTML
       // even with CF Edge cache HIT). Compress with gzip here so the
       // response — and the downstream CF Edge cache entry — is small.
-      if (env.ASSETS) {
+      // Only Astro overlay at `/` is static; marketing pages use edge HTML cache.
+      if (env.ASSETS && url.pathname === '/') {
         const assetResp = await env.ASSETS.fetch(request);
         // The assets binding answers If-None-Match revalidations with 304.
         // Pass those through — falling through would hand the request to
