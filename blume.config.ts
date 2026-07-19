@@ -8,28 +8,28 @@
 // Run:  npx blume dev   |   npx blume build
 //
 // Docs: https://useblume.dev/docs/configuration
-import { defineConfig } from "blume";
+import { defineConfig } from 'blume';
 
 export default defineConfig({
-  title: "Karte docs",
+  title: 'Karte docs',
   description:
-    "Local-first knowledge system for Karte (linkchat) — a link-in-bio platform with AI-enhanced profile modes on Cloudflare Workers.",
+    'Local-first knowledge system for Karte (linkchat) — a link-in-bio platform with AI-enhanced profile modes on Cloudflare Workers.',
 
   content: {
     // The committed docs tree is the source of truth.
-    root: "docs",
+    root: 'docs',
     // Archive is historical context; include it but it's not the primary nav.
-    include: ["**/*.{md,mdx}"],
+    include: ['**/*.{md,mdx}'],
   },
 
   theme: {
-    accent: "cyan",
-    radius: "md",
-    mode: "system",
+    accent: 'cyan',
+    radius: 'md',
+    mode: 'system',
   },
 
   search: {
-    provider: "orama",
+    provider: 'orama',
   },
 
   markdown: {
@@ -52,7 +52,7 @@ export default defineConfig({
   },
 
   deployment: {
-    output: "static",
+    output: 'static',
     // TODO(docs): confirm the docs site origin and update before publishing.
     // Left unset on purpose so Blume doesn't emit wrong canonical URLs.
     // site: "https://docs.karte.cc",

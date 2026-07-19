@@ -10,7 +10,7 @@
 // External links (http/https/mailto), pure anchors (#...), and code spans
 // are not checked. Run: `pnpm docs:check`. Used by .github/workflows/docs.yml.
 
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -58,7 +58,6 @@ function targetExists(abs) {
 
 function checkLinks(file, text) {
   const stripped = stripCode(text);
-  let m;
   LINK_RE.lastIndex = 0;
   const lines = stripped.split('\n');
   const seen = new Set();
@@ -66,8 +65,8 @@ function checkLinks(file, text) {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const re = /(?<!\\)\[(?:[^\]\\]|\\.)+?\]\(([^)]+)\)/g;
-    while ((m = re.exec(line))) {
-      const target = m[1].trim();
+    for (const match of line.matchAll(re)) {
+      const target = match[1].trim();
       if (/^(https?:|mailto:|tel:|ftp:)/i.test(target)) continue;
       if (target.startsWith('#')) continue;
       const key = `${i}:${target}`;
@@ -148,8 +147,8 @@ function main() {
 function finish() {
   for (const w of warnings) console.warn(`warn: ${w}`);
   for (const e of errors) console.error(`error: ${e}`);
-  console.log(
-    `\nDocs check: ${errors.length} error(s), ${warnings.length} warning(s).`,
+  process.stdout.write(
+    `\nDocs check: ${errors.length} error(s), ${warnings.length} warning(s).\n`,
   );
   if (errors.length > 0) process.exit(1);
 }
