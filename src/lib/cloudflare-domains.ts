@@ -3,7 +3,6 @@ import 'server-only';
 import type { PageDomainStatus, PageDomainVerification } from '@/db/schema';
 
 import {
-  type DnsInstruction,
   getDnsInstructions as sharedGetDnsInstructions,
 } from './hostname';
 
@@ -13,8 +12,6 @@ export type DomainProviderStatus = {
   errorMessage?: string;
   configured: boolean;
 };
-
-export type { DnsInstruction };
 
 export const getDnsInstructions = sharedGetDnsInstructions;
 

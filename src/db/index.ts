@@ -42,17 +42,4 @@ export async function ensureProjectsTable() {
   // intentional no-op
 }
 
-/**
- * Raw SQL escape hatch. Now backed by D1.prepare() instead of libsql.
- * Returns the same shape callers expected from libsql: `{ rows: [...] }`.
- */
-export async function appDbExecute(
-  sql: string,
-  args: unknown[] = [],
-): Promise<{ rows: Record<string, unknown>[] }> {
-  const stmt = getD1()
-    .prepare(sql)
-    .bind(...args);
-  const result = await stmt.all();
-  return { rows: (result.results ?? []) as Record<string, unknown>[] };
-}
+

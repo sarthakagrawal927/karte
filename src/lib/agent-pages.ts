@@ -1,7 +1,6 @@
 import type { pages } from '@/db/schema';
 
 export {
-  MAX_AGENT_CAPABILITIES,
   normalizeAgentCapabilities,
 } from './agent-capabilities';
 export const MAX_AGENT_PURPOSE_LENGTH = 500;
