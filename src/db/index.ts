@@ -41,5 +41,3 @@ export const db = new Proxy({} as DB, {
 export async function ensureProjectsTable() {
   // intentional no-op
 }
-
-

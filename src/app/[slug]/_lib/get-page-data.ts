@@ -351,5 +351,3 @@ export const getGeneratedPage = cache(async (pageId: string, type: string) => {
     .limit(1);
   return result[0] ?? null;
 });
-
-

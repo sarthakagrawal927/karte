@@ -120,9 +120,7 @@ export function applyOpportunityLifecyclePatch(
   };
 }
 
-function isValidEmail(
-  value: string | null | undefined,
-): value is string {
+function isValidEmail(value: string | null | undefined): value is string {
   return Boolean(value && z.string().email().safeParse(value.trim()).success);
 }
 

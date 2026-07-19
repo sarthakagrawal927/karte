@@ -2,9 +2,7 @@ import 'server-only';
 
 import type { PageDomainStatus, PageDomainVerification } from '@/db/schema';
 
-import {
-  getDnsInstructions as sharedGetDnsInstructions,
-} from './hostname';
+import { getDnsInstructions as sharedGetDnsInstructions } from './hostname';
 
 export type DomainProviderStatus = {
   status: PageDomainStatus;

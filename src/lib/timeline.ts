@@ -1,6 +1,4 @@
-import type {
-  TimelineEventType,
-} from '@/db/schema';
+import type { TimelineEventType } from '@/db/schema';
 
 // Display label for each event type, used in the dashboard chips +
 // public timeline badge.
@@ -97,4 +95,3 @@ export function parseWhenLabel(label: string): Date {
 
   return new Date();
 }
-

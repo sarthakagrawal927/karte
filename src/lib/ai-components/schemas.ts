@@ -144,6 +144,4 @@ export const renderableComponentSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('TimelineSlice'), props: timelineSliceSchema }),
 ]);
 
-type ValidatedRenderableComponent = z.infer<
-  typeof renderableComponentSchema
->;
+type ValidatedRenderableComponent = z.infer<typeof renderableComponentSchema>;

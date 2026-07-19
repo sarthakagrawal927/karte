@@ -8,20 +8,14 @@ import type { ReactNode } from 'react';
 
 import type { WidgetRenderContext, WidgetVariant } from '@/lib/widget-types';
 
-import {
-  type LinkCardData,
-  linkCardVariants,
-} from './link-card-variants';
+import { type LinkCardData, linkCardVariants } from './link-card-variants';
 import {
   type ProjectCardData,
   projectCardVariants,
 } from './project-card-variants';
 
 export type { LinkCardData, ProjectCardData };
-export {
-  linkCardVariants,
-  projectCardVariants,
-};
+export { linkCardVariants, projectCardVariants };
 
 /**
  * Full catalog of every variant the renderer knows about, flattened
